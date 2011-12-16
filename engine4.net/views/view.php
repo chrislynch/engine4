@@ -10,23 +10,25 @@
 
 // Decide what template we are using
 
-if (isset($data['template'])){ $template = $data['template'];} else { $template = 'index';}
+if (isset($data['template'])){ $template = $data['template'];} else { $template = 'view';}
+if (isset($data['enclosure'])){ $enclosure = $data['enclosure'];} else { $enclosure = 'index';}
 
-$template = file_get_contents('engine4.net/templates/' . $template . '.html');
+$output = file_get_contents('engine4.net/templates/' . $enclosure . '.html');
 
 // Find any inner templates and recursively load them up.
-while (strstr($template,'<e4.template')){
-	$templatecommandstart = stripos($template, '<e4.template');
-	$templatecommandend = stripos($template, '/>',$templatecommandstart);
+while (strstr($output,'<e4.template')){
+	$templatecommandstart = stripos($output, '<e4.template');
+	$templatecommandend = stripos($output, '/>',$templatecommandstart);
 	$templatecommandlength = ($templatecommandend + 2) - $templatecommandstart;
-	$templatecommand = substr($template,$templatecommandstart,$templatecommandlength);
+	$templatecommand = substr($output,$templatecommandstart,$templatecommandlength);
 	
 	$innertemplate = str_ireplace('<e4.template.', '', $templatecommand);
 	$innertemplate = str_ireplace('/>', '', $innertemplate);
 	$innertemplate = trim($innertemplate);
+	if (strlen($innertemplate) == 0) { $innertemplate = $template; }
 	
 	$innertemplate = file_get_contents('engine4.net/templates/' . $innertemplate . '.html');
-	$template = str_ireplace($templatecommand, $innertemplate, $template);
+	$output = str_ireplace($templatecommand, $innertemplate, $output);
 }
 
 // Now run any actions that we find.
@@ -38,13 +40,13 @@ foreach($data as $datakey=>$datavalue){
 		// TODO: Go through the loop and output the repeating elements
 	} else {
 		// Single element, simple to output
-		$template = str_ireplace("<e4.data.$datakey/>", $datavalue, $template);
-		$template = str_ireplace("<e4.data.$datakey />", $datavalue, $template); // Support for slightly different formatting of commands
+		$output = str_ireplace("<e4.data.$datakey/>", $datavalue, $output);
+		$output = str_ireplace("<e4.data.$datakey />", $datavalue, $output); // Support for slightly different formatting of commands
 	}
 }
 
 // Allow for Markdown inside templates as well
-$template = Markdown($template);
-print $template;
+// $output = Markdown($output);
+print $output;
 
 ?>

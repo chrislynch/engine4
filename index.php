@@ -60,7 +60,16 @@ Content = $content
 // So, we have now identified our action and our view.
 // Include the action, which should set up the $data array, then call the view, which should render it
 $data = array();
+
 include $action;
+
+if (isset($_REQUEST['debug'])){
+print "
+<pre>
+Data = " . print_r($data,TRUE) . "
+</pre>";	
+}
+
 include $view;
 
 ?>
