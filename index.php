@@ -4,6 +4,8 @@
  * It works out what action and view we are using, calls that action, then passes the resulting data over to the view to be rendered.
  */
 
+include 'helper.php';
+
 /*
  * Start by grabbing and breaking down the URL
  * Also, set the default action and default view, in case neither can be found.
@@ -23,7 +25,8 @@ while (strlen($path[0]) == 0){ array_shift($path); }
 
 
 // ACTIONS
-$searchpath = 'engine4.net/actions/' . str_ireplace('_', '/', $path[0]) . '.php';
+// $searchpath = 'engine4.net/actions/' . str_ireplace('_', '/', $path[0]) . '.php';
+$searchpath = e4_find('actions',$path[0]);
 if (file_exists($searchpath)){
 	// We have found an action!
 	// Store the action and pop this piece off the front of the path array
@@ -33,7 +36,8 @@ if (file_exists($searchpath)){
 
 // VIEWS
 if (isset($path[0])){
-	$searchpath = 'engine4.net/views/' . str_ireplace('_', '/', $path[0]) . '.php';
+	// $searchpath = 'engine4.net/views/' . str_ireplace('_', '/', $path[0]) . '.php';
+	$searchpath = e4_find('views',$path[0]);
 	if (is_dir($searchpath)){
 		// We have found an action!
 		// Store the action and pop this piece off the front of the path array
