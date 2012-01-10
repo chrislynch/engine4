@@ -14,6 +14,7 @@ function e4_find($filetype,$filename){
 	
 	// Build array of potential locations
 	$locations = array();
+	// $locations[] = 'www.planetofthepenguins.com';
 	$locations[] = 'engine4.net';
 	
 	// Make sure we have decoded the filename
@@ -23,6 +24,7 @@ function e4_find($filetype,$filename){
 	switch($filetype){
 		case 'content': $extension = '.html'; break;
 		case 'data': $extension = '.xml'; break;
+		case 'templates': $extension = '.html'; break;
 		default: $extension = '.php';
 	}
 	
@@ -39,6 +41,9 @@ function e4_find($filetype,$filename){
 }
 
 function e4_Load($content){
+	$content = str_ireplace('engine4.net/content/', '', $content);
+	$content = str_ireplace('.html', '', $content);
+	
 	$contentfile = e4_find('content',$content);
 	$contentdatafile = e4_find('data',$content);
 
@@ -69,4 +74,18 @@ function e4_loadData($contentfile){
 	return $xml;
 }
 
+// http://www.php.net/manual/en/function.glob.php#106595
+if ( ! function_exists('glob_recursive'))
+{
+    // Does not support flag GLOB_BRACE
+    function glob_recursive($pattern, $flags = 0)
+    {
+        $files = glob($pattern, $flags);
+        foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir)
+        {
+            $files = array_merge($files, glob_recursive($dir.'/'.basename($pattern), $flags));
+        }
+        return $files;
+    }
+}
 ?>

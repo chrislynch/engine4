@@ -15,24 +15,22 @@ if (strlen($content) > 0){
 	 * Find files on a particular path, returning the most recent, up to a given limit on the number of files.
 	 * Ignores directories and does not recurse down
 	 */
-	$mode = 'glob';
-	$files = glob('content/' . $path . '/*.html'); 
-		
-	$return = array();
+	$files = glob_recursive('engine4.net/content/*.html'); // See helper.php
+	$startat = 0;
+	$count = 10;
+	$data['content'] = array();
 	
 	foreach($files as $file){
 		if (!is_dir($file)){
 			$startat --;
 			if ($startat <= 0){
-				$return[] = $file; 
-				if (sizeof($return) >= $count){
+				$data['content'][] = e4_Load($file); 
+				if (sizeof($data) >= $count){
 					break;
 				}	
 			}
 		}
 	}
-	
-	return $return;
 	
 }
 

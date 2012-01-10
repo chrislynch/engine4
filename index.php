@@ -49,6 +49,7 @@ if (isset($path[0])){
 // CONTENT
 // Whatever remains, after we have found actions and views, is the content
 $content = implode('/',$path);
+$content = str_ireplace('github/engine4/', '', $content);
 
 if (isset($_REQUEST['debug'])){
 print "

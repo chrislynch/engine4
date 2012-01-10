@@ -13,7 +13,7 @@
 if (isset($data['template'])){ $template = $data['template'];} else { $template = 'view';}
 if (isset($data['enclosure'])){ $enclosure = $data['enclosure'];} else { $enclosure = 'index';}
 
-$output = file_get_contents('engine4.net/templates/' . $enclosure . '.html');
+$output = file_get_contents(e4_find('templates',$enclosure));
 
 // Find any inner templates and recursively load them up.
 while (strstr($output,'<e4.template')){
@@ -27,7 +27,7 @@ while (strstr($output,'<e4.template')){
 	$innertemplate = trim($innertemplate);
 	if (strlen($innertemplate) == 0) { $innertemplate = $template; }
 	
-	$innertemplate = file_get_contents('engine4.net/templates/' . $innertemplate . '.html');
+	$innertemplate = file_get_contents(e4_find('templates',$innertemplate));
 	$output = str_ireplace($templatecommand, $innertemplate, $output);
 }
 
@@ -37,7 +37,20 @@ while (strstr($output,'<e4.template')){
 // Now work through the data and write it out.
 foreach($data as $datakey=>$datavalue){
 	if (is_array($datavalue)){
-		// TODO: Go through the loop and output the repeating elements
+		$repeatStart = stripos($output, "<e4.data.$datakey>");
+		$repeatTemplateStart = $repeatStart + strlen("<e4.data.$datakey>");
+		$repeatEnd = stripos($output,"</e4.data.$datakey>") - 1;
+		$outputTemplate = substr($output, $repeatTemplateStart,$repeatEnd - $repeatTemplateStart);
+		print $outputTemplate;
+		$repeaterOutput = '';
+		foreach($datavalue as $idatakey=>$idatavalue){
+			 $repeaterOutput .= $outputTemplate;
+			 foreach($idatavalue as $iidatakey => $iidatavalue){
+			 	$repeaterOutput = str_ireplace("<e4.data.$iidatakey/>", $iidatavalue, $repeaterOutput);
+				$repeaterOutput = str_ireplace("<e4.data.$iidatakey />", $iidatavalue, $repeaterOutput); // Support for slightly different formatting of commands
+			 }
+		}
+		$output = substr($output,0,$repeatStart) . $repeaterOutput . substr($output,$repeatEnd);
 	} else {
 		// Single element, simple to output
 		$output = str_ireplace("<e4.data.$datakey/>", $datavalue, $output);
