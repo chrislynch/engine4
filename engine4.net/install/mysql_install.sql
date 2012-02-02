@@ -1,0 +1,6 @@
+CREATE TABLE  `engine4`.`e4_data` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Data` text NOT NULL,
+  `XML` text NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1
