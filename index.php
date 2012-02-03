@@ -19,8 +19,8 @@ mysql_select_db($data['configuration']['database']['schema'],$db);
  * At the end of everything, we always run the "view" action.
  */
 
-e4_data_save(array('ID'=>1,'Data'=>'Hello'));
-e4_data_save(array('ID'=>2,'Data'=>'Hello'));
+e4_data_save(array('ID'=>1,'Title'=>'Hello','Body'=>'Hello there. How are you?'));
+e4_data_save(array('ID'=>2,'Title'=>'Goodbye','Body'=>'OK, Bye-Bye then'));
 
 if(isset($_REQUEST['e4_action'])){
 	array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
