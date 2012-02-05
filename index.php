@@ -44,7 +44,7 @@ mysql_close($db);
  * Output debugging information
  */
 if (isset($_REQUEST['debug']) || $data['configuration']['debug']){
-	print '<pre>' . print_r($data,TRUE) . '</pre>';	
+	print '<pre>' . htmlentities(print_r($data,TRUE)) . '</pre>';	
 }
 
 // 
@@ -83,14 +83,15 @@ function e4_data_save($saveData){
 		$saveID = 0;
 	}
 	$serialisedSaveData = base64_encode(serialize($saveData));
+	$xmlData = e4_xmlify($saveData);
 	
 	$saveQuery = 'INSERT INTO e4_data 
 					SET  ID = ' . $saveID . ',
 						 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-						 XML  = "<xml></xml>"
+						 XML  = "' . $xmlData . '"
 				  ON DUPLICATE KEY UPDATE 
 						 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-						 XML  = "<xml></xml>"';
+						 XML  = "' . $xmlData . '"';
 	e4_db_query($saveQuery); 
 }
 
@@ -127,6 +128,23 @@ function e4_db_query($SQL){
 	e4_trace('SQL complete');
 	
 	return $return;
+}
+
+function e4_xmlify($dataArray,$elementName = 'xml'){
+	/*
+	 * Turn the inbound array into XML. Recursive calls are used to work our way down the data structure.
+	 */
+	$xml = "<$elementName>";
+	foreach($dataArray as $key=>$value){
+		if (is_array($value)){
+			$xml .= e4_xmlify($value,$key);
+		} else {
+			$xml .= "<$key>" . htmlentities($value) . "</$key>";
+		}
+	}
+	$xml .= "</$elementName>";
+	
+	return $xml;
 }
 
 /*
