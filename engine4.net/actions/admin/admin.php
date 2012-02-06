@@ -13,15 +13,10 @@ $data['configuration']['renderers']['html']['sidebar-left'] = 'templates/html/ad
 $data['configuration']['renderers']['html']['sidebar-right'] = 'templates/html/admin/sidebar-right.php';
 
 /*
- * Inform the CMS that it needs to load some addition Javascript and CSS files
+ * Inform the CMS if it needs to load some addition Javascript and CSS files
  */
-$data['page']['head']['stylesheet'][] = 'engine4.net/lib/superfish/css/superfish.css';
-$data['page']['head']['stylesheet'][] = 'engine4.net/lib/superfish/css/superfish-vertical.css';
-$data['page']['head']['javascript'][] = 'engine4.net/lib/superfish/js/hoverIntent.js';
-$data['page']['head']['javascript'][] = 'engine4.net/lib/superfish/js/superfish.js';
-$data['page']['head']['scripting'][] = "jQuery(function(){
-											jQuery('ul.sf-menu').superfish();
-										});";
+
+
 if (isset($_REQUEST['e4_op'])){
 	switch ($_REQUEST['e4_op']){
 		case 'save':
@@ -36,6 +31,10 @@ if (isset($_REQUEST['e4_op'])){
 			break;
 		case 'create':
 			$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/create-data.php';
+			break;
+		
+		case 'search':
+			$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/search.php';
 			break;
 	}
 }

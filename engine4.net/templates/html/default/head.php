@@ -32,6 +32,8 @@
 
 <!-- CDN Hosted JQuery -->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+
 
 <!-- Page or Host specific Javascript libraries -->
 <?php 
@@ -48,7 +50,16 @@
 		}
 	}
 ?>
-  	
+
+<script>
+$(function() {
+	$( "#accordion" ).accordion({
+		autoHeight: false,
+		navigation: true
+	});
+});
+</script>
+
 <script type="text/javascript">
 	var _gaq = _gaq || [];
 	_gaq.push(['_setAccount', '']);
