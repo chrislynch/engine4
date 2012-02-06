@@ -1,17 +1,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <!-- Title and SEO information -->
-<title><e4.data.title/></title>
-<meta name="abstract" content="<e4.data.abstract/>" />
-<meta name="keywords" content="<e4.data.keywords/>" />
-<meta name="description" content="<e4.data.description/>" />
-<meta name="copyright" CONTENT="<e4.data.copyright/>" />
+<title><?=@$data['page']['head']['title']?></title>
+
+<meta name="abstract" content="<?=@$data['page']['head']['abstract']?>" />
+<meta name="keywords" content="<?=@$data['page']['head']['keywords']?>" />
+<meta name="description" content="<?=@$data['page']['head']['description']?>" />
+<meta name="copyright" CONTENT="<?=@$data['page']['head']['copyright']?>" />
+
 <!-- Google, Yahoo, and Bing tracking -->
 <meta name="google-site-verification" content="" />
 <META name="y_key" content="" />
 <meta name="msvalidate.01" content="" />
+
 <!-- URL canonicalisation -->
 <link rel="canonical" href="" />
+
 <!-- ROBOTS directives -->
 <meta name="robots" content="index,follow" />
 

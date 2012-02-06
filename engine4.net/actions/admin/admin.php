@@ -13,10 +13,8 @@ $data['configuration']['renderers']['html']['sidebar-left'] = 'templates/html/ad
 $data['configuration']['renderers']['html']['sidebar-right'] = 'templates/html/admin/sidebar-right.php';
 
 /*
- * Inform the CMS if it needs to load some addition Javascript and CSS files
+ * Then override these defaults if necessary
  */
-
-
 if (isset($_REQUEST['e4_op'])){
 	switch ($_REQUEST['e4_op']){
 		case 'save':
@@ -39,6 +37,10 @@ if (isset($_REQUEST['e4_op'])){
 	}
 }
 
+
+/*
+ * FORM SAVE FUNCTIONS - Reads form data and saves it to the e4_data table using functions from index.php
+ */
 function e4_admin_save_formData(){
 	/*
 	 * Parse through the submitted form data and build up a piece of content to save.

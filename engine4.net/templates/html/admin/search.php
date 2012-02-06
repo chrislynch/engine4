@@ -4,7 +4,7 @@
 	&nbsp;<input type="submit" name="Search">
 	&nbsp;<a href="?e4_action=admin&e4_op=search">Clear Search</a>
 </form>
-<br><br>
+<hr>
 <table>
 	<tr><th>ID</th><th>Name</th><th>Last Modified</th><th>&nbsp</th></tr>
 	<?

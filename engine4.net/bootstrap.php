@@ -28,6 +28,10 @@ $data['configuration']['debug'] = TRUE;
 $data['configuration']['actions'] = array();
 $data['configuration']['renderers'] = array();
 
+$data['configuration']['seo'] = array();
+$data['configuration']['seo']['keywords'] = array();
+$data['configuration']['seo']['keywords']['count'] = 8;
+
 /* 
  * All data lives in this array as well
  * Data is populated by actions as the system runs
@@ -58,6 +62,12 @@ $data['debug']['trace'] = array();
  */
 $data['page'] = array();
 $data['page']['head'] = array();
+$data['page']['head']['title'] = 'engine4 Content Management';
+$data['page']['head']['keywords'] = '';
+$data['page']['head']['abstract'] = '';
+$data['page']['head']['description'] = '';
+$data['page']['head']['copyright'] = '';
+
 $data['page']['head']['javascript'] = array();
 $data['page']['head']['stylesheets'] = array();
 $data['page']['body'] = array();

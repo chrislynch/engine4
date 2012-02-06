@@ -18,13 +18,18 @@ ob_start();
 	print '<html><head>';
 	include e4_findinclude($data['configuration']['renderers']['html']['head']);
 	print '</head><body>';
-	include e4_findinclude($data['configuration']['renderers']['html']['body']);
-	print '</body></html>';
 	$output = ob_get_contents();
 ob_end_clean();
-
-// Allow for Markdown inside templates as well
-$output = Markdown($output);
+ob_start();
+	// Allow for Markdown inside all body templates.
+	include e4_findinclude($data['configuration']['renderers']['html']['body']);
+	$output .= Markdown(ob_get_contents());
+ob_end_clean();
+ob_start();
+	print '</body></html>';
+	$output .= ob_get_contents();
+ob_end_clean();
+	
 print $output;
 
 ?>
