@@ -19,8 +19,8 @@ mysql_select_db($data['configuration']['database']['schema'],$db);
  * At the end of everything, we always run the "view" action.
  */
 
-e4_data_save(array('ID'=>1,'Title'=>'Hello','Body'=>'Hello there. How are you?'));
-e4_data_save(array('ID'=>2,'Title'=>'Goodbye','Body'=>'OK, Bye-Bye then'));
+// e4_data_save(array('ID'=>1,'name'=>'Hello','type' => 'Content', 'Body'=>'Hello there. How are you?'));
+// e4_data_save(array('ID'=>2,'name'=>'Goodbye','type' => 'Content','Body'=>'OK, Bye-Bye then'));
 
 if(isset($_REQUEST['e4_action'])){
 	array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
@@ -62,11 +62,20 @@ function e4_data_load($ID){
 	global $db;
 	global $data;
 	
-	$dataquery = e4_db_query("SELECT ID,Data,XML FROM e4_data WHERE ID = $ID");
+	$dataquery = e4_db_query("SELECT ID,Name,Type,Timestamp,Data,XML FROM e4_data WHERE ID = $ID");
 	while($datarecord = mysql_fetch_assoc($dataquery)){
 		$data['page']['body']['content'][$datarecord['ID']] = array();
+		// These are the header items. Make sure we have these and that they have the right name & case.
 		$data['page']['body']['content'][$datarecord['ID']]['ID'] = $datarecord['ID'];
+		$data['page']['body']['content'][$datarecord['ID']]['name'] = $datarecord['Name'];
+		$data['page']['body']['content'][$datarecord['ID']]['type'] = $datarecord['Type'];
+		$data['page']['body']['content'][$datarecord['ID']]['timestamp'] = $datarecord['Timestamp'];
+		// Everything is saved in [data]. Jump down in [data][data] to get what we need, if it exists somehow.  
 		$data['page']['body']['content'][$datarecord['ID']]['data'] = unserialize(base64_decode($datarecord['Data']));
+		if(isset($data['page']['body']['content'][$datarecord['ID']]['data']['data'])){
+			$data['page']['body']['content'][$datarecord['ID']]['data'] = $data['page']['body']['content'][$datarecord['ID']]['data']['data'];
+		}
+		// Unlikely that we will need XML, but keep it just in case 
 		$data['page']['body']['content'][$datarecord['ID']]['xml'] = $datarecord['XML'];
 	}
 }
@@ -87,12 +96,22 @@ function e4_data_save($saveData){
 	
 	$saveQuery = 'INSERT INTO e4_data 
 					SET  ID = ' . $saveID . ',
+						 Name = "' . $saveData['name'] . '",
+						 Type = "' . $saveData['type'] . '",
 						 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 						 XML  = "' . $xmlData . '"
 				  ON DUPLICATE KEY UPDATE 
+				  		 Name = "' . $saveData['name'] . '",
+						 Type = "' . $saveData['type'] . '",
 						 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 						 XML  = "' . $xmlData . '"';
+	// Run the query through our traced query function
 	e4_db_query($saveQuery); 
+	// If this was an insert using the next available ID, return that ID rather than the ID given
+	if ($saveID == 0){ $saveID = mysql_insert_id($db);}
+	// Return the ID of the saved record.
+	return $saveID;
+	
 }
 
 function e4_data_search($criteria){
@@ -103,7 +122,10 @@ function e4_data_search($criteria){
 	global $db;
 	
 	$searchQuery = 'SELECT ID FROM e4_data';
-	// TODO: This is where the criteria will go
+	// Add in critera
+	if(isset($_REQUEST['e4_ID'])){
+		$searchQuery .= ' WHERE ID =' . $_REQUEST['e4_ID'];
+	}
 	// TODO: This is where the limiters and paging will go
 	
 	$searchData = e4_db_query($searchQuery);
@@ -166,21 +188,24 @@ function e4_findinclude($filepath){
 	 * It looks for it first in the domain specific directory and then, after that, in the default directory
 	 * TODO: Extending the list of search directories will enabled plugins that do not have to go into core.
 	 */
-	$searchpaths = array();
-	$searchpaths[] = e4_domaindir();
-	$searchpaths[] = 'engine4.net/';
 	$return = 'engine4.net/void.php';
 	
-	foreach($searchpaths as $searchpath){
-		e4_trace("Looking for $searchpath$filepath");
-		if(file_exists($searchpath . $filepath)){
-			e4_trace("Found $searchpath$filepath");
-			$return = $searchpath . $filepath;
-			break;	// Stop looking as soon as we have found the file we want and drop out to the return
+	if (strlen($filepath) > 0){
+		$searchpaths = array();
+		$searchpaths[] = e4_domaindir();
+		$searchpaths[] = 'engine4.net/';
+				
+		foreach($searchpaths as $searchpath){
+			e4_trace("Looking for $searchpath$filepath");
+			if(file_exists($searchpath . $filepath)){
+				e4_trace("Found $searchpath$filepath");
+				$return = $searchpath . $filepath;
+				break;	// Stop looking as soon as we have found the file we want and drop out to the return
+			}
 		}
-	}
-	if ($return == 'engine4.net/void.php'){
-		e4_trace("No matches for $filepath, returning void.php");
+		if ($return == 'engine4.net/void.php'){
+			e4_trace("No matches for $filepath, returning void.php");
+		}	
 	}
 	
 	return $return;
