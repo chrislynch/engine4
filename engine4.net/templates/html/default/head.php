@@ -20,7 +20,34 @@
 <!--[if lt IE 8]>
 	<link rel="stylesheet" href="engine4.net/lib/blueprint/ie.css" type="text/css" media="screen, projection">
 <![endif]-->
-  	
+
+<!-- Page or Host specific CSS -->
+<?php 
+	if (isset($data['page']['head']['stylesheet'])){
+		foreach($data['page']['head']['stylesheet'] as $css){
+			print '<link rel="stylesheet" src="' . $css . '"></script>';
+		}
+	}
+?>
+
+<!-- CDN Hosted JQuery -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<!-- Page or Host specific Javascript libraries -->
+<?php 
+	if (isset($data['page']['head']['javascript'])){
+		foreach($data['page']['head']['javascript'] as $jquery){
+			print '<script type="text/javascript" src="' . $jquery . '"></script>';
+		}
+	}
+?>
+<?php 
+	if (isset($data['page']['head']['scripting'])){
+		foreach($data['page']['head']['scripting'] as $script){
+			print '<script type="text/javascript">' . $script . '</script>';
+		}
+	}
+?>
   	
 <script type="text/javascript">
 	var _gaq = _gaq || [];

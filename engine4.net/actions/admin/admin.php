@@ -4,9 +4,24 @@
  * This is where our CMS lives, basically.
  */
 
-$data['configuration']['renderers']['html']['body'] = 'templates/html/admin/body.php';
+/*
+ * Start by deciding what page we are going to view as our primary page
+ * and what page we are viewing as our sidebar
+ */
 $data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/home.php';
+$data['configuration']['renderers']['html']['sidebar-left'] = 'templates/html/admin/sidebar-left.php';
+$data['configuration']['renderers']['html']['sidebar-right'] = 'templates/html/admin/sidebar-right.php';
 
+/*
+ * Inform the CMS that it needs to load some addition Javascript and CSS files
+ */
+$data['page']['head']['stylesheet'][] = 'engine4.net/lib/superfish/css/superfish.css';
+$data['page']['head']['stylesheet'][] = 'engine4.net/lib/superfish/css/superfish-vertical.css';
+$data['page']['head']['javascript'][] = 'engine4.net/lib/superfish/js/hoverIntent.js';
+$data['page']['head']['javascript'][] = 'engine4.net/lib/superfish/js/superfish.js';
+$data['page']['head']['scripting'][] = "jQuery(function(){
+											jQuery('ul.sf-menu').superfish();
+										});";
 if (isset($_REQUEST['e4_op'])){
 	switch ($_REQUEST['e4_op']){
 		case 'save':

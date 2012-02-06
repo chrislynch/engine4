@@ -9,6 +9,8 @@
  * All views and actions should start by loading up their defaults, if they are not already there.
  */
 
+
+// TODO: This should not load anything if there has already been data loaded.
 e4_data_search(array());
 
 ?>

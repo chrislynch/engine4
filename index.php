@@ -19,8 +19,8 @@ mysql_select_db($data['configuration']['database']['schema'],$db);
  * At the end of everything, we always run the "view" action.
  */
 
-// e4_data_save(array('ID'=>1,'name'=>'Hello','type' => 'Content', 'Body'=>'Hello there. How are you?'));
-// e4_data_save(array('ID'=>2,'name'=>'Goodbye','type' => 'Content','Body'=>'OK, Bye-Bye then'));
+// e4_data_save(array('ID'=>1,'name'=>'Hello','type' => 'Content', 'body'=>'Hello there. How are you?'));
+// e4_data_save(array('ID'=>2,'name'=>'Goodbye','type' => 'Content','body'=>'OK, Bye-Bye then'));
 
 if(isset($_REQUEST['e4_action'])){
 	array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
@@ -94,23 +94,25 @@ function e4_data_save($saveData){
 	$serialisedSaveData = base64_encode(serialize($saveData));
 	$xmlData = e4_xmlify($saveData);
 	
-	$saveQuery = 'INSERT INTO e4_data 
-					SET  ID = ' . $saveID . ',
-						 Name = "' . $saveData['name'] . '",
-						 Type = "' . $saveData['type'] . '",
-						 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-						 XML  = "' . $xmlData . '"
-				  ON DUPLICATE KEY UPDATE 
-				  		 Name = "' . $saveData['name'] . '",
-						 Type = "' . $saveData['type'] . '",
-						 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-						 XML  = "' . $xmlData . '"';
-	// Run the query through our traced query function
-	e4_db_query($saveQuery); 
-	// If this was an insert using the next available ID, return that ID rather than the ID given
-	if ($saveID == 0){ $saveID = mysql_insert_id($db);}
-	// Return the ID of the saved record.
-	return $saveID;
+	if (strlen($saveData['name']) > 0 AND strlen($saveData['type']) > 0){
+		$saveQuery = 'INSERT INTO e4_data 
+						SET  ID = ' . $saveID . ',
+							 Name = "' . $saveData['name'] . '",
+							 Type = "' . $saveData['type'] . '",
+							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
+							 XML  = "' . $xmlData . '"
+					  ON DUPLICATE KEY UPDATE 
+					  		 Name = "' . $saveData['name'] . '",
+							 Type = "' . $saveData['type'] . '",
+							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
+							 XML  = "' . $xmlData . '"';
+		// Run the query through our traced query function
+		e4_db_query($saveQuery); 
+		// If this was an insert using the next available ID, return that ID rather than the ID given
+		if ($saveID == 0){ $saveID = mysql_insert_id($db);}
+		// Return the ID of the saved record.
+		return $saveID;	
+	}
 	
 }
 
