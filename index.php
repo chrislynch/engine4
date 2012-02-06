@@ -123,11 +123,17 @@ function e4_data_search($criteria){
 	 */
 	global $db;
 	
-	$searchQuery = 'SELECT ID FROM e4_data';
-	// Add in critera
-	if(isset($_REQUEST['e4_ID'])){
-		$searchQuery .= ' WHERE ID =' . $_REQUEST['e4_ID'];
+	if(isset($_REQUEST['e4_search'])){
+		$searchQuery = 'SELECT ID, MATCH(XML) AGAINST ("' . mysql_escape_string($_REQUEST['e4_search']) . '" IN BOOLEAN MODE) AS score FROM e4_data';
+		$searchQuery .= ' HAVING score > 0';
+	} else {
+		$searchQuery = 'SELECT ID FROM e4_data';
+		// Add in critera
+		if(isset($_REQUEST['e4_ID'])){
+			$searchQuery .= ' WHERE ID =' . $_REQUEST['e4_ID'];
+		}	
 	}
+	
 	// TODO: This is where the limiters and paging will go
 	
 	$searchData = e4_db_query($searchQuery);
