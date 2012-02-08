@@ -8,9 +8,46 @@
  * Start by deciding what page we are going to view as our primary page
  * and what page we are viewing as our sidebar
  */
-$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/home.php';
+if(!isset($data['configuration']['renderers']['html'])){ $data['configuration']['renderers']['html'] = array();}
+
+$data['configuration']['renderers']['html']['body-header'] = 'templates/html/admin/header.php';
 $data['configuration']['renderers']['html']['sidebar-left'] = 'templates/html/admin/sidebar-left.php';
+$data['configuration']['renderers']['html']['body-content-header'] = 'templates/html/default/body-top.php';
+$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/home.php';
+$data['configuration']['renderers']['html']['body-content-footer'] = 'templates/html/default/body-bottom.php';
 $data['configuration']['renderers']['html']['sidebar-right'] = 'templates/html/admin/sidebar-right.php';
+$data['configuration']['renderers']['html']['body-footer'] = 'templates/html/admin/footer.php';
+
+$data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/admin/benevolentdictator/BenevolentDictator.css';
+
+$data['page']['head']['scripting'][] = '$(function() {
+											$( "#accordion" ).accordion({
+												autoHeight: false,
+												navigation: true
+												});
+										});';
+$data['page']['head']['scripting'][] =
+	'var currentMenuItem = "";
+		  $(document).ready(function() {
+          $("a.MenuTab").click(function() {
+           var contentId = "#" + $(this).attr("id").replace("MenuItem","MenuContent");
+           var menuContent = $(contentId).html();
+		   if(menuContent == null){
+			currentMenuItem = contentId;
+			$("#MenuContentContainer").slideUp();
+			$("#MenuContentContainer").html(menuContent);
+			location.href=$(this).attr("href");
+		   } else {
+			$("#MenuContentContainer").html(menuContent);
+			if(currentMenuItem != contentId){
+				currentMenuItem = contentId;
+				$("#MenuContentContainer").slideDown();
+			} else {
+				$("#MenuContentContainer").slideUp();
+			} 
+		   }
+          });
+		});';
 
 /*
  * Then override these defaults if necessary

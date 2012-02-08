@@ -1,1 +1,1 @@
-<h2>Statistics</h2>
+<h2 class="SectionHeading">Help</h2>

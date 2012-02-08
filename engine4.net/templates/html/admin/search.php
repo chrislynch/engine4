@@ -5,7 +5,7 @@
 	&nbsp;<a href="?e4_action=admin&e4_op=search">Clear Search</a>
 </form>
 <hr>
-<table>
+<table class="DataTable">
 	<tr><th>ID</th><th>Name</th><th>Last Modified</th><th>&nbsp</th></tr>
 	<?
 		foreach($data['page']['body']['content'] as $content){

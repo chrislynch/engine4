@@ -1,0 +1,63 @@
+<div class="span-24 last" id="HeaderContainer">
+	<div id="Header">
+		System Administration
+		<div id="HeaderUserMenu">
+			Welcome back Christopher<br>
+		</div>
+	</div>
+</div>
+
+<div class="span-24 last" id="MenuContainer">
+	<div id="MainMenu">
+		<ul id="MainMenuList">
+			<li><a href="?e4_action=admin" class="MenuTab" id="HomeMenuItem">Home</a></li>
+			<li><a href="#" class="MenuTab" id="ContentMenuItem">Content</a></li>
+			<!-- 
+			<li><a href="#" class="MenuTab" id="UsersMenuItem">Users</a></li>
+			<li><a href="#" class="MenuTab" id="MessagesMenuItem">Messages</a></li>
+			 -->
+		</ul>
+	</div>
+	<!-- 
+		This is a section if divs that hold the content for each menu item as well as the container where
+		we swap them in and out. MenuContentContainer has its content replaced and then it's display toggled.
+	-->
+	<div id="MenuContentContainer">
+	  PLACEHOLDER
+	</div>
+</div>
+				
+<div id="OrderItemsContainer">
+<!-- 
+	Create one XYZMenuContent for each XYZMenuItem in the MainMenuList. The plumbing for the menu relies on the XYZ 
+	part being the same for both.
+-->	
+  <div id="ContentMenuContent" class="MenuContent">
+		<ul>
+			<li><a href="?e4_action=admin&e4_op=create">Create Content</a></li>
+			<li><a href="?e4_action=admin&e4_op=search">Edit Content</a></li>
+		</ul>
+		<p>
+			<!-- You can put any HTML content you want for your menu: tables, grids of links, headings, etc. This entire div just displays below the menu when requested.  -->
+		</p>
+	</div>
+  <div id="UsersMenuContent" class="MenuContent">
+		<div style="float:right; margin: 15px;">
+			All of the mega menu functionality is convention based for naming.
+		</div>
+		<ul>
+			<li>Find User</li>
+			<li>Create New User</li>
+			<li>Browse Users By Role</li>
+		</ul>
+	</div>
+	<div id="MessagesMenuContent" class="MenuContent">
+		<ul>
+			<li>Find Message</li>
+			<li>Create New Message</li>
+			<li>Browse All Pending Messages</li>
+		</ul>
+	</div>
+</div>
+			
+<div class="span-24 last" id="HeaderEnd">&nbsp;</div>

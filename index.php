@@ -44,7 +44,7 @@ mysql_close($db);
  * Output debugging information
  */
 if (isset($_REQUEST['debug']) || $data['configuration']['debug']){
-	print '<pre>' . htmlentities(print_r($data,TRUE)) . '</pre>';	
+	print '<hr><pre>' . htmlentities(print_r($data,TRUE)) . '</pre>';	
 }
 
 // 

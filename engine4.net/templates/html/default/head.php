@@ -20,7 +20,9 @@
 <meta name="robots" content="index,follow" />
 
 <!-- Blueprint CSS http://www.blueprintcss.org -->
-<link rel="stylesheet" href="engine4.net/lib/blueprint/screen.css" type="text/css" media="screen, projection">
+<link rel="stylesheet" href="engine4.net/lib/blueprint/src/grid.css" type="text/css" media="screen, projection">
+<link rel="stylesheet" href="engine4.net/lib/blueprint/src/typography.css" type="text/css" media="screen, projection">
+
 <!--[if lt IE 8]>
 	<link rel="stylesheet" href="engine4.net/lib/blueprint/ie.css" type="text/css" media="screen, projection">
 <![endif]-->
@@ -29,7 +31,8 @@
 <?php 
 	if (isset($data['page']['head']['stylesheet'])){
 		foreach($data['page']['head']['stylesheet'] as $css){
-			print '<link rel="stylesheet" src="' . $css . '"></script>';
+			print '<link rel="stylesheet" href="' . $css . '" type="text/css" media="screen, projection">';
+			
 		}
 	}
 ?>
@@ -54,15 +57,6 @@
 		}
 	}
 ?>
-
-<script>
-$(function() {
-	$( "#accordion" ).accordion({
-		autoHeight: false,
-		navigation: true
-	});
-});
-</script>
 
 <script type="text/javascript">
 	var _gaq = _gaq || [];
