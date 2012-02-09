@@ -63,13 +63,14 @@ function e4_data_load($ID){
 	global $db;
 	global $data;
 	
-	$dataquery = e4_db_query("SELECT ID,Name,Type,Timestamp,Data,XML FROM e4_data WHERE ID = $ID");
+	$dataquery = e4_db_query("SELECT ID,Name,Type,URL,Timestamp,Data,XML FROM e4_data WHERE ID = $ID");
 	while($datarecord = mysql_fetch_assoc($dataquery)){
 		$data['page']['body']['content'][$datarecord['ID']] = array();
 		// These are the header items. Make sure we have these and that they have the right name & case.
 		$data['page']['body']['content'][$datarecord['ID']]['ID'] = $datarecord['ID'];
 		$data['page']['body']['content'][$datarecord['ID']]['name'] = $datarecord['Name'];
 		$data['page']['body']['content'][$datarecord['ID']]['type'] = $datarecord['Type'];
+		$data['page']['body']['content'][$datarecord['ID']]['url'] = $datarecord['URL'];
 		$data['page']['body']['content'][$datarecord['ID']]['timestamp'] = $datarecord['Timestamp'];
 		// Everything is saved in [data]. Jump down in [data][data] to get what we need, if it exists somehow.  
 		$data['page']['body']['content'][$datarecord['ID']]['data'] = unserialize(base64_decode($datarecord['Data']));
@@ -100,11 +101,13 @@ function e4_data_save($saveData){
 						SET  ID = ' . $saveID . ',
 							 Name = "' . $saveData['name'] . '",
 							 Type = "' . $saveData['type'] . '",
+							 URL = "' . $saveData['url'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 							 XML  = "' . $xmlData . '"
 					  ON DUPLICATE KEY UPDATE 
 					  		 Name = "' . $saveData['name'] . '",
 							 Type = "' . $saveData['type'] . '",
+							 URL = "' . $saveData['url'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 							 XML  = "' . $xmlData . '"';
 		// Run the query through our traced query function
@@ -207,6 +210,7 @@ function e4_findinclude($filepath){
 	 * It looks for it first in the domain specific directory and then, after that, in the default directory
 	 * TODO: Extending the list of search directories will enabled plugins that do not have to go into core.
 	 */
+	global $data;
 	$return = 'engine4.net/void.php';
 	
 	if (strlen($filepath) > 0){
@@ -226,7 +230,7 @@ function e4_findinclude($filepath){
 			e4_trace("No matches for $filepath, returning void.php");
 		}	
 	}
-	
+	// $return = '/' . $data['configuration']['basedir'] . $return;
 	return $return;
 }
 
@@ -234,6 +238,42 @@ function e4_domaindir(){
 	// $return = '/' . $_SERVER['SERVER_NAME'] . '/';
 	$return = $_SERVER['SERVER_NAME'] . '/';
 	return $return;
+}
+
+/*
+ * TEMPLATE FUNCTIONS - CAN BE USED BY ANY RENDERER
+ */
+
+function e4_findtemplate($template,$useBaseDir = FALSE){
+	/*
+	 * We need to find a template. Ideally we have a list of skins that we can use.
+	 */
+	global $data;
+	$return = 'engine4.net/void.php';
+	if (strlen($template) > 0){
+		foreach($data['configuration']['renderers']['html']['skins'] as $skin){
+			$return = e4_findinclude('templates/html/' . $skin . '/' . $template);
+			if ($return !== 'engine4.net/void.php'){
+				break;
+			}
+		}	
+	}
+	if ($useBaseDir){
+		$return = '/' . $data['configuration']['basedir'] . $return;
+	}
+	return $return;
+}
+
+function e4_pickContentTemplate(){
+	/*
+	 * Look at the data array, and the query parameters, and select an appropriate template.
+	 */
+	global $data;
+	if (isset($_REQUEST['e4_ID'])){
+		return 'content.php';
+	} else {
+		return 'home.php';
+	}
 }
 
 ?>

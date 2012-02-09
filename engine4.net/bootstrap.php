@@ -17,6 +17,9 @@ $data = array();
  * Configuration lives in an array
  */
 $data['configuration'] = array();
+
+$data['configuration']['basedir'] = 'github/engine4/';
+
 $data['configuration']['database'] = array();
 $data['configuration']['database']['server'] = 'localhost';
 $data['configuration']['database']['username'] = 'root';

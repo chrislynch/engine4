@@ -39,7 +39,7 @@ ksort($data['configuration']['renderers']['html']['templates']);
 ob_start();
 	print '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
 	print '<html><head>';
-	include e4_html_findtemplate($data['configuration']['renderers']['html']['templates']['head']);
+	include e4_findtemplate($data['configuration']['renderers']['html']['templates']['head']);
 	print '</head><body>';
 	$output = ob_get_contents();
 ob_end_clean();
@@ -47,9 +47,9 @@ ob_start();
 	foreach($data['configuration']['renderers']['html']['templates'] as $key=>$bodytemplate){
 		if ($key !== 'head'){
 			if($bodytemplate == '?'){
-				$bodytemplate = e4_html_pickContentTemplate();	
+				$bodytemplate = e4_pickContentTemplate();	
 			}
-			include e4_html_findtemplate($bodytemplate);	
+			include e4_findtemplate($bodytemplate);	
 		}
 	}
 	$output .= ob_get_contents();
@@ -65,33 +65,4 @@ print $output;
  * RENDERER FUNCTIONS
  */
 
-function e4_html_findtemplate($template){
-	/*
-	 * We need to find a template. Ideally we have a list of skins that we can use.
-	 */
-	global $data;
-	$return = 'engine4.net/void.php';
-	if (strlen($template) > 0){
-		foreach($data['configuration']['renderers']['html']['skins'] as $skin){
-			$return = e4_findinclude('templates/html/' . $skin . '/' . $template);
-			if ($return !== 'engine4.net/void.php'){
-				break;
-			}
-		}	
-	}
-	
-	return $return;
-}
-
-function e4_html_pickContentTemplate(){
-	/*
-	 * Look at the data array, and the query parameters, and select an appropriate template.
-	 */
-	global $data;
-	if (isset($_REQUEST['e4_ID'])){
-		return 'content.php';
-	} else {
-		return 'home.php';
-	}
-}
 ?>
