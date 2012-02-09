@@ -58,7 +58,12 @@ ob_start();
 	print '</body></html>';
 	$output .= ob_get_contents();
 ob_end_clean();
-	
+
+/*
+ * Perform search and replace for shortcodes (like a Warp widget, but simpler)
+ */
+$output = str_ireplace('@@configuration.basedir@@', '/' . $data['configuration']['basedir'], $output);
+
 print $output;
 
 /*

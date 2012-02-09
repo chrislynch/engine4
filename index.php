@@ -126,35 +126,43 @@ function e4_data_search($criteria){
 	 * TODO: This might be the first function that is going to get long enough to be unweildy in this file - think on!
 	 */
 	global $db;
+	$searchQuery = '';
 	
 	/*
 	 * Start with a URL lookup, if a URL has been specified
 	 */
-	if (isset($_REQUEST['e4_URL'])){
-		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['url'] . '"');
+	if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
+		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE  URL = "' . $_REQUEST['e4_url'] . '"');
 		if (mysql_num_rows($findURLQuery) == 1){
 			$_REQUEST['e4_ID'] = mysql_result($findURLQuery, 0);
+		} else {
+			$_REQUEST['e4_ID'] = -1;
 		}
 	}
 	
-	if(isset($_REQUEST['e4_search'])){
-		$searchQuery = 'SELECT ID, MATCH(XML) AGAINST ("' . mysql_escape_string($_REQUEST['e4_search']) . '" IN BOOLEAN MODE) AS score FROM e4_data';
-		$searchQuery .= ' HAVING score > 0';
-	} else {
+	if(isset($_REQUEST['e4_ID'])){
+		// Find an item based on its ID
 		$searchQuery = 'SELECT ID FROM e4_data';
-		// Add in critera
 		if(isset($_REQUEST['e4_ID'])){
 			$searchQuery .= ' WHERE ID =' . $_REQUEST['e4_ID'];
+		}
+	} else {
+		if(isset($_REQUEST['e4_search'])){
+			// Perform a search of some type
+			$searchQuery = 'SELECT ID, MATCH(XML) AGAINST ("' . mysql_escape_string($_REQUEST['e4_search']) . '" IN BOOLEAN MODE) AS score FROM e4_data';
+			$searchQuery .= ' HAVING score > 0';
+		} else {
+			// Generic search that just goes looking for anything
+			$searchQuery = 'SELECT ID FROM e4_data';
 		}	
 	}
-	
-	// TODO: This is where the limiters and paging will go
-	
+
+	// Perform the search and 
 	$searchData = e4_db_query($searchQuery);
-	
 	while($searchRecord = mysql_fetch_assoc($searchData)){
 		e4_data_load($searchRecord['ID']);
 	}
+	
 }
 
 /*
@@ -269,10 +277,14 @@ function e4_pickContentTemplate(){
 	 * Look at the data array, and the query parameters, and select an appropriate template.
 	 */
 	global $data;
-	if (isset($_REQUEST['e4_ID'])){
+	if (isset($_REQUEST['e4_ID']) && $_REQUEST['e4_ID'] > 0){
 		return 'content.php';
 	} else {
-		return 'home.php';
+		if(sizeof($data['page']['body']['content']) == 0){
+			return '404.php';
+		} else {
+			return 'home.php';	
+		}
 	}
 }
 

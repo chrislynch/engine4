@@ -14,12 +14,19 @@ e4_data_search(array());
 
 /*
  * After the content has been loaded, we need to parse it and set up any page level data that is affected by it.
+ * If there is no content, we need to perform a redirect or do something else.
  */
 
-/*
- * SEO Meta Data - Scan all content items and aggregate the SEO data
- * If there is only one item, use its keywords
- */
+if(sizeof($data['page']['body']['content']) == 0){
+	/*
+	 * We did not find anything to show to the user
+	 * TODO: Handle 404 errors, redirect errors, etc. 
+	 */	
+} else {
+	/*
+	 * SEO Meta Data - Scan all content items and aggregate the SEO data
+	 * If there is only one item, use its keywords
+	 */
 	if(sizeof($data['page']['body']['content']) > 1){
 		$keywords = array();
 		foreach($data['page']['body']['content'] as $content){
@@ -63,5 +70,8 @@ e4_data_search(array());
 			break;
 		}
 	}
-
+	/*
+	 * SEO Meta Data Complete
+	 */
+}
 ?>

@@ -85,7 +85,7 @@ function e4_admin_save_formData(){
 	 * Parse through the submitted form data and build up a piece of content to save.
 	 * Pass this piece of content over to the save function.
 	 */
-	$content = array('ID'=>0,'name'=>'','type' => '');
+	$content = array('ID'=>0,'name'=>'','type' => '', 'url' => '');
 	
 	foreach($_POST as $key=>$value){
 		// We transform each posted value into a pointer into our $content
