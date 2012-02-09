@@ -19,19 +19,16 @@ mysql_select_db($data['configuration']['database']['schema'],$db);
  * At the end of everything, we always run the "view" action.
  */
 
-// e4_data_save(array('ID'=>1,'name'=>'Hello','type' => 'Content', 'body'=>'Hello there. How are you?'));
-// e4_data_save(array('ID'=>2,'name'=>'Goodbye','type' => 'Content','body'=>'OK, Bye-Bye then'));
-
-if(isset($_REQUEST['e4_action'])){
-	array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
-}
+e4_action_search();
 
 foreach($data['actions'] as $action){
 	include e4_findinclude('actions/' . $action);
 }
 
-foreach($data['renderers'] as $action){
-	include e4_findinclude('renderers/' . $action);
+e4_prepareTemplates();
+
+foreach($data['renderers'] as $renderer){
+	include e4_findinclude('renderers/' . $renderer);
 }
 
 /*
@@ -39,6 +36,12 @@ foreach($data['renderers'] as $action){
  * Close the database connection
  */
 mysql_close($db);
+
+/*
+ * The result of all our processing *could* be a redirect.
+ * Run the redirection function in case this is the case
+ */
+e4_redirect();
 
 /*
  * Output debugging information
@@ -56,30 +59,37 @@ if (isset($_REQUEST['debug']) || $data['configuration']['debug']){
  * Lots of actions have cause to do this, so the functions live here for all to share. 
  */
 
-function e4_data_load($ID){
+function e4_data_load($ID,$addToData = TRUE){
 	/*
 	 * Perform a simple load of a single datacontent ID
 	 */
 	global $db;
 	global $data;
 	
-	$dataquery = e4_db_query("SELECT ID,Name,Type,URL,Timestamp,Data,XML FROM e4_data WHERE ID = $ID");
+	$newdata = array();
+	$dataquery = e4_db_query("SELECT ID,Name,Type,URL,Timestamp,Data FROM e4_data WHERE ID = $ID");
+	
 	while($datarecord = mysql_fetch_assoc($dataquery)){
-		$data['page']['body']['content'][$datarecord['ID']] = array();
 		// These are the header items. Make sure we have these and that they have the right name & case.
-		$data['page']['body']['content'][$datarecord['ID']]['ID'] = $datarecord['ID'];
-		$data['page']['body']['content'][$datarecord['ID']]['name'] = $datarecord['Name'];
-		$data['page']['body']['content'][$datarecord['ID']]['type'] = $datarecord['Type'];
-		$data['page']['body']['content'][$datarecord['ID']]['url'] = $datarecord['URL'];
-		$data['page']['body']['content'][$datarecord['ID']]['timestamp'] = $datarecord['Timestamp'];
+		$newdata['ID'] = $datarecord['ID'];
+		$newdata['name'] = $datarecord['Name'];
+		$newdata['type'] = $datarecord['Type'];
+		$newdata['url'] = $datarecord['URL'];
+		$newdata['timestamp'] = $datarecord['Timestamp'];
 		// Everything is saved in [data]. Jump down in [data][data] to get what we need, if it exists somehow.  
-		$data['page']['body']['content'][$datarecord['ID']]['data'] = unserialize(base64_decode($datarecord['Data']));
-		if(isset($data['page']['body']['content'][$datarecord['ID']]['data']['data'])){
-			$data['page']['body']['content'][$datarecord['ID']]['data'] = $data['page']['body']['content'][$datarecord['ID']]['data']['data'];
+		$newdata['data'] = unserialize(base64_decode($datarecord['Data']));
+		if(isset($newdata['data']['data'])){
+			$newdata['data'] = $newdata['data']['data'];
 		}
-		// Unlikely that we will need XML, but keep it just in case 
-		$data['page']['body']['content'][$datarecord['ID']]['xml'] = $datarecord['XML'];
+		// Unlikely that we will need XML, so have removed it from the query above and in the line below.
+		// $data['page']['body']['content'][$datarecord['ID']]['xml'] = $datarecord['XML'];
+		
+		if ($addToData){
+			$data['page']['body']['content'][$datarecord['ID']] = $newdata;
+		}
 	}
+	
+	return $newdata;
 }
 
 function e4_data_save($saveData){
@@ -118,6 +128,25 @@ function e4_data_save($saveData){
 		return $saveID;	
 	}
 	
+}
+
+function e4_action_search(){
+	/*
+	 * Check the URL and other parameters to find our actions
+	 */
+	global $data;
+	
+	if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
+		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE type="Action" AND URL = "' . $_REQUEST['e4_url'] . '"');
+		if (mysql_num_rows($findURLQuery) == 1){
+			$newaction = e4_data_load(mysql_result($findURLQuery, 0),FALSE);
+			$_REQUEST['e4_action'] = $newaction['data']['e4']['action'];
+			$_REQUEST['e4_op'] = $newaction['data']['e4']['op'];
+		}
+	}
+	if(isset($_REQUEST['e4_action'])){
+		array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
+	}
 }
 
 function e4_data_search($criteria){
@@ -252,6 +281,41 @@ function e4_domaindir(){
  * TEMPLATE FUNCTIONS - CAN BE USED BY ANY RENDERER
  */
 
+function e4_prepareTemplates(){
+	/*
+	 * Scan through the various templates that have been offered and decide which to use in rendering.
+	 */
+	global $data;
+	
+	$templates = array();
+	if(isset($data['configuration']['renderers']['html']['templates'])){
+		$templates = $data['configuration']['renderers']['html']['templates'];
+	} else {
+		if (isset($data['configuration']['renderers']['all']['templates'])){
+			$templates = $data['configuration']['renderers']['all']['templates'];
+		}
+	}
+	
+	if (sizeof($templates) == 0){
+		$templates['head'] = 'head.php';
+	}
+	if (!isset($templates['head'])){
+		// Ensure we **always** have a header, even if someone forgets to put one in the templates array
+		$templates['head'] = 'head.php';
+	}
+	if (sizeof($templates) == 1){
+		// Ensure we **always** at least one body template.
+		// This is also the mechanism for default template selection
+		$templates[] = 'home.php';
+	}
+	
+	/*
+	 * Sort the templates, to allow for appending a pre-pending templates
+	 */
+	ksort($templates);
+	$data['configuration']['renderers']['templates'] = $templates;
+}
+
 function e4_findtemplate($template,$useBaseDir = FALSE){
 	/*
 	 * We need to find a template. Ideally we have a list of skins that we can use.
@@ -280,10 +344,57 @@ function e4_pickContentTemplate(){
 	if (isset($_REQUEST['e4_ID']) && $_REQUEST['e4_ID'] > 0){
 		return 'content.php';
 	} else {
-		if(sizeof($data['page']['body']['content']) == 0){
-			return '404.php';
-		} else {
-			return 'home.php';	
+		switch (sizeof($data['page']['body']['content'])){
+			case 0: return '404.php'; 		break;
+			case 1: return 'content.php';   break;
+			default: 
+				if (isset($_REQUEST['e4_search'])){
+					return 'search.php';
+				} else {
+					return 'home.php';
+				}
+		}
+	}
+}
+
+/*
+ * REDIRECTION AND ERROR HANDLING
+ */
+
+function e4_message($message,$messagetype = 'info'){
+	global $data;
+	if (!isset($data['page']['messages'])){ $data['page']['messages'] = array();}
+	$data['page']['messages'][] = array('message' => $message, 'type' => $messagetype); 
+}
+
+function e4_goto($redirectPath,$redirectMethod = 301){
+	/*
+	 * Call this function to tell engine4 to redirect you somewhere
+	 */
+	global $data;
+	// Store the redirect ready for it be picked up at the end of the main process
+	$data['redirect'] = array($redirectMethod => $redirectPath);
+	// Clear the actions, as we are not going to be doing anything more/else
+	// TODO: Is this always the case? What about logging, and that sort of thing? Does this all have to happen *before* view?
+	$data['actions'] = array();
+	// Clear the renderers, as we are not going to be displaying anything
+	$data['renderers'] = array();
+}
+
+function e4_redirect(){
+	global $data;
+	if(isset($data['redirect'])){
+		foreach($data['redirect'] as $method=>$location){
+			switch($method){
+				case 301:
+					header('HTTP/1.1 301 Moved Permanently');
+					break;
+				case 404:
+					header('HTTP/1.1 404 Not Found');
+					break;
+				default:
+			}
+			header('Location: '. $location);
 		}
 	}
 }
