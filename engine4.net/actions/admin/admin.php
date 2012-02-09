@@ -8,9 +8,7 @@
  * Start by deciding what page we are going to view as our primary page
  * and what page we are viewing as our sidebar
  */
-if(!isset($data['configuration']['renderers']['html'])){ $data['configuration']['renderers']['html'] = array();}
 $data['configuration']['renderers']['all']['templates'] = array();
-
 $data['configuration']['renderers']['all']['templates'][] = 'header.php';
 
 $data['configuration']['renderers']['html']['skins'] = array('admin','default');
@@ -61,6 +59,7 @@ if (isset($_REQUEST['e4_op'])){
 			}
 		case 'edit':
 			$data['configuration']['renderers']['all']['templates'][] = 'edit-data.php';
+			
 			break;
 		case 'create':
 			$data['configuration']['renderers']['all']['templates'][] = 'create-data.php';

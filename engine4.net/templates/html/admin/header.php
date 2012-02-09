@@ -1,3 +1,4 @@
+<div class="container">
 <div class="span-24 last" id="HeaderContainer">
 	<div id="Header">
 		System Administration

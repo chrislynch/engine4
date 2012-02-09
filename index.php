@@ -16,19 +16,25 @@ mysql_select_db($data['configuration']['database']['schema'],$db);
  * ACTIONS
  * We will perform a series of actions in order to load up the data array, ready for the render,
  * and to do any tasks that we are required to do.
- * At the end of everything, we always run the "view" action.
+ * At the end of everything, we always run the "view" action (or *do* we?)
  */
 
 e4_action_search();
 
 foreach($data['actions'] as $action){
-	include e4_findinclude('actions/' . $action);
+	include_once e4_findinclude('actions/' . $action);
+	// TODO: Call a function, rather than having the code run automatically.
 }
 
-e4_prepareTemplates();
-
 foreach($data['renderers'] as $renderer){
-	include e4_findinclude('renderers/' . $renderer);
+	include_once e4_findinclude('renderers/' . $renderer);
+	e4_trace('Looking for function ' . e4_getGoFunction($renderer,'renderer'));
+	if (function_exists(e4_getGoFunction($renderer,'renderer'))){
+		e4_trace('Found function ' . e4_getGoFunction($renderer,'renderer'));
+		call_user_func(e4_getGoFunction($renderer,'renderer'),e4_prepareTemplates());	
+	} else {
+		e4_trace('Could not find function ' . e4_getGoFunction($renderer,'renderer'));
+	}
 }
 
 /*
@@ -161,7 +167,7 @@ function e4_data_search($criteria){
 	 * Start with a URL lookup, if a URL has been specified
 	 */
 	if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
-		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE  URL = "' . $_REQUEST['e4_url'] . '"');
+		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['e4_url'] . '"');
 		if (mysql_num_rows($findURLQuery) == 1){
 			$_REQUEST['e4_ID'] = mysql_result($findURLQuery, 0);
 		} else {
@@ -241,6 +247,15 @@ function e4_trace($message){
 	$data['debug']['trace'][] = date("d/m/y : H:i:s", time()) . ' : ' . $message;
 }
 
+function e4_getGoFunction($include,$type){
+	/*
+	 * Work out what the "go" function of the included file is.
+	 */
+	$include = str_ireplace('.php', '', $include);
+	$include = str_ireplace('/', '_', $include);
+	return 'e4_' . $type . '_' . $include . '_go';
+}
+
 function e4_findinclude($filepath){
 	/*
 	 * This function locates a file to be included.
@@ -297,13 +312,18 @@ function e4_prepareTemplates(){
 	}
 	
 	if (sizeof($templates) == 0){
-		$templates['head'] = 'head.php';
+		$templates['header'] = 'head.php';
+		$templates['footer'] = 'footer.php';
 	}
-	if (!isset($templates['head'])){
+	if (!isset($templates['header'])){
 		// Ensure we **always** have a header, even if someone forgets to put one in the templates array
-		$templates['head'] = 'head.php';
+		$templates['header'] = 'header.php';
 	}
-	if (sizeof($templates) == 1){
+	if (!isset($templates['footer'])){
+		// Ensure we **always** have a header, even if someone forgets to put one in the templates array
+		$templates['footer'] = 'footer.php';
+	}
+	if (sizeof($templates) == 2){
 		// Ensure we **always** at least one body template.
 		// This is also the mechanism for default template selection
 		$templates[] = 'home.php';
@@ -313,7 +333,9 @@ function e4_prepareTemplates(){
 	 * Sort the templates, to allow for appending a pre-pending templates
 	 */
 	ksort($templates);
-	$data['configuration']['renderers']['templates'] = $templates;
+	// $data['configuration']['renderers']['templates'] = $templates;
+	
+	return $templates;
 }
 
 function e4_findtemplate($template,$useBaseDir = FALSE){
