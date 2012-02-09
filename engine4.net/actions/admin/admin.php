@@ -9,14 +9,7 @@
  * and what page we are viewing as our sidebar
  */
 if(!isset($data['configuration']['renderers']['html'])){ $data['configuration']['renderers']['html'] = array();}
-
-$data['configuration']['renderers']['html']['body-header'] = 'templates/html/admin/header.php';
-$data['configuration']['renderers']['html']['sidebar-left'] = 'templates/html/admin/sidebar-left.php';
-$data['configuration']['renderers']['html']['body-content-header'] = 'templates/html/default/body-top.php';
-$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/home.php';
-$data['configuration']['renderers']['html']['body-content-footer'] = 'templates/html/default/body-bottom.php';
-$data['configuration']['renderers']['html']['sidebar-right'] = 'templates/html/admin/sidebar-right.php';
-$data['configuration']['renderers']['html']['body-footer'] = 'templates/html/admin/footer.php';
+$data['configuration']['renderers']['html']['skins'] = array('admin','default');
 
 $data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/admin/benevolentdictator/BenevolentDictator.css';
 
@@ -62,14 +55,14 @@ if (isset($_REQUEST['e4_op'])){
 				e4_data_load($savedID);
 			}
 		case 'edit':
-			$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/edit-data.php';
+			$data['configuration']['renderers']['html']['body-content'] = 'edit-data.php';
 			break;
 		case 'create':
-			$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/create-data.php';
+			$data['configuration']['renderers']['html']['body-content'] = 'create-data.php';
 			break;
 		
 		case 'search':
-			$data['configuration']['renderers']['html']['body-content'] = 'templates/html/admin/search.php';
+			$data['configuration']['renderers']['html']['body-content'] = 'search.php';
 			break;
 	}
 }

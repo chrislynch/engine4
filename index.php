@@ -220,7 +220,8 @@ function e4_findinclude($filepath){
 }
 
 function e4_domaindir(){
-	$return = '/' . $_SERVER['SERVER_NAME'] . '/';
+	// $return = '/' . $_SERVER['SERVER_NAME'] . '/';
+	$return = $_SERVER['SERVER_NAME'] . '/';
 	return $return;
 }
 
