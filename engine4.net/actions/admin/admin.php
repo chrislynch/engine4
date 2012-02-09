@@ -9,6 +9,10 @@
  * and what page we are viewing as our sidebar
  */
 if(!isset($data['configuration']['renderers']['html'])){ $data['configuration']['renderers']['html'] = array();}
+$data['configuration']['renderers']['html']['templates'] = array();
+
+$data['configuration']['renderers']['html']['templates'][] = 'header.php';
+
 $data['configuration']['renderers']['html']['skins'] = array('admin','default');
 
 $data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/admin/benevolentdictator/BenevolentDictator.css';
@@ -55,18 +59,23 @@ if (isset($_REQUEST['e4_op'])){
 				e4_data_load($savedID);
 			}
 		case 'edit':
-			$data['configuration']['renderers']['html']['body-content'] = 'edit-data.php';
+			$data['configuration']['renderers']['html']['templates'][] = 'edit-data.php';
 			break;
 		case 'create':
-			$data['configuration']['renderers']['html']['body-content'] = 'create-data.php';
+			$data['configuration']['renderers']['html']['templates'][] = 'create-data.php';
 			break;
 		
 		case 'search':
-			$data['configuration']['renderers']['html']['body-content'] = 'search.php';
+			$data['configuration']['renderers']['html']['templates'][] = 'search.php';
 			break;
+		
+			
 	}
+} else {
+			$data['configuration']['renderers']['html']['templates'][] = 'home.php';
 }
 
+$data['configuration']['renderers']['html']['templates'][] = 'sidebar.php';
 
 /*
  * FORM SAVE FUNCTIONS - Reads form data and saves it to the e4_data table using functions from index.php

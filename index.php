@@ -44,7 +44,8 @@ mysql_close($db);
  * Output debugging information
  */
 if (isset($_REQUEST['debug']) || $data['configuration']['debug']){
-	print '<hr><pre>' . htmlentities(print_r($data,TRUE)) . '</pre>';	
+	print '<hr><pre>' . htmlentities(print_r($data,TRUE)) . '</pre>';
+	print '<hr><pre>' . htmlentities(print_r($_REQUEST,TRUE)) . '</pre>';	
 }
 
 // 
@@ -122,6 +123,16 @@ function e4_data_search($criteria){
 	 * TODO: This might be the first function that is going to get long enough to be unweildy in this file - think on!
 	 */
 	global $db;
+	
+	/*
+	 * Start with a URL lookup, if a URL has been specified
+	 */
+	if (isset($_REQUEST['e4_URL'])){
+		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['url'] . '"');
+		if (mysql_num_rows($findURLQuery) == 1){
+			$_REQUEST['e4_ID'] = mysql_result($findURLQuery, 0);
+		}
+	}
 	
 	if(isset($_REQUEST['e4_search'])){
 		$searchQuery = 'SELECT ID, MATCH(XML) AGAINST ("' . mysql_escape_string($_REQUEST['e4_search']) . '" IN BOOLEAN MODE) AS score FROM e4_data';

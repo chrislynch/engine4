@@ -61,3 +61,4 @@
 </div>
 			
 <div class="span-24 last" id="HeaderEnd">&nbsp;</div>
+<div class="clear"></div>
