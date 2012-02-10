@@ -23,8 +23,8 @@
 		<meta name="robots" content="index,follow" />
 		
 		<!-- Blueprint CSS http://www.blueprintcss.org -->
-		<link rel="stylesheet" href="engine4.net/lib/blueprint/src/grid.css" type="text/css" media="screen, projection">
-		<link rel="stylesheet" href="engine4.net/lib/blueprint/src/typography.css" type="text/css" media="screen, projection">
+		<link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/grid.css" type="text/css" media="screen, projection">
+		<link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/typography.css" type="text/css" media="screen, projection">
 		
 		<!--[if lt IE 8]>
 			<link rel="stylesheet" href="engine4.net/lib/blueprint/ie.css" type="text/css" media="screen, projection">
@@ -34,7 +34,7 @@
 		<?php 
 			if (isset($data['page']['head']['stylesheet'])){
 				foreach($data['page']['head']['stylesheet'] as $css){
-					print '<link rel="stylesheet" href="' . $css . '" type="text/css" media="screen, projection">';
+					print '<link rel="stylesheet" href="@@configuration.basedir@@' . $css . '" type="text/css" media="screen, projection">';
 					
 				}
 			}
@@ -49,7 +49,7 @@
 		<?php 
 			if (isset($data['page']['head']['javascript'])){
 				foreach($data['page']['head']['javascript'] as $jquery){
-					print '<script type="text/javascript" src="' . $jquery . '"></script>';
+					print '<script type="text/javascript" src="@@configuration.basedir@@' . $jquery . '"></script>';
 				}
 			}
 		?>
@@ -72,7 +72,8 @@
 			})();
 		</script>
 	</head>
-<body>
+<body class="container">
+	<div class="span-24 last">
 	<?php 
 		if(sizeof(@$data['page']['messages']) > 0){
 			foreach($data['page']['messages'] as $message){
@@ -80,3 +81,4 @@
 			}
 		}
 	?>
+	</div>	

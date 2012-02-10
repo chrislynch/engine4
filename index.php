@@ -26,6 +26,11 @@ foreach($data['actions'] as $action){
 	// TODO: Call a function, rather than having the code run automatically.
 }
 
+/*
+ * RENDERERS
+ * Renders turn the results of actions in outputs. 
+ * The standard renderer is HTML, but others could be built to server other platforms.
+ */
 foreach($data['renderers'] as $renderer){
 	include_once e4_findinclude('renderers/' . $renderer);
 	e4_trace('Looking for function ' . e4_getGoFunction($renderer,'renderer'));
@@ -312,7 +317,7 @@ function e4_prepareTemplates(){
 	}
 	
 	if (sizeof($templates) == 0){
-		$templates['header'] = 'head.php';
+		$templates['header'] = 'header.php';
 		$templates['footer'] = 'footer.php';
 	}
 	if (!isset($templates['header'])){

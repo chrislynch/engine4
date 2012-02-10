@@ -9,19 +9,13 @@
  * and what page we are viewing as our sidebar
  */
 $data['configuration']['renderers']['all']['templates'] = array();
-$data['configuration']['renderers']['all']['templates'][] = 'header.php';
+$data['configuration']['renderers']['all']['templates'][] = 'menu.php';
 
 $data['configuration']['renderers']['html']['skins'] = array('admin','default');
 
 $data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/admin/benevolentdictator/BenevolentDictator.css';
 $data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/admin/css/engine4.css';
 
-$data['page']['head']['scripting'][] = '$(function() {
-											$( "#accordion" ).accordion({
-												autoHeight: false,
-												navigation: true
-												});
-										});';
 $data['page']['head']['scripting'][] =
 	'var currentMenuItem = "";
 		  $(document).ready(function() {
@@ -39,7 +33,7 @@ $data['page']['head']['scripting'][] =
 				currentMenuItem = contentId;
 				$("#MenuContentContainer").slideDown();
 			} else {
-				$("#MenuContentContainer").slideUp();
+				// $("#MenuContentContainer").slideUp();
 			} 
 		   }
           });

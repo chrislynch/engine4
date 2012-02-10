@@ -22,7 +22,7 @@ function e4_renderer_html_html_go($templates){
 	ob_start();
 		include e4_findtemplate($templates['header']);
 		foreach($templates as $key=>$bodytemplate){
-			if ($key !== 'head'){
+			if ($key !== 'header' AND $key !== 'footer'){
 				if($bodytemplate == '?'){
 					$bodytemplate = e4_pickContentTemplate();	
 				}
