@@ -63,3 +63,12 @@
 			
 <div class="span-24 last" id="HeaderEnd">&nbsp;</div>
 <div class="clear"></div>
+<?php 
+	if (isset($data['messages'])){
+		foreach($data['messages'] as $message){
+			print '<div class="' . $message['type'] . 'Message">';
+			print 'Message: ' . $message['type'] . ': ' . $message['message'];
+			print '</div>';
+		}	
+	}
+?>

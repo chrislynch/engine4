@@ -135,6 +135,8 @@ function e4_data_save($saveData){
 		e4_db_query($saveQuery); 
 		// If this was an insert using the next available ID, return that ID rather than the ID given
 		if ($saveID == 0){ $saveID = mysql_insert_id($db);}
+		// Display a message
+		e4_message('Saved record ' . $saveID,'Success');
 		// Return the ID of the saved record.
 		return $saveID;	
 	}
