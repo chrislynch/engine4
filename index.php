@@ -27,39 +27,39 @@ foreach($data['actions'] as $action){
 }
 
 /*
- * RENDERERS
- * Renders turn the results of actions in outputs. 
- * The standard renderer is HTML, but others could be built to server other platforms.
- */
-foreach($data['renderers'] as $renderer){
-	include_once e4_findinclude('renderers/' . $renderer);
-	e4_trace('Looking for function ' . e4_getGoFunction($renderer,'renderer'));
-	if (function_exists(e4_getGoFunction($renderer,'renderer'))){
-		e4_trace('Found function ' . e4_getGoFunction($renderer,'renderer'));
-		call_user_func(e4_getGoFunction($renderer,'renderer'),e4_prepareTemplates());	
-	} else {
-		e4_trace('Could not find function ' . e4_getGoFunction($renderer,'renderer'));
-	}
-}
-
-/*
- * Time to shut down now
- * Close the database connection
+ * Only actions can re/write the DB. Close the connection now.
  */
 mysql_close($db);
 
 /*
  * The result of all our processing *could* be a redirect.
- * Run the redirection function in case this is the case
+ * Run the redirection function in case this is the case.
+ * If it returns false, there is no redirect and we need OUTPUT.
  */
-e4_redirect();
+if (! e4_redirect()){
+	/*
+	 * RENDERERS
+	 * Renders turn the results of actions in outputs. 
+	 * The standard renderer is HTML, but others could be built to server other platforms.
+	 */
+	foreach($data['renderers'] as $renderer){
+		include_once e4_findinclude('renderers/' . $renderer);
+		e4_trace('Looking for function ' . e4_getGoFunction($renderer,'renderer'));
+		if (function_exists(e4_getGoFunction($renderer,'renderer'))){
+			e4_trace('Found function ' . e4_getGoFunction($renderer,'renderer'));
+			call_user_func(e4_getGoFunction($renderer,'renderer'),e4_prepareTemplates());	
+		} else {
+			e4_trace('Could not find function ' . e4_getGoFunction($renderer,'renderer'));
+		}
+	}
 
-/*
- * Output debugging information
- */
-if (isset($_REQUEST['debug']) || $data['configuration']['debug']){
-	print '<hr><pre>' . htmlentities(print_r($data,TRUE)) . '</pre>';
-	print '<hr><pre>' . htmlentities(print_r($_REQUEST,TRUE)) . '</pre>';	
+	/*
+	 * Output debugging information
+	 */
+	if (isset($_REQUEST['debug']) || $data['configuration']['debug']){
+		print '<hr><pre>' . htmlentities(print_r($data,TRUE)) . '</pre>';
+		print '<hr><pre>' . htmlentities(print_r($_REQUEST,TRUE)) . '</pre>';	
+	}
 }
 
 // 
@@ -158,6 +158,11 @@ function e4_action_search(){
 	if(isset($_REQUEST['e4_action'])){
 		array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
 	}
+	
+	// Once we have picked up the actions to run *before* view, we need to enforce mandatory pre-cursor actions
+	// The obvious one at the moment is security. 
+	// TODO: This is where any "modules", like eCommerce, would be loaded. 
+	array_unshift($data['actions'],'security/security.php');
 }
 
 function e4_data_search($criteria){
@@ -410,7 +415,10 @@ function e4_goto($redirectPath,$redirectMethod = 301){
 
 function e4_redirect(){
 	global $data;
+	$return = FALSE;
+	
 	if(isset($data['redirect'])){
+		$return = TRUE;
 		foreach($data['redirect'] as $method=>$location){
 			switch($method){
 				case 301:
@@ -424,6 +432,8 @@ function e4_redirect(){
 			header('Location: '. $location);
 		}
 	}
+	
+	return $return;
 }
 
 ?>
