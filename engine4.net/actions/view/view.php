@@ -20,23 +20,24 @@ if (sizeof(@$data['page']['content'] == 0)){
  * Now that we know what is happening in terms of data, we can decide what templates to use.
  * TODO: We need a way to tell the system not to do this, if a previous action has already selected a template
  */
-
-if (isset($_REQUEST['e4_ID']) && $_REQUEST['e4_ID'] > 0){
-	e4_trace('Action VIEW selected template ? for single item');
-	$data['configuration']['renderers']['all']['templates'][0] = '?';
-} else {
-	switch (sizeof($data['page']['body']['content'])){
-		case 0: $data['configuration']['renderers']['all']['templates'][0] = '404.php'; e4_trace('Action VIEW selected template 404 for no items'); break;
-		case 1: $data['configuration']['renderers']['all']['templates'][0] = '?'; e4_trace('Action VIEW selected template ? for single item'); break;
-		default: 
-			if (isset($_REQUEST['e4_search'])){
-				include_once e4_findinclude('actions/view/viewtype/search.php');
-				e4_trace('Action VIEW included template search.php for multiple items');
-			} else {
-				include_once e4_findinclude('actions/view/viewtype/home.php');
-				e4_trace('Action VIEW included action home.php for home page');
-			}
-	}
+if (!isset($data['configuration']['renderers']['all']['templates'][0])){
+	if (isset($_REQUEST['e4_ID']) && $_REQUEST['e4_ID'] > 0){
+		e4_trace('Action VIEW selected template ? for single item');
+		$data['configuration']['renderers']['all']['templates'][0] = '?';	
+	} else {
+		switch (sizeof($data['page']['body']['content'])){
+			case 0: $data['configuration']['renderers']['all']['templates'][0] = '404.php'; e4_trace('Action VIEW selected template 404 for no items'); break;
+			case 1: $data['configuration']['renderers']['all']['templates'][0] = '?'; e4_trace('Action VIEW selected template ? for single item'); break;
+			default: 
+				if (isset($_REQUEST['e4_search'])){
+					include_once e4_findinclude('actions/view/viewtype/search.php');
+					e4_trace('Action VIEW included template search.php for multiple items');
+				} else {
+					include_once e4_findinclude('actions/view/viewtype/home.php');
+					e4_trace('Action VIEW included action home.php for home page');
+				}
+		}
+	}	
 }
 
 /*

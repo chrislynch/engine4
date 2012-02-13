@@ -8,8 +8,7 @@
  * Start by deciding what page we are going to view as our primary page
  * and what page we are viewing as our sidebar
  */
-$data['configuration']['renderers']['all']['templates'] = array();
-$data['configuration']['renderers']['all']['templates'][] = 'menu.php';
+$data['configuration']['renderers']['all']['templates'][0] = 'menu.php';
 
 $data['configuration']['renderers']['html']['skins'] = array('admin','default');
 
@@ -52,24 +51,24 @@ if (isset($_REQUEST['e4_op'])){
 				e4_data_load($savedID);
 			}
 		case 'edit':
-			$data['configuration']['renderers']['all']['templates'][] = 'edit-data.php';
+			$data['configuration']['renderers']['all']['templates'][1] = 'edit-data.php';
 			
 			break;
 		case 'create':
-			$data['configuration']['renderers']['all']['templates'][] = 'create-data.php';
+			$data['configuration']['renderers']['all']['templates'][1] = 'create-data.php';
 			break;
 		
 		case 'search':
-			$data['configuration']['renderers']['all']['templates'][] = 'search.php';
+			$data['configuration']['renderers']['all']['templates'][1] = 'search.php';
 			break;
 		
 			
 	}
 } else {
-			$data['configuration']['renderers']['all']['templates'][] = 'home.php';
+			$data['configuration']['renderers']['all']['templates'][1] = 'home.php';
 }
 
-$data['configuration']['renderers']['all']['templates'][] = 'sidebar.php';
+$data['configuration']['renderers']['all']['templates'][2] = 'sidebar.php';
 
 /*
  * FORM SAVE FUNCTIONS - Reads form data and saves it to the e4_data table using functions from index.php

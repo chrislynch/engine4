@@ -52,14 +52,12 @@ function e4_renderer_html_html_go($templates){
 	ob_end_clean();
 	
 	/*
-	 * Perform search and replace for shortcodes (like a Warp widget, but simpler)
+	 * Perform search and replace for shortcodes (like a Warp widget, but simpler) that are global across the template.
 	 */
 	$output = str_ireplace('@@configuration.basedir@@', '/' . $data['configuration']['basedir'], $output);
 	
 	print $output;	
 }
-
-
 
 /*
  * RENDERER FUNCTIONS
