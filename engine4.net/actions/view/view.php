@@ -9,8 +9,35 @@
  * All views and actions should start by loading up their defaults, if they are not already there.
  */
 
-// TODO: This should not load anything if there has already been data loaded.
-e4_data_search(array());
+/*
+ * If another action has not already loaded up content, we need to load it up 
+ */
+if (sizeof(@$data['page']['content'] == 0)){
+	e4_data_search(array());	
+}
+
+/*
+ * Now that we know what is happening in terms of data, we can decide what templates to use.
+ * TODO: We need a way to tell the system not to do this, if a previous action has already selected a template
+ */
+
+if (isset($_REQUEST['e4_ID']) && $_REQUEST['e4_ID'] > 0){
+	e4_trace('Action VIEW selected template ? for single item');
+	$data['configuration']['renderers']['all']['templates'][0] = '?';
+} else {
+	switch (sizeof($data['page']['body']['content'])){
+		case 0: $data['configuration']['renderers']['all']['templates'][0] = '404.php'; e4_trace('Action VIEW selected template 404 for no items'); break;
+		case 1: $data['configuration']['renderers']['all']['templates'][0] = '?'; e4_trace('Action VIEW selected template ? for single item'); break;
+		default: 
+			if (isset($_REQUEST['e4_search'])){
+				include_once e4_findinclude('actions/view/viewtype/search.php');
+				e4_trace('Action VIEW included template search.php for multiple items');
+			} else {
+				include_once e4_findinclude('actions/view/viewtype/home.php');
+				e4_trace('Action VIEW included action home.php for home page');
+			}
+	}
+}
 
 /*
  * After the content has been loaded, we need to parse it and set up any page level data that is affected by it.

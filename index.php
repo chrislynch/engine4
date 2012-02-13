@@ -370,25 +370,12 @@ function e4_findtemplate($template,$useBaseDir = FALSE){
 	return $return;
 }
 
-function e4_pickContentTemplate(){
+function e4_pickContentTemplate($content){
 	/*
-	 * Look at the data array, and the query parameters, and select an appropriate template.
+	 * Look at the piece of content array, and maybe the query parameters, and select an appropriate template for this piece of content
 	 */
-	global $data;
-	if (isset($_REQUEST['e4_ID']) && $_REQUEST['e4_ID'] > 0){
-		return 'content.php';
-	} else {
-		switch (sizeof($data['page']['body']['content'])){
-			case 0: return '404.php'; 		break;
-			case 1: return 'content.php';   break;
-			default: 
-				if (isset($_REQUEST['e4_search'])){
-					return 'search.php';
-				} else {
-					return 'home.php';
-				}
-		}
-	}
+	return 'content.php';
+	// return $content['type'] . '.php';	
 }
 
 /*
