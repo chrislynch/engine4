@@ -374,7 +374,19 @@ function e4_pickContentTemplate($content){
 	/*
 	 * Look at the piece of content array, and maybe the query parameters, and select an appropriate template for this piece of content
 	 */
-	return 'content.php';
+	if(is_array($content) && isset($content['type'])){
+		$template = e4_findtemplate('content-types/' . strtolower($content['type']) . '.php');
+		if ($template !== 'engine4.net/void.php'){
+			$template = explode('/',$template);
+			$templateReturn = array_pop($template);
+			$templateReturn = array_pop($template) . '/' . $templateReturn;
+			$template = $templateReturn;
+		}
+	}
+	if ($template == 'engine4.net/void.php'){
+		$template = 'content.php';
+	}
+	return $template;
 	// return $content['type'] . '.php';	
 }
 
