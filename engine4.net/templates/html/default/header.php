@@ -73,12 +73,3 @@
 		</script>
 	</head>
 <body class="container">
-	<div class="span-24 last">
-	<?php 
-		if(sizeof(@$data['page']['messages']) > 0){
-			foreach($data['page']['messages'] as $message){
-				print $message['message'];
-			}
-		}
-	?>
-	</div>	
