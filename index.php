@@ -23,7 +23,14 @@ e4_action_search();
 
 foreach($data['actions'] as $action){
 	include_once e4_findinclude('actions/' . $action);
-	// TODO: Call a function, rather than having the code run automatically.
+	e4_trace('Looking for function ' . e4_getGoFunction($action,'action'));
+	if (function_exists(e4_getGoFunction($action,'action'))){
+		e4_trace('Found function ' . e4_getGoFunction($action,'action'));
+		$parameters = array( &$data );
+		call_user_func_array(e4_getGoFunction($action,'action'),$parameters);
+	} else {
+		e4_trace('Could not find function ' . e4_getGoFunction($action,'action'));
+	}
 }
 
 /*
@@ -69,6 +76,14 @@ if (! e4_redirect()){
  * These functions load up content and data for the system to use.
  * Lots of actions have cause to do this, so the functions live here for all to share. 
  */
+
+function e4_data_new(){
+	/*
+	 * Create a new data item array and return it for use.
+	 */
+	$newitem = array('ID'=>0,'name'=>'','type' => '', 'url' => '', 'is_content' => 1, 'status' => 1);
+	return $newitem;
+}
 
 function e4_data_load($ID,$addToData = TRUE){
 	/*
@@ -124,13 +139,17 @@ function e4_data_save($saveData){
 							 Type = "' . $saveData['type'] . '",
 							 URL = "' . $saveData['url'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-							 XML  = "' . $xmlData . '"
+							 XML  = "' . $xmlData . '",
+							 is_content = ' . $saveData['is_content'] . ',
+							 status = ' . $saveData['status'] . '
 					  ON DUPLICATE KEY UPDATE 
 					  		 Name = "' . $saveData['name'] . '",
 							 Type = "' . $saveData['type'] . '",
 							 URL = "' . $saveData['url'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-							 XML  = "' . $xmlData . '"';
+							 XML  = "' . $xmlData . '",
+							 is_content = ' . $saveData['is_content'] . ',
+							 status = ' . $saveData['status'];
 		// Run the query through our traced query function
 		e4_db_query($saveQuery); 
 		// If this was an insert using the next available ID, return that ID rather than the ID given
@@ -167,9 +186,9 @@ function e4_action_search(){
 	array_unshift($data['actions'],'security/security.php');
 }
 
-function e4_data_search($criteria){
+function e4_data_search($criteria,$addToData = TRUE,$onlyContent=TRUE,$admin=FALSE){
 	/*
-	 * Perform a search on teh e4_data.
+	 * Perform a search on the e4_data.
 	 * TODO: This might be the first function that is going to get long enough to be unweildy in this file - think on!
 	 */
 	global $db;
@@ -179,7 +198,7 @@ function e4_data_search($criteria){
 	 * Start with a URL lookup, if a URL has been specified
 	 */
 	if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
-		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['e4_url'] . '"');
+		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['e4_url'] . '" AND status <> 0');
 		if (mysql_num_rows($findURLQuery) == 1){
 			$_REQUEST['e4_ID'] = mysql_result($findURLQuery, 0);
 		} else {
@@ -187,27 +206,56 @@ function e4_data_search($criteria){
 		}
 	}
 	
+	/*
+	 * Now build the real search query
+	 */
+	$searchQuery = '';
+	$searchQueryCriteria = '';
+	$searchQueryHaving = '';
+	$searchQueryOrderBy = '';
+	
 	if(isset($_REQUEST['e4_ID'])){
 		// Find an item based on its ID
 		$searchQuery = 'SELECT ID FROM e4_data';
 		if(isset($_REQUEST['e4_ID'])){
-			$searchQuery .= ' WHERE ID =' . $_REQUEST['e4_ID'];
+			$searchQueryCriteria = 'ID =' . $_REQUEST['e4_ID'];
 		}
 	} else {
 		if(isset($_REQUEST['e4_search'])){
 			// Perform a search of some type
 			$searchQuery = 'SELECT ID, MATCH(XML) AGAINST ("' . mysql_escape_string($_REQUEST['e4_search']) . '" IN BOOLEAN MODE) AS score FROM e4_data';
-			$searchQuery .= ' HAVING score > 0';
+			$searchQueryHaving = 'score > 0';
 		} else {
 			// Generic search that just goes looking for anything
 			$searchQuery = 'SELECT ID FROM e4_data';
 		}	
 	}
 
-	// Perform the search and 
+	// We build in the criteria afterwards to avoid duplication of code.
+	// Search query needs to be extended for non-admin users/screens
+	if (!$admin){
+		if (strlen($searchQueryCriteria) > 0) {
+			$searchQueryCriteria = ' (' . $searchQueryCriteria . ') AND '; 
+		}
+		$searchQueryCriteria .= ' status <> 0 ';
+	}
+	if (strlen($searchQueryCriteria) > 0){
+		$searchQuery .= ' WHERE ' . $searchQueryCriteria;	
+	}
+	if (strlen($searchQueryHaving) > 0){
+		$searchQuery .= ' HAVING ' . $searchQueryHaving;	
+	}
+	if (strlen($searchQueryOrderBy) > 0){
+		$searchQuery .= ' ORDER BY ' . $searchQueryOrderBy;	
+	}
+	
+	// Perform the ACTUAL SEARCH!  
 	$searchData = e4_db_query($searchQuery);
+	
+	// Load up the items that we searched for, adding them to the global data if necessary.
+	$return = array();
 	while($searchRecord = mysql_fetch_assoc($searchData)){
-		e4_data_load($searchRecord['ID']);
+		$return[$searchRecord['ID']] = e4_data_load($searchRecord['ID'],$addToData);
 	}
 	
 }
@@ -296,6 +344,14 @@ function e4_findinclude($filepath){
 	}
 	// $return = '/' . $data['configuration']['basedir'] . $return;
 	return $return;
+}
+
+/*
+ * DOMAIN CONTROLS
+ */
+
+function e4_domain(){
+	return $_SERVER['SERVER_NAME'];
 }
 
 function e4_domaindir(){

@@ -4,6 +4,7 @@
 		System Administration
 		<div id="HeaderUserMenu">
 			Welcome back Christopher<br>
+			<a href="@@configuration.basedir@@">Return to website</a>
 		</div>
 	</div>
 </div>
