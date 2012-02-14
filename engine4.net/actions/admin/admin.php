@@ -51,15 +51,29 @@ function e4_action_admin_admin_go(&$data){
 				if ($savedID !== $_REQUEST['e4_ID']){
 					e4_data_load($savedID);
 				}
+				
 			case 'edit':
 				$data['configuration']['renderers']['all']['templates'][1] = 'edit-data.php';
-				
 				break;
+				
 			case 'create':
-				$data['configuration']['renderers']['all']['templates'][1] = 'create-data.php';
+				if(isset($_REQUEST['e4_adminType'])){
+					$content = e4_data_new();
+					$content['type'] = $_REQUEST['e4_adminType'];
+					$data['page']['body']['content'][] = $content;
+					$data['configuration']['renderers']['all']['templates'][1] = 'edit-data.php';
+				} else {
+					$data['configuration']['renderers']['all']['templates'][1] = 'create-data.php';	
+				}
+				
 				break;
 			
 			case 'search':
+				if(isset($_REQUEST['e4_adminType'])){
+					e4_data_search(array('Type'=>$_REQUEST['e4_adminType']),TRUE,FALSE);
+				} else {
+					e4_data_search();
+				}
 				$data['configuration']['renderers']['all']['templates'][1] = 'search.php';
 				break;
 			
