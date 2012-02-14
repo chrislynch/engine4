@@ -19,7 +19,7 @@ function e4_action_view_view_go(&$data){
 	
 	/*
 	 * Now that we know what is happening in terms of data, we can decide what templates to use.
-	 * TODO: We need a way to tell the system not to do this, if a previous action has already selected a template
+	 * @todo We need a way to tell the system not to do this, if a previous action has already selected a template
 	 */
 	if (!isset($data['configuration']['renderers']['all']['templates'][0])){
 		if (isset($_REQUEST['e4_ID']) && $_REQUEST['e4_ID'] > 0){
@@ -49,7 +49,7 @@ function e4_action_view_view_go(&$data){
 	if(sizeof($data['page']['body']['content']) == 0){
 		/*
 		 * We did not find anything to show to the user
-		 * TODO: Handle 404 errors, redirect errors, etc. 
+		 * @todo Handle 404 errors, redirect errors, etc. 
 		 */	
 	} else {
 		/*

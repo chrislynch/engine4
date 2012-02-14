@@ -7,14 +7,21 @@
 			<tr><td>Name</td><td><input name="e4_form_content_name" type="text" size="60" value="<?php print $content['name'];?>"></td></tr>
 			<tr><td>Type</td><td><?php print $content['type'];?><input name="e4_form_content_type" type="hidden" size="60" value="<?php print $content['type'];?>"></td></tr>
 			<?php
-				include e4_findtemplate('content-types/' .  strtolower($content['type']) . '.php'); 
+				// @todo: We need to understand the difference between content types and non-content types
+				include e4_findtemplate('forms/data-types/' .  strtolower($content['type']) . '.php'); 
 				switch ($content['type']){
 					case 'Content':
-						include e4_findtemplate('content-types/seo.php');
+						include e4_findtemplate('forms/data-types/seo.php');
 						break;
 				}
 			?>
 			<tr><td class="nobg" colspan="2"><h2 class="SectionHeading">Save and Continue</h2></td></tr>
+			<tr><td>Item Status:</td><td>
+										<select name="e4_form_content_status">
+											<option value="0" <?php if($content['status'] == 0) { print 'selected="selected"; }'?>>Unpublished/Disabled</option>
+											<option value="1" <?php if($content['status'] == 0) { print 'selected="selected"; }'?>>Published/Active</option>
+										</select>
+									</td></tr>
 			<tr><td></td><td><input name="save" type="submit" value="Save Content"></td></tr>					
 		</table>
 	</form>

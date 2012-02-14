@@ -87,7 +87,7 @@ function e4_admin_save_formData(){
 	foreach($_POST as $key=>$value){
 		// We transform each posted value into a pointer into our $content
 		// We do this by breaking down the key string and building the array structure in $content based on it.
-		// At the moment, we only support three levels. TODO: More levels to follow?
+		// At the moment, we only support three levels. @todo More levels to follow?
 		if(strstr($key,'e4_form_content_')){
 			$key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
 			$key=explode('_',$key);								// Explode the key at the underscores

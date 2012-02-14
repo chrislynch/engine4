@@ -17,7 +17,8 @@ function e4_action_security_security_go(&$data){
 	}
 
 	/*
- 	* Now that we know who the user is, ascertain if this user can access the page that they are looking at.
+ 	* @todo Now that we know who the current user is, ascertain if this user can access the page that they are looking at.
+ 	* 
  	*/
 	
 }

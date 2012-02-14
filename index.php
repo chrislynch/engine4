@@ -93,7 +93,7 @@ function e4_data_load($ID,$addToData = TRUE){
 	global $data;
 	
 	$newdata = array();
-	$dataquery = e4_db_query("SELECT ID,Name,Type,URL,Timestamp,Data FROM e4_data WHERE ID = $ID");
+	$dataquery = e4_db_query("SELECT ID,Name,Type,URL,Timestamp,Data,is_content,status FROM e4_data WHERE ID = $ID");
 	
 	while($datarecord = mysql_fetch_assoc($dataquery)){
 		// These are the header items. Make sure we have these and that they have the right name & case.
@@ -102,6 +102,8 @@ function e4_data_load($ID,$addToData = TRUE){
 		$newdata['type'] = $datarecord['Type'];
 		$newdata['url'] = $datarecord['URL'];
 		$newdata['timestamp'] = $datarecord['Timestamp'];
+		$newdata['is_content'] = $datarecord['is_content'];
+		$newdata['status'] = $datarecord['status'];
 		// Everything is saved in [data]. Jump down in [data][data] to get what we need, if it exists somehow.  
 		$newdata['data'] = unserialize(base64_decode($datarecord['Data']));
 		if(isset($newdata['data']['data'])){
@@ -182,14 +184,14 @@ function e4_action_search(){
 	
 	// Once we have picked up the actions to run *before* view, we need to enforce mandatory pre-cursor actions
 	// The obvious one at the moment is security. 
-	// TODO: This is where any "modules", like eCommerce, would be loaded. 
+	// @todo This is where any "modules", like eCommerce, would be loaded. 
 	array_unshift($data['actions'],'security/security.php');
 }
 
 function e4_data_search($criteria,$addToData = TRUE,$onlyContent=TRUE,$admin=FALSE){
 	/*
 	 * Perform a search on the e4_data.
-	 * TODO: This might be the first function that is going to get long enough to be unweildy in this file - think on!
+	 * @todo This might be the first function that is going to get long enough to be unweildy in this file - think on!
 	 */
 	global $db;
 	$searchQuery = '';
@@ -320,7 +322,7 @@ function e4_findinclude($filepath){
 	/*
 	 * This function locates a file to be included.
 	 * It looks for it first in the domain specific directory and then, after that, in the default directory
-	 * TODO: Extending the list of search directories will enabled plugins that do not have to go into core.
+	 * @todo Extending the list of search directories will enabled plugins that do not have to go into core.
 	 */
 	global $data;
 	$return = 'engine4.net/void.php';
@@ -464,7 +466,7 @@ function e4_goto($redirectPath,$redirectMethod = 301){
 	// Store the redirect ready for it be picked up at the end of the main process
 	$data['redirect'] = array($redirectMethod => $redirectPath);
 	// Clear the actions, as we are not going to be doing anything more/else
-	// TODO: Is this always the case? What about logging, and that sort of thing? Does this all have to happen *before* view?
+	// @todo Is this always the case? What about logging, and that sort of thing? Does this all have to happen *before* view?
 	$data['actions'] = array();
 	// Clear the renderers, as we are not going to be displaying anything
 	$data['renderers'] = array();
