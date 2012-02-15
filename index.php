@@ -108,7 +108,7 @@ function e4_data_load($ID,$addToData = TRUE){
 		$newdata['type'] = $datarecord['Type'];
 		$newdata['url'] = $datarecord['URL'];
 		$newdata['timestamp'] = $datarecord['Timestamp'];
-		$newdata['is_content'] = $datarecord['is_content'];
+		$newdata['iscontent'] = $datarecord['is_content'];
 		$newdata['status'] = $datarecord['status'];
 		// Everything is saved in [data]. Jump down in [data][data] to get what we need, if it exists somehow.  
 		$newdata['data'] = unserialize(base64_decode($datarecord['Data']));
@@ -148,7 +148,7 @@ function e4_data_save($saveData){
 							 URL = "' . $saveData['url'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 							 XML  = "' . $xmlData . '",
-							 is_content = ' . $saveData['is_content'] . ',
+							 is_content = ' . $saveData['iscontent'] . ',
 							 status = ' . $saveData['status'] . '
 					  ON DUPLICATE KEY UPDATE 
 					  		 Name = "' . $saveData['name'] . '",
@@ -156,7 +156,7 @@ function e4_data_save($saveData){
 							 URL = "' . $saveData['url'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 							 XML  = "' . $xmlData . '",
-							 is_content = ' . $saveData['is_content'] . ',
+							 is_content = ' . $saveData['iscontent'] . ',
 							 status = ' . $saveData['status'];
 		// Run the query through our traced query function
 		e4_db_query($saveQuery); 
@@ -194,13 +194,20 @@ function e4_action_search(){
 	array_unshift($data['actions'],'security/security.php');
 }
 
-function e4_data_search($criteria,$addToData = TRUE,$onlyContent=TRUE,$admin=FALSE){
+function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE){
 	/*
 	 * Perform a search on the e4_data.
 	 * @todo This might be the first function that is going to get long enough to be unweildy in this file - think on!
 	 */
 	global $db;
 	$searchQuery = '';
+	
+	if (isset($_REQUEST['e4_action']) && $_REQUEST['e4_action'] = 'admin'){
+		$admin=TRUE;
+	} else {
+		$admin=FALSE;	
+	}
+	
 	
 	/*
 	 * Start with a URL lookup, if a URL has been specified
@@ -219,8 +226,32 @@ function e4_data_search($criteria,$addToData = TRUE,$onlyContent=TRUE,$admin=FAL
 	 */
 	$searchQuery = '';
 	$searchQueryCriteria = '';
+	$searchQueryKeywords = array();
 	$searchQueryHaving = '';
 	$searchQueryOrderBy = '';
+	
+	if ($onlyContent){
+		$searchQueryCriteria = ' is_content = 1 ';
+	}
+	
+	if (is_array($criteria) && sizeof($criteria) > 0){
+		foreach($criteria as $field=>$value){
+			if (strtoupper($field) == 'XML'){
+				$searchQueryKeywords[]= '"' . $value . '"';
+			} else {
+				if(strlen($searchQueryCriteria) > 0) { $searchQueryCriteria .= ' AND '; }
+				$searchQueryCriteria .= ' ' . $field . ' = ';
+				if (is_numeric($value)){
+					$searchQueryCriteria .= $value . ' ';
+				} else {
+					$searchQueryCriteria .= '"' . $value . '" ';
+				}
+			}
+		}
+	}
+	if(isset($_REQUEST['e4_search'])){
+		$searchQueryKeywords[] = '"' . $_REQUEST['e4_search'] . '"';
+	}
 	
 	if(isset($_REQUEST['e4_ID'])){
 		// Find an item based on its ID
@@ -229,9 +260,9 @@ function e4_data_search($criteria,$addToData = TRUE,$onlyContent=TRUE,$admin=FAL
 			$searchQueryCriteria = 'ID =' . $_REQUEST['e4_ID'];
 		}
 	} else {
-		if(isset($_REQUEST['e4_search'])){
+		if(sizeof($searchQueryKeywords) > 0){
 			// Perform a search of some type
-			$searchQuery = 'SELECT ID, MATCH(XML) AGAINST ("' . mysql_escape_string($_REQUEST['e4_search']) . '" IN BOOLEAN MODE) AS score FROM e4_data';
+			$searchQuery = 'SELECT ID, MATCH(XML) AGAINST (' . implode(',',$searchQueryKeywords) . ' IN BOOLEAN MODE) AS score FROM e4_data';
 			$searchQueryHaving = 'score > 0';
 		} else {
 			// Generic search that just goes looking for anything

@@ -14,8 +14,8 @@
 		<ul id="MainMenuList">
 			<li><a href="?e4_action=admin" class="MenuTab" id="HomeMenuItem">Home</a></li>
 			<li><a href="#" class="MenuTab" id="ContentMenuItem">Content</a></li>
-			<!-- 
 			<li><a href="#" class="MenuTab" id="UsersMenuItem">Users</a></li>
+			<!-- 
 			<li><a href="#" class="MenuTab" id="MessagesMenuItem">Messages</a></li>
 			 -->
 		</ul>
@@ -48,9 +48,8 @@
 			All of the mega menu functionality is convention based for naming.
 		</div>
 		<ul>
-			<li>Find User</li>
-			<li>Create New User</li>
-			<li>Browse Users By Role</li>
+			<li><a href="?e4_action=admin&e4_op=create&e4_adminType=user">Create New User</a></li>
+			<li><a href="?e4_action=admin&e4_op=search&e4_adminType=user">Find User</a></li>
 		</ul>
 	</div>
 	<div id="MessagesMenuContent" class="MenuContent">
