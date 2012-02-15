@@ -21,7 +21,12 @@ mysql_select_db($data['configuration']['database']['schema'],$db);
 
 e4_action_search();
 
-foreach($data['actions'] as $action){
+// Run the security action, to ensure that we are not allowing a user to run actions they are not entitled to
+include_once e4_findinclude('actions/security/security.php');
+e4_action_security_security_go($data);
+
+if (!e4_redirect()){
+    foreach($data['actions'] as $action){
 	include_once e4_findinclude('actions/' . $action);
 	e4_trace('Looking for function ' . e4_getGoFunction($action,'action'));
 	if (function_exists(e4_getGoFunction($action,'action'))){
@@ -31,6 +36,7 @@ foreach($data['actions'] as $action){
 	} else {
 		e4_trace('Could not find function ' . e4_getGoFunction($action,'action'));
 	}
+    }
 }
 
 /*
