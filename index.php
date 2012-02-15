@@ -25,6 +25,9 @@ e4_action_search();
 include_once e4_findinclude('actions/security/security.php');
 e4_action_security_security_go($data);
 
+// Include the analytics code, so that any action can record a stat
+include_once e4_findinclude('actions/analytics/analytics.php');
+
 if (!e4_redirect()){
     foreach($data['actions'] as $action){
 	include_once e4_findinclude('actions/' . $action);
@@ -38,6 +41,9 @@ if (!e4_redirect()){
 	}
     }
 }
+
+// Record generic stats
+e4_action_analytics_analytics_go($data);
 
 /*
  * Only actions can re/write the DB. Close the connection now.
@@ -163,6 +169,7 @@ function e4_data_save($saveData){
 		// If this was an insert using the next available ID, return that ID rather than the ID given
 		if ($saveID == 0){ $saveID = mysql_insert_id($db);}
 		// Display a message
+                e4_trace('Saved record '. $saveID,TRUE);
 		e4_message('Saved record ' . $saveID,'Success');
 		// Return the ID of the saved record.
 		return $saveID;	
@@ -340,12 +347,19 @@ function e4_xmlify($dataArray,$elementName = 'xml'){
  * This is where all things that all needed by all pages live.
  */
 
-function e4_trace($message){
+function e4_trace($message,$posterity = FALSE){
 	/*
 	 * I am the trace function. I record things that have happened.
 	 */
 	global $data;
 	$data['debug']['trace'][] = date("d/m/y : H:i:s", time()) . ' : ' . $message;
+        
+        /*
+         * If required, I keep things for posterity
+         */
+        if($posterity){
+            e4_db_query('INSERT INTO e4_log SET Message="' . mysql_escape_string($message) . '"');
+        }
 }
 
 function e4_getGoFunction($include,$type){
