@@ -280,6 +280,24 @@
 		margin-bottom: 5px;
 		margin-left: 10px;
 		margin-right: 10px;
+        }
+        .InfoMessage {
+		color: #ffffff;
+		font-size: 14px;
+		font-weight: bold;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		-webkit-box-shadow: 0 1px 3px rgba(0,0,0, .4);
+		-moz-box-shadow: 0 1px 3px rgba(0,0,0, .4);
+		border-bottom: 1px solid #cccccc;
+		background-color: #007fff;
+		background-image: -moz-linear-gradient(100% 100% 90deg, #007fff, #007fff);
+		background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#007fff), to(#007fff));
+		padding: 10px;
+		margin-top: 5px;
+		margin-bottom: 5px;
+		margin-left: 10px;
+		margin-right: 10px;
 		
 	}
 	#Footer {

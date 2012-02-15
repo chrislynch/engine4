@@ -4,7 +4,8 @@
 		System Administration
 		<div id="HeaderUserMenu">
 			Welcome back Christopher<br>
-			<a href="@@configuration.basedir@@">Return to website</a>
+			<a href="@@configuration.basedir@@">Return to website</a>&nbsp;|&nbsp;
+                        <a href="@@configuration.basedir@@?e4_action=security&e4_op=deauthenticate">Log Out</a>&nbsp;|&nbsp;
 		</div>
 	</div>
 </div>
@@ -48,7 +49,7 @@
 			All of the mega menu functionality is convention based for naming.
 		</div>
 		<ul>
-			<li><a href="?e4_action=admin&e4_op=create&e4_adminType=user">Create New User</a></li>
+			<li><a href="?e4_action=admin&e4_op=create&e4_adminType=user&e4_adminTypeIsContent=0">Create New User</a></li>
 			<li><a href="?e4_action=admin&e4_op=search&e4_adminType=user">Find User</a></li>
 		</ul>
 	</div>

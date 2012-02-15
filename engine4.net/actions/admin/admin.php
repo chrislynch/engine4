@@ -60,6 +60,9 @@ function e4_action_admin_admin_go(&$data){
 				if(isset($_REQUEST['e4_adminType'])){
 					$content = e4_data_new();
 					$content['type'] = $_REQUEST['e4_adminType'];
+                                        if(isset($_REQUEST['e4_adminTypeIsContent'])){
+                                            $content['iscontent'] = $_REQUEST['e4_adminTypeIsContent'];
+                                        }
 					$data['page']['body']['content'][] = $content;
 					$data['configuration']['renderers']['all']['templates'][1] = 'edit-data.php';
 				} else {
@@ -82,8 +85,10 @@ function e4_action_admin_admin_go(&$data){
 	} else {
 				$data['configuration']['renderers']['all']['templates'][1] = 'home.php';
 	}
+	if (isset($data['configuration']['renderers']['all']['templates'][1])){
+            $data['configuration']['renderers']['all']['templates'][2] = 'sidebar.php';	
+        }
 	
-	$data['configuration']['renderers']['all']['templates'][2] = 'sidebar.php';	
 }
 
 
@@ -121,8 +126,28 @@ function e4_admin_save_formData(){
 			}
 		}
 	}
-	$savedID = e4_data_save($content);
-	return $savedID;
+        
+        /*
+         * Validate the data that we are saving using our validators
+         */
+        include_once e4_findinclude('actions/admin/validators/all.php');
+        include_once e4_findinclude('actions/admin/validators/' . $content['type'] . '.php');
+        
+        e4_action_admin_validate($content);
+        
+        if (function_exists('e4_action_admin_validate_' . $content['type'])){
+            $parameters = array( &$content );
+            call_user_func_array('e4_action_admin_validate_' . $content['type'], $parameters);
+        }
+        
+        if (isset($content['valid']) && $content['valid'] == TRUE){
+            $savedID = e4_data_save($content);
+            return $savedID;
+        } else {
+            e4_message('Hit "Back" in your browser to go back to your changes and try again');
+            return $content['ID'];
+        }
+	
 }
 
 

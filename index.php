@@ -87,7 +87,7 @@ function e4_data_new(){
 	/*
 	 * Create a new data item array and return it for use.
 	 */
-	$newitem = array('ID'=>0,'name'=>'','type' => '', 'url' => '', 'is_content' => 1, 'status' => 1);
+	$newitem = array('ID'=>0,'name'=>'','type' => '', 'url' => '', 'iscontent' => 1, 'status' => 1);
 	return $newitem;
 }
 
@@ -185,16 +185,18 @@ function e4_action_search(){
 		}
 	}
 	if(isset($_REQUEST['e4_action'])){
-		array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
+            if ($_REQUEST['e4_action'] !== 'security'){
+                array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
+            }
 	}
 	
 	// Once we have picked up the actions to run *before* view, we need to enforce mandatory pre-cursor actions
-	// The obvious one at the moment is security. 
+	// Security is already called before ANYTHING else, so that is no longer needed here.
 	// @todo This is where any "modules", like eCommerce, would be loaded. 
-	array_unshift($data['actions'],'security/security.php');
+	// array_unshift($data['actions'],'security/security.php');
 }
 
-function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE){
+function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$suppressID=FALSE){
 	/*
 	 * Perform a search on the e4_data.
 	 * @todo This might be the first function that is going to get long enough to be unweildy in this file - think on!
@@ -207,7 +209,6 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE){
 	} else {
 		$admin=FALSE;	
 	}
-	
 	
 	/*
 	 * Start with a URL lookup, if a URL has been specified
@@ -253,12 +254,12 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE){
 		$searchQueryKeywords[] = '"' . $_REQUEST['e4_search'] . '"';
 	}
 	
-	if(isset($_REQUEST['e4_ID'])){
-		// Find an item based on its ID
-		$searchQuery = 'SELECT ID FROM e4_data';
-		if(isset($_REQUEST['e4_ID'])){
-			$searchQueryCriteria = 'ID =' . $_REQUEST['e4_ID'];
-		}
+	if(!$suppressID &&  isset($_REQUEST['e4_ID'])){
+            // Find an item based on its ID
+            $searchQuery = 'SELECT ID FROM e4_data';
+            if(isset($_REQUEST['e4_ID'])){
+                    $searchQueryCriteria = 'ID =' . $_REQUEST['e4_ID'];
+            }		
 	} else {
 		if(sizeof($searchQueryKeywords) > 0){
 			// Perform a search of some type
@@ -294,9 +295,10 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE){
 	// Load up the items that we searched for, adding them to the global data if necessary.
 	$return = array();
 	while($searchRecord = mysql_fetch_assoc($searchData)){
-		$return[$searchRecord['ID']] = e4_data_load($searchRecord['ID'],$addToData);
+            $return[$searchRecord['ID']] = e4_data_load($searchRecord['ID'],$addToData);
 	}
 	
+        return $return;
 }
 
 /*
@@ -489,7 +491,7 @@ function e4_pickContentTemplate($content){
  * REDIRECTION AND ERROR HANDLING
  */
 
-function e4_message($message,$messagetype = 'info'){
+function e4_message($message,$messagetype = 'Info'){
 	global $data;
 	if (!isset($data['page']['messages'])){ $data['page']['messages'] = array();}
 	$data['page']['messages'][] = array('message' => $message, 'type' => $messagetype); 
