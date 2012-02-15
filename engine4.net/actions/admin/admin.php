@@ -91,8 +91,6 @@ function e4_action_admin_admin_go(&$data){
 	
 }
 
-
-
 /*
  * FORM SAVE FUNCTIONS - Reads form data and saves it to the e4_data table using functions from index.php
  */
@@ -104,28 +102,30 @@ function e4_admin_save_formData(){
 	$content = e4_data_new();
 	
 	foreach($_POST as $key=>$value){
-		// We transform each posted value into a pointer into our $content
-		// We do this by breaking down the key string and building the array structure in $content based on it.
-		// At the moment, we only support three levels. @todo More levels to follow?
-		if(strstr($key,'e4_form_content_')){
-			$key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
-			$key=explode('_',$key);								// Explode the key at the underscores
-			switch (sizeof($key)){
-				case 1:
-					$content[$key[0]] = $value;
-					break;
-				case 2:
-					if (!isset($content[$key[0]])){ $content[$key[0]] = array();}
-					$content[$key[0]][$key[1]] = $value;
-					break;
-				case 3:
-					if (!isset($content[$key[0]])){ $content[$key[0]] = array();}
-					if (!isset($content[$key[0]][$key[1]])){ $content[$key[0]][$key[1]] = array();}
-					$content[$key[0]][$key[1]][$key[2]] = $value;
-					break;
-			}
-		}
+            // We transform each posted value into a pointer into our $content
+            // We do this by breaking down the key string and building the array structure in $content based on it.
+            // At the moment, we only support three levels. @todo More levels to follow?
+            if(strstr($key,'e4_form_content_')){
+                // Ignore files submissions - these are handled below
+                $key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
+                $key=explode('_',$key);								// Explode the key at the underscores
+                switch (sizeof($key)){
+                        case 1:
+                                $content[$key[0]] = $value;
+                                break;
+                        case 2:
+                                if (!isset($content[$key[0]])){ $content[$key[0]] = array();}
+                                $content[$key[0]][$key[1]] = $value;
+                                break;
+                        case 3:
+                                if (!isset($content[$key[0]])){ $content[$key[0]] = array();}
+                                if (!isset($content[$key[0]][$key[1]])){ $content[$key[0]][$key[1]] = array();}
+                                $content[$key[0]][$key[1]][$key[2]] = $value;
+                                break;
+                }
+            }
 	}
+        e4_message('Files:' . print_r($_FILES,TRUE));
         
         /*
          * Validate the data that we are saving using our validators
