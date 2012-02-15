@@ -16,8 +16,9 @@ function e4_action_admin_validate(&$content){
         e4_trace('Found ' . sizeof($namecheck));
         if (sizeof($namecheck) > 0){
             foreach($namecheck as $ID=>$item){
-                if ($ID !== $content['ID']){
-                    e4_message('The name ' . $content['name'] . ' is already taken by item ' . $ID . '<br>All things must have a unique name.','Error');
+                if (strval($ID) !== strval($content['ID'])){
+                    e4_message('The name ' . $content['name'] . ' is already taken by item ' . $ID . '(' . $item['name'] .'). Your ID is ' . $content['ID'] . 
+                                '<br>All things must have a unique name.','Error');
                     $content['valid'] = FALSE;            
                 }
             }
