@@ -113,6 +113,11 @@ function e4_data_load($ID,$addToData = TRUE){
 		$newdata['name'] = $datarecord['Name'];
 		$newdata['type'] = $datarecord['Type'];
 		$newdata['url'] = $datarecord['URL'];
+                if (strlen($newdata['url']) > 0){
+                    $newdata['link'] = $newdata['url'];
+                } else {
+                    $newdata['link'] = '@@configuration.basedir@@?e4_ID=' . $newdata['ID'];
+                }
 		$newdata['timestamp'] = $datarecord['Timestamp'];
 		$newdata['iscontent'] = $datarecord['is_content'];
 		$newdata['status'] = $datarecord['status'];
