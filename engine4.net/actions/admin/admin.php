@@ -125,7 +125,37 @@ function e4_admin_save_formData(){
                 }
             }
 	}
-        e4_message('Files:' . print_r($_FILES,TRUE));
+        foreach($_FILES as $key=>$file){
+            // Move the uploaded file to a sensible place.
+            e4_trace('Copying uploaded file from ' . $file["tmp_name"] . ' to ' . e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name']);
+            
+            if (!is_dir(e4_domaindir() . '/uploads/' . $content['ID'])){mkdir(e4_domaindir() . 'uploads/' . $content['ID']);}
+            
+            move_uploaded_file($file["tmp_name"], e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name']);
+            e4_trace('Adding ' . $file['name'] . ' to content data');
+                       
+            if(!isset($content['data']['files'])){$content['data']['files'] = array();}
+            
+            $file['path'] = e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name'];
+            $key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
+            $key=explode('_',$key);								// Explode the key at the underscores
+            e4_message(print_r($key,TRUE));
+            switch (sizeof($key)){
+                    case 1:
+                            $content['data'][$key[0]] = $file;
+                            break;
+                    case 2:
+                            if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
+                            $content[$key[0]][$key[1]] = $file;
+                            break;
+                    case 3:
+                            if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
+                            if (!isset($content['data'][$key[0]][$key[1]])){ $content['data'][$key[0]][$key[1]] = array();}
+                            $content['data'][$key[0]][$key[1]][$key[2]] = $file;
+                            break;
+            }
+            
+        }
         
         /*
          * Validate the data that we are saving using our validators

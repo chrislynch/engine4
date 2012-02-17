@@ -1,6 +1,6 @@
 <h1>Product: <?=@$content['name'];?></h1>
 <div class="span-8">
-	&nbsp;
+	<img src="<?php print $content['data']['files']['images']['primary']['path']; ?>">
 </div>
 <div class="span-8 last">
 	<form action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/627458445324618" id="BB_BuyButtonForm" method="post" name="BB_BuyButtonForm" target="_top">
