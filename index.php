@@ -93,7 +93,7 @@ function e4_data_new(){
 	/*
 	 * Create a new data item array and return it for use.
 	 */
-	$newitem = array('ID'=>0,'name'=>'','type' => '', 'url' => '', 'iscontent' => 1, 'status' => 1);
+	$newitem = array('ID'=>0,'name'=>'','type' => '', 'url' => '', 'folder' => '', 'iscontent' => 1, 'status' => 1);
 	return $newitem;
 }
 
@@ -105,7 +105,7 @@ function e4_data_load($ID,$addToData = TRUE){
 	global $data;
 	
 	$newdata = array();
-	$dataquery = e4_db_query("SELECT ID,Name,Type,URL,Timestamp,Data,is_content,status FROM e4_data WHERE ID = $ID");
+	$dataquery = e4_db_query("SELECT ID,Name,Type,URL,Folder,Timestamp,Data,is_content,status FROM e4_data WHERE ID = $ID");
 	
 	while($datarecord = mysql_fetch_assoc($dataquery)){
 		// These are the header items. Make sure we have these and that they have the right name & case.
@@ -118,6 +118,7 @@ function e4_data_load($ID,$addToData = TRUE){
                 } else {
                     $newdata['link'] = '@@configuration.basedir@@?e4_ID=' . $newdata['ID'];
                 }
+                $newdata['folder'] = $datarecord['Folder'];
 		$newdata['timestamp'] = $datarecord['Timestamp'];
 		$newdata['iscontent'] = $datarecord['is_content'];
 		$newdata['status'] = $datarecord['status'];
@@ -130,7 +131,9 @@ function e4_data_load($ID,$addToData = TRUE){
 		// $data['page']['body']['content'][$datarecord['ID']]['xml'] = $datarecord['XML'];
 		
 		if ($addToData){
-			$data['page']['body']['content'][$datarecord['ID']] = $newdata;
+			$data['page']['body']['content'][$newdata['ID']] = $newdata;
+                        $data['page']['body']['contentByType'][$newdata['type']][$newdata['ID']] = $newdata;
+                        $data['page']['body']['contentByFolder'][$newdata['folder']][$newdata['ID']] = $newdata;
 		}
 	}
 	
@@ -157,6 +160,7 @@ function e4_data_save($saveData){
 							 Name = "' . $saveData['name'] . '",
 							 Type = "' . $saveData['type'] . '",
 							 URL = "' . $saveData['url'] . '",
+                                                         Folder = "' . $saveData['folder'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 							 XML  = "' . $xmlData . '",
 							 is_content = ' . $saveData['iscontent'] . ',
@@ -165,6 +169,7 @@ function e4_data_save($saveData){
 					  		 Name = "' . $saveData['name'] . '",
 							 Type = "' . $saveData['type'] . '",
 							 URL = "' . $saveData['url'] . '",
+                                                         Folder = "' . $saveData['folder'] . '",
 							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
 							 XML  = "' . $xmlData . '",
 							 is_content = ' . $saveData['iscontent'] . ',

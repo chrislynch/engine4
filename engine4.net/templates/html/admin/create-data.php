@@ -7,6 +7,13 @@
 								<input type="radio" name="e4_form_content_type" value="Content" checked>Content: The generic content type used for static pages<br>
 								<input type="radio" name="e4_form_content_type" value="Action">Action Alias: Create a clean URL for an action<br>
 								<input type="radio" name="e4_form_content_type" value="Product">Product: Create a product that can be sold<br>
+                                                                <?php
+                                                                    if (isset($data['configuration']['datatypes'])){
+                                                                        foreach($data['configuration']['datatypes'] as $typekey=>$config){
+                                                                            print '<input type="radio" name="e4_form_content_type" value="' . $typekey . '">' . $config['name'] . ': ' . $config['description'] . '<br>';
+                                                                        }
+                                                                    }
+                                                                ?>
 							</td></tr>
 			<tr><td>&nbsp;</td><td><input name="save" type="submit" value="Create Content"></td></tr>			
 		</table>

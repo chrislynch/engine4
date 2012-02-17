@@ -15,11 +15,16 @@
 			<?php
 				// @todo: We need to understand the difference between content types and non-content types
 				include e4_findtemplate('forms/data-types/' .  strtolower($content['type']) . '.php'); 
+                                if ($content['iscontent'] == 1){
+                                    include e4_findtemplate('forms/data-types/seo.php');
+                                }
+                                /*
 				switch ($content['type']){
 					case 'Content':
 						include e4_findtemplate('forms/data-types/seo.php');
 						break;
 				}
+                                 */
 			?>
 			<tr><td class="nobg" colspan="2"><h2 class="SectionHeading">Save and Continue</h2></td></tr>
 			<tr><td>Item Status:</td><td>

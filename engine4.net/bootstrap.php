@@ -76,4 +76,6 @@ $data['page']['head']['stylesheets'] = array();
 $data['page']['body'] = array();
 $data['page']['body']['H1'] = 'engine4 Content Management System';
 $data['page']['body']['content'] = array();
+$data['page']['body']['contentByType'] = array();
+$data['page']['body']['contentByFolder'] = array();
 ?>

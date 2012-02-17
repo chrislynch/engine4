@@ -1,8 +1,9 @@
-CREATE TABLE IF NOT EXISTS `e4_data` (
+CREATE TABLE `e4_data` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(1024) NOT NULL,
   `Type` varchar(255) NOT NULL,
   `URL` varchar(2000) DEFAULT NULL,
+  `Folder` varchar(255) NOT NULL DEFAULT '',
   `Data` text NOT NULL,
   `XML` text NOT NULL,
   `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -10,7 +11,9 @@ CREATE TABLE IF NOT EXISTS `e4_data` (
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`ID`),
   FULLTEXT KEY `e4_fulltext` (`XML`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+
 
 CREATE TABLE `e4_stats` (
   `Year` CHAR(4)  NOT NULL,

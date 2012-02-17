@@ -139,7 +139,7 @@ function e4_admin_save_formData(){
             $file['path'] = e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name'];
             $key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
             $key=explode('_',$key);								// Explode the key at the underscores
-            e4_message(print_r($key,TRUE));
+            
             switch (sizeof($key)){
                     case 1:
                             $content['data'][$key[0]] = $file;
