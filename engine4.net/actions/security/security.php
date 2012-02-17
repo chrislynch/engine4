@@ -44,10 +44,12 @@ function e4_action_security_security_go(&$data){
                                 $data['user'] = $user;
                                 cookie_set('userid',$user['ID']);
                                 e4_message('Welcome back ' . $user['name']);
+                                break;
                             } else {
                                 // This is not the right user
                                 e4_message('Invalid password for user "' . $user['name'] . '"');
                                 $data['configuration']['renderers']['all']['templates'][0] = 'forms/security/authenticate.php';
+                                break;
                             }
                         }    
                     } else {
