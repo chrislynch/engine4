@@ -22,8 +22,10 @@ function e4_action_security_security_go(&$data){
     // Hard code controls around "admin", to prevent someone removing this from the database by mistake.
     if(in_array('admin/admin.php', $data['actions'])){
         // The current user must be an administrator to do this.
-        if(!e4_security_user_hasRole($data['user'], 'Administrator')){
-            e4_goto('?e4_action=security&e4_op=authenticate', 403);
+        if(!(@$data['configuration']['install'] == TRUE)){
+            if(!e4_security_user_hasRole($data['user'], 'Administrator')){
+                e4_goto('?e4_action=security&e4_op=authenticate', 403);
+            }
         }
     }
     
