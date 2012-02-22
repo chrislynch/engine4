@@ -94,12 +94,16 @@ function e4_action_admin_admin_go(&$data){
 /*
  * FORM SAVE FUNCTIONS - Reads form data and saves it to the e4_data table using functions from index.php
  */
-function e4_admin_save_formData(){
+function e4_admin_save_formData($forceContent = array()){
 	/*
 	 * Parse through the submitted form data and build up a piece of content to save.
 	 * Pass this piece of content over to the save function.
 	 */
-	$content = e4_data_new();
+        if (sizeof($forceContent) == 0){
+            $content = e4_data_new();
+        } else {
+            $content = $forceContent;
+        }
 	
 	foreach($_POST as $key=>$value){
             // We transform each posted value into a pointer into our $content

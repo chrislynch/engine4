@@ -12,6 +12,8 @@
 				<td><input name="e4_form_content_name" type="text" size="60" value="<?php print $content['name'];?>"></td></tr>
 			<tr><td>Type</td>
 				<td><?php print $content['type'];?><input name="e4_form_content_type" type="hidden" size="60" value="<?php print $content['type'];?>"></td></tr>
+                        <tr><td>Folder</td>
+				<td><input name="e4_form_content_folder" type="text" size="60" value="<?php print $content['folder'];?>"></td></tr>
 			<?php
 				// @todo: We need to understand the difference between content types and non-content types
 				include e4_findtemplate('forms/data-types/' .  strtolower($content['type']) . '.php'); 

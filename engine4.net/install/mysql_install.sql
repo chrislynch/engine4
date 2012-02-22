@@ -22,7 +22,7 @@ CREATE TABLE `e4_stats` (
   `ID` INT(11) NOT NULL DEFAULT 0,
   `Stat` VARCHAR(255)  NOT NULL,
   `Value` FLOAT  NOT NULL,
-  PRIMARY KEY (`Year`, `Month`, `Day`, `URL`, `Stat`)
+  PRIMARY KEY (`Year`, `Month`, `Day`, `ID`, `Stat`)
 )
 ENGINE = MyISAM DEFAULT CHARSET=latin1;
 
