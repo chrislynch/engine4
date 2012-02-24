@@ -9,6 +9,7 @@ function e4_action_admin_admin_go(&$data){
 	 * Start by deciding what page we are going to view as our primary page
 	 * and what page we are viewing as our sidebar
 	 */
+        $data['configuration']['renderers']['all']['templates'] = array();
 	$data['configuration']['renderers']['all']['templates'][0] = 'menu.php';
 	
 	$data['configuration']['renderers']['html']['skins'] = array('admin','default');
@@ -95,6 +96,7 @@ function e4_action_admin_admin_go(&$data){
  * FORM SAVE FUNCTIONS - Reads form data and saves it to the e4_data table using functions from index.php
  */
 function e4_admin_save_formData($forceContent = array()){
+    global $data;
 	/*
 	 * Parse through the submitted form data and build up a piece of content to save.
 	 * Pass this piece of content over to the save function.
@@ -105,6 +107,10 @@ function e4_admin_save_formData($forceContent = array()){
             $content = $forceContent;
         }
 	
+        // Now add in some standard data, to represent what we are saving
+        if (!isset($content['linkages'])) { $content['linkages'] = array(); }
+        $content['linkages']['owner'] = $data['user']['ID'];
+        
 	foreach($_POST as $key=>$value){
             // We transform each posted value into a pointer into our $content
             // We do this by breaking down the key string and building the array structure in $content based on it.
@@ -127,38 +133,48 @@ function e4_admin_save_formData($forceContent = array()){
                                 $content[$key[0]][$key[1]][$key[2]] = $value;
                                 break;
                 }
+            } else {
+                // Now process any "linkages"
+                if(strstr($key,'e4_form_linkage_')){
+                    // Add a linkage.
+                    $key = explode('_',$key);
+                    $content['linkages'][$key[3]] = $value;
+                }
             }
+            
 	}
         foreach($_FILES as $key=>$file){
-            // Move the uploaded file to a sensible place.
-            e4_trace('Copying uploaded file from ' . $file["tmp_name"] . ' to ' . e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name']);
-            
-            if (!is_dir(e4_domaindir() . '/uploads/' . $content['ID'])){mkdir(e4_domaindir() . 'uploads/' . $content['ID']);}
-            
-            move_uploaded_file($file["tmp_name"], e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name']);
-            e4_trace('Adding ' . $file['name'] . ' to content data');
-                       
-            if(!isset($content['data']['files'])){$content['data']['files'] = array();}
-            
-            $file['path'] = e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name'];
-            $key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
-            $key=explode('_',$key);								// Explode the key at the underscores
-            
-            switch (sizeof($key)){
-                    case 1:
-                            $content['data'][$key[0]] = $file;
-                            break;
-                    case 2:
-                            if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
-                            $content[$key[0]][$key[1]] = $file;
-                            break;
-                    case 3:
-                            if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
-                            if (!isset($content['data'][$key[0]][$key[1]])){ $content['data'][$key[0]][$key[1]] = array();}
-                            $content['data'][$key[0]][$key[1]][$key[2]] = $file;
-                            break;
+            // @todo: Need a way to ensure that we remember our old file types.
+            if ($file['error'] == 0){
+                // Move the uploaded file to a sensible place.
+                e4_trace('Copying uploaded file from ' . $file["tmp_name"] . ' to ' . e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name']);
+
+                if (!is_dir(e4_domaindir() . '/uploads/' . $content['ID'])){mkdir(e4_domaindir() . 'uploads/' . $content['ID']);}
+
+                move_uploaded_file($file["tmp_name"], e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name']);
+                e4_trace('Adding ' . $file['name'] . ' to content data');
+
+                if(!isset($content['data']['files'])){$content['data']['files'] = array();}
+
+                $file['path'] = e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name'];
+                $key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
+                $key=explode('_',$key);								// Explode the key at the underscores
+
+                switch (sizeof($key)){
+                        case 1:
+                                $content['data'][$key[0]] = $file;
+                                break;
+                        case 2:
+                                if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
+                                $content[$key[0]][$key[1]] = $file;
+                                break;
+                        case 3:
+                                if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
+                                if (!isset($content['data'][$key[0]][$key[1]])){ $content['data'][$key[0]][$key[1]] = array();}
+                                $content['data'][$key[0]][$key[1]][$key[2]] = $file;
+                                break;
+                }
             }
-            
         }
         
         /*

@@ -94,10 +94,12 @@ function e4_data_new(){
 	 * Create a new data item array and return it for use.
 	 */
 	$newitem = array('ID'=>0,'name'=>'','type' => '', 'url' => '', 'folder' => '', 'iscontent' => 1, 'status' => 1);
+        $newitem['data'] = array();
+        $newitem['linkages'] = array();
 	return $newitem;
 }
 
-function e4_data_load($ID,$addToData = TRUE){
+function e4_data_load($ID,$addToData = TRUE,$loadLinkages = TRUE){
 	/*
 	 * Perform a simple load of a single datacontent ID
 	 */
@@ -129,14 +131,25 @@ function e4_data_load($ID,$addToData = TRUE){
 		}
 		// Unlikely that we will need XML, so have removed it from the query above and in the line below.
 		// $data['page']['body']['content'][$datarecord['ID']]['xml'] = $datarecord['XML'];
-		
-		if ($addToData){
-			$data['page']['body']['content'][$newdata['ID']] = $newdata;
-                        $data['page']['body']['contentByType'][$newdata['type']][$newdata['ID']] = $newdata;
-                        $data['page']['body']['contentByFolder'][$newdata['folder']][$newdata['ID']] = $newdata;
-		}
 	}
+        
+        $newdata['linkages'] = array();
+        $linkagequery = e4_db_query('SELECT ID,LinkType,LinkID FROM e4_linkage WHERE ID = ' . $newdata['ID']);
+        
+        while($linkagerecord = mysql_fetch_assoc($linkagequery)){
+            if ($loadLinkages === TRUE){
+                $newdata['linkages'][$linkagerecord['LinkType']][] = e4_data_load($linkagerecord['LinkID'], FALSE, FALSE);
+            } else {
+                $newdata['linkages'][$linkagerecord['LinkType']][] = $linkagerecord['LinkID'];
+            }
+        }
 	
+        if ($addToData){
+            $data['page']['body']['content'][$newdata['ID']] = $newdata;
+            $data['page']['body']['contentByType'][$newdata['type']][$newdata['ID']] = $newdata;
+            $data['page']['body']['contentByFolder'][$newdata['folder']][$newdata['ID']] = $newdata;
+        }
+        
 	return $newdata;
 }
 
@@ -145,6 +158,7 @@ function e4_data_save($saveData){
 	 * Save a piece of data back to the DB
 	 */
 	global $db;
+        global $data;
 	
 	if (isset($saveData['ID'])){
 		$saveID = $saveData['ID'];
@@ -177,10 +191,29 @@ function e4_data_save($saveData){
 		// Run the query through our traced query function
 		e4_db_query($saveQuery); 
 		// If this was an insert using the next available ID, return that ID rather than the ID given
-		if ($saveID == 0){ $saveID = mysql_insert_id($db);}
+		if ($saveID == 0){ 
+                    $saveID = mysql_insert_id($db);
+                    $saveData['ID'] = $saveID;
+                }
 		// Display a message
-                e4_trace('Saved record '. $saveID,TRUE);
+                e4_trace('User ' . $data['user']['ID'] . ' saved record '. $saveID,TRUE);
 		e4_message('Saved record ' . $saveID,'Success');
+                
+                // If we have an ID, we can save any linkages that we have.
+                e4_db_query('DELETE FROM e4_linkage WHERE ID = ' . $saveData['ID']);
+                if(isset($saveData['linkages'])){
+                    foreach($saveData['linkages'] as $linkType=>$linkID){
+                        if (is_array($linkID)){
+                            // @todo: Add support to save an array
+                        } else {
+                            e4_db_query('INSERT INTO e4_linkage SET 
+                                        ID = ' . $saveData['ID'] . ', 
+                                        LinkType = "' . $linkType . '",
+                                        LinkID = ' . $linkID);
+                        }
+                    }
+                }
+                
 		// Return the ID of the saved record.
 		return $saveID;	
 	}

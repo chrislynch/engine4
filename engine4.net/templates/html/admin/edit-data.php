@@ -19,6 +19,7 @@
 				include e4_findtemplate('forms/data-types/' .  strtolower($content['type']) . '.php'); 
                                 if ($content['iscontent'] == 1){
                                     include e4_findtemplate('forms/data-types/seo.php');
+                                    include e4_findtemplate('forms/data-types/owner.php');
                                 }
                                 /*
 				switch ($content['type']){
