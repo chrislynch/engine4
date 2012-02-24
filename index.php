@@ -242,7 +242,7 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 	 * Start with a URL lookup, if a URL has been specified
 	 */
 	if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
-		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['e4_url'] . '" AND status <> 0');
+		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['e4_url'] . '" AND status <> 0 AND Type<>"Action"');
 		if (mysql_num_rows($findURLQuery) == 1){
 			$_REQUEST['e4_ID'] = mysql_result($findURLQuery, 0);
 		} else {
@@ -314,8 +314,10 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 		$searchQuery .= ' HAVING ' . $searchQueryHaving;	
 	}
 	if (strlen($searchQueryOrderBy) > 0){
-		$searchQuery .= ' ORDER BY ' . $searchQueryOrderBy;	
-	}
+            $searchQuery .= ' ORDER BY ' . $searchQueryOrderBy;	
+	} else {
+            $searchQuery .= ' ORDER BY timestamp DESC';	
+        }
 	
 	// Perform the ACTUAL SEARCH!  
 	$searchData = e4_db_query($searchQuery);
@@ -507,7 +509,7 @@ function e4_pickContentTemplate($content){
 	 * Look at the piece of content array, and maybe the query parameters, and select an appropriate template for this piece of content
 	 */
 	if(is_array($content) && isset($content['type'])){
-		$template = e4_findtemplate('content-types/' . strtolower($content['type']) . '.php');
+		$template = e4_findtemplate('data-types/' . strtolower($content['type']) . '.php');
 		if ($template !== 'engine4.net/void.php'){
 			$template = explode('/',$template);
 			$templateReturn = array_pop($template);
