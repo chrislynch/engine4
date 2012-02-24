@@ -1,5 +1,8 @@
-# Make Warp handle any 404 errors.
+# Make engine4 handle any 404 errors.
 ErrorDocument 404 /github/engine4/index.php
+
+# Make sure we can put sites live using symlinks
+Options +FollowSymLinks
 
 <IfModule mod_rewrite.c>
   RewriteEngine on
