@@ -13,14 +13,24 @@ function e4_action_contribute_contribute_go(&$data){
     if (isset($_REQUEST['e4_op'])){
 	switch ($_REQUEST['e4_op']){
             case 'save':
-                
+                // @todo: Add code to call save function from main admin.
+                include_once e4_findinclude('actions/admin/admin.php');
+                $content = e4_data_new();               // Get a new content item
+                $content['status'] = 1;                 // Override to default published status
+                $content['type'] = $_REQUEST['e4_contributeType'];
+                $savedID = e4_admin_save_formData($content);
+                if ($savedID !== @$_REQUEST['e4_ID']){
+                    e4_data_load($savedID);
+                    if (is_numeric($savedID)){
+                        // Our save was successful. Go and look at the item?
+                    }
+                }
                 break;
             case 'edit':
-                
-                break;
+                // @todo: Will we support editing of contributed items in the contribution form?
             case 'create':
                 if(isset($_REQUEST['e4_contributeType'])){
-                    
+                    $data['configuration']['renderers']['all']['templates'][0] = 'contribute.php';
                 }
                 break;
         }

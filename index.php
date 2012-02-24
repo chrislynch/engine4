@@ -192,20 +192,31 @@ function e4_action_search(){
 	 * Check the URL and other parameters to find our actions
 	 */
 	global $data;
-	
+	      
 	if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
-		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE type="Action" AND URL = "' . $_REQUEST['e4_url'] . '"');
-		if (mysql_num_rows($findURLQuery) == 1){
-			$newaction = e4_data_load(mysql_result($findURLQuery, 0),FALSE);
-			$_REQUEST['e4_action'] = $newaction['data']['e4']['action'];
-			$_REQUEST['e4_op'] = $newaction['data']['e4']['op'];
-		}
+            $findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE type="Action" 
+                                          AND (URL = "' . $_REQUEST['e4_url'] . '" OR URL = "' . $_REQUEST['e4_url'] . '/")');
+            if (mysql_num_rows($findURLQuery) == 1){
+                $newaction = e4_data_load(mysql_result($findURLQuery, 0),FALSE);
+                if (!isset($_REQUEST['e4_action'])){ $_REQUEST['e4_action'] = $newaction['data']['e4']['action']; }
+                if (!isset($_REQUEST['e4_op'])){ $_REQUEST['e4_op'] = $newaction['data']['e4']['op']; }
+                if (isset($newaction['data']['e4']['params'])){
+                    $params = explode('&',$newaction['data']['e4']['params']);
+                    foreach($params as $param){
+                        $param = explode('=',$param);
+                        if (!isset($_REQUEST[trim($param[0])])){
+                            $_REQUEST[trim($param[0])] = trim($param[1]);
+                        }
+                    }
+                }
+            }
 	}
-	if(isset($_REQUEST['e4_action'])){
+	
+        if(isset($_REQUEST['e4_action'])){
             if ($_REQUEST['e4_action'] !== 'security'){
                 array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
             }
-	}
+	} 
 	
 	// Once we have picked up the actions to run *before* view, we need to enforce mandatory pre-cursor actions
 	// Security is already called before ANYTHING else, so that is no longer needed here.

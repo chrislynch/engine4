@@ -164,8 +164,8 @@ function e4_admin_save_formData($forceContent = array()){
         /*
          * Validate the data that we are saving using our validators
          */
-        include_once e4_findinclude('actions/admin/validators/all.php');
-        include_once e4_findinclude('actions/admin/validators/' . $content['type'] . '.php');
+        include_once e4_findinclude('data-types/all.php');
+        include_once e4_findinclude('data-types/' . $content['type'] . '.php');
         
         e4_action_admin_validate($content);
         
@@ -175,7 +175,9 @@ function e4_admin_save_formData($forceContent = array()){
         }
         
         if (isset($content['valid']) && $content['valid'] == TRUE){
+            e4_trace('Submitted content is valid. Attempting save');
             $savedID = e4_data_save($content);
+            e4_trace('Save result = ' . $savedID);
             return $savedID;
         } else {
             e4_message('Hit "Back" in your browser to go back to your changes and try again');
