@@ -13,7 +13,6 @@ function e4_action_contribute_contribute_go(&$data){
     if (isset($_REQUEST['e4_op'])){
 	switch ($_REQUEST['e4_op']){
             case 'save':
-                // @todo: Add code to call save function from main admin.
                 include_once e4_findinclude('actions/admin/admin.php');
                 $content = e4_data_new();               // Get a new content item
                 $content['status'] = 1;                 // Override to default published status
