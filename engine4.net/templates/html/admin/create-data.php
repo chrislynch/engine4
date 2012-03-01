@@ -4,17 +4,24 @@
 		<table>
 			<tr><td>Name</td><td><input name="e4_form_content_name" type="text" size="60" value=""></td></tr>
 			<tr><td>Type</td><td>
-								<input type="radio" name="e4_form_content_type" value="Content" checked>Content: The generic content type used for static pages<br>
-								<input type="radio" name="e4_form_content_type" value="Action">Action Alias: Create a clean URL for an action<br>
-								<input type="radio" name="e4_form_content_type" value="Product">Product: Create a product that can be sold<br>
-                                                                <?php
-                                                                    if (isset($data['configuration']['datatypes'])){
-                                                                        foreach($data['configuration']['datatypes'] as $typekey=>$config){
-                                                                            print '<input type="radio" name="e4_form_content_type" value="' . $typekey . '">' . $config['name'] . ': ' . $config['description'] . '<br>';
-                                                                        }
-                                                                    }
-                                                                ?>
-							</td></tr>
+                                <br><strong>Content Data Types</strong><br>
+                                <input type="radio" name="e4_form_content_type" value="Content" checked>Page: The generic content type used for static pages<br>
+                                <input type="radio" name="e4_form_content_type" value="Blog">Post: The type used for blog posts and news articles<br>
+                                <input type="radio" name="e4_form_content_type" value="Image">Image: The type used when posting a blog/news article about a specific image<br>
+                                <input type="radio" name="e4_form_content_type" value="Video">Video: The type used when posting a blog/news article about a specific video<br>
+                                <?php
+                                    if (isset($data['configuration']['datatypes'])){
+                                        foreach($data['configuration']['datatypes'] as $typekey=>$config){
+                                            print '<input type="radio" name="e4_form_content_type" value="' . $typekey . '">' . $config['name'] . ': ' . $config['description'] . '<br>';
+                                        }
+                                    }
+                                ?>
+                                <br><strong>SEO Data Types</strong><br>    
+                                <input type="radio" name="e4_form_content_type" value="Action">Action Alias: Create a clean URL for an action<br>
+                                
+                                <br><strong>eCommerce Data Types</strong><br>    
+                                <input type="radio" name="e4_form_content_type" value="Product">Product: Create a product that can be sold<br>
+                        </td></tr>
 			<tr><td>&nbsp;</td><td><input name="save" type="submit" value="Create Content"></td></tr>			
 		</table>
 	</form>
