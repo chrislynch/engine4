@@ -13,8 +13,6 @@ CREATE TABLE `e4_data` (
   FULLTEXT KEY `e4_fulltext` (`XML`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
-
-
 CREATE TABLE `e4_stats` (
   `Year` CHAR(4)  NOT NULL,
   `Month` CHAR(2)  NOT NULL,
@@ -33,3 +31,10 @@ CREATE  TABLE `e4_log` (
   PRIMARY KEY (`ID`) 
 )
 ENGINE = MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE  `e4_linkage` (
+  `ID` int(11) NOT NULL,
+  `LinkType` varchar(50) NOT NULL,
+  `LinkID` int(11) NOT NULL,
+  KEY `IDX_LINKAGE` (`ID`,`LinkType`,`LinkID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
