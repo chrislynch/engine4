@@ -50,17 +50,16 @@
         border-bottom: #000;
         border-bottom-style: double;
                 
-        font-family: serif;
+        font-family: 'IM Fell English SC', serif;
         font-weight: bolder;
         font-size: xx-large;
         
         text-align: center;
     }
     .strapline{
-        background-color: burlywood;
         font-size: medium;
-        padding-left: 160px;
-        padding-right: 160px;
+        padding-left: 120px;
+        padding-right: 120px;
     }
     .social{
         font-size: small;
@@ -68,14 +67,14 @@
         text-align: right;
     }
     .articleheading {
-        font-family: serif;
+        font-family: 'IM Fell English SC', serif;
         font-weight: bolder;
         font-size: xx-large;
     }
     .articleteaserheading {
-        font-family: serif;
+        font-family: 'IM Fell English SC', serif;
         font-weight: bolder;
-        font-size: large;
+        font-size: xx-large;
     }
     
     .sidebar {
@@ -101,5 +100,13 @@
         background-image: url('@@configuration.basedir@@<?php print e4_findtemplate('images/bg.jpg'); ?>');
         background-position: top center;
         background-repeat: no-repeat;
+        
+        font-family: 'IM Fell English', serif;
+        font-size: +1em;
+        font-weight: bold;
     }
+    
 </style>
+
+<link href='http://fonts.googleapis.com/css?family=IM+Fell+English+SC' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=IM+Fell+English' rel='stylesheet' type='text/css'>
