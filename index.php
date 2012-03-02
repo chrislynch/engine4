@@ -134,7 +134,7 @@ function e4_data_load($ID,$addToData = TRUE,$loadLinkages = TRUE){
 	}
         
         $newdata['linkages'] = array();
-        $linkagequery = e4_db_query('SELECT ID,LinkType,LinkID FROM e4_linkage WHERE ID = ' . $newdata['ID']);
+        $linkagequery = e4_db_query('SELECT ID,LinkType,LinkID FROM e4_linkage WHERE ID = ' . $ID);
         
         while($linkagerecord = mysql_fetch_assoc($linkagequery)){
             if ($loadLinkages === TRUE){
