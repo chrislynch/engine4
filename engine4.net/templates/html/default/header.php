@@ -24,20 +24,20 @@
 		
 		<!-- Blueprint CSS http://www.blueprintcss.org -->
 		<link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/grid.css" type="text/css" media="screen, projection">
-		<link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/typography.css" type="text/css" media="screen, projection">
+		<!-- <link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/typography.css" type="text/css" media="screen, projection"> -->
 		
 		<!--[if lt IE 8]>
 			<link rel="stylesheet" href="engine4.net/lib/blueprint/ie.css" type="text/css" media="screen, projection">
 		<![endif]-->
 		
 		<!-- Page or Host specific CSS -->
-		<?php 
-			if (isset($data['page']['head']['stylesheet'])){
-				foreach($data['page']['head']['stylesheet'] as $css){
-					print '<link rel="stylesheet" href="@@configuration.basedir@@' . $css . '" type="text/css" media="screen, projection">';
-					
-				}
+		<?php
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('style.css') . '" type="text/css" media="screen, projection">';
+                    if (isset($data['page']['head']['stylesheet'])){
+                        foreach($data['page']['head']['stylesheet'] as $css){
+                            print '<link rel="stylesheet" href="@@configuration.basedir@@' . $css . '" type="text/css" media="screen, projection">';
 			}
+                    }
 		?>
 		
 		<!-- CDN Hosted JQuery -->
@@ -73,3 +73,8 @@
 		</script>
 	</head>
 <body class="container">
+    <div id="header" class="span-24">
+        <div id="sitename" class="span-18">engine4.net</div>
+        <div id="sociallinks" class="span-6 last">Facebook|Twitter</div>
+    </div>
+    <div class="span-18">

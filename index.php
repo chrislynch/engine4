@@ -258,6 +258,7 @@ function e4_action_search(){
 }
 
 function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$suppressID=FALSE){
+    global $data;
 	/*
 	 * Perform a search on the e4_data.
 	 * @todo This might be the first function that is going to get long enough to be unweildy in this file - think on!
@@ -352,6 +353,35 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
             $searchQuery .= ' ORDER BY timestamp DESC';	
         }
 	
+        // Add in limits and take into account paging
+        $pagerQuery = 'SELECT COUNT(0) FROM (' . $searchQuery . ') count';
+        $pagerQuery = e4_db_query($pagerQuery);
+        if ($pagerQuery){
+            $pageCount = mysql_result($pagerQuery, 0);
+            $data['page']['body']['pager']['recordcount'] = $pageCount;
+            if ($pageCount < $data['configuration']['paging']['page-size']) {
+                $pageCount = 1;
+            } else {
+                $pageCount = intval(1 + ($pageCount / $data['configuration']['paging']['page-size']));
+            }
+        } else {
+            $pageCount = 0;
+        }
+        $data['page']['body']['pager']['pagecount'] = $pageCount;
+        if ($pageCount > 0){
+            
+        }
+        
+        // Now adding the paging to the query
+        if (isset($_REQUEST['e4_page'])){
+            $pageStart = $_REQUEST['e4_page'] * $data['configuration']['paging']['page-size'];
+            $searchQuery .= ' LIMIT ' . $pageStart . ',' . ($pageStart + $data['configuration']['paging']['page-size']);
+        } else {
+            $searchQuery .= ' LIMIT ' . $data['configuration']['paging']['page-size'];
+        }
+        
+               
+        
 	// Perform the ACTUAL SEARCH!  
 	$searchData = e4_db_query($searchQuery);
 	

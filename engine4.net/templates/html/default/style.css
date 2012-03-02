@@ -1,0 +1,28 @@
+/* 
+    Document   : styles.css
+    Created on : 02-Mar-2012, 23:28:19
+    Author     : chris
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+#header {
+    border-bottom: #000;
+    border-bottom-style: solid;
+}
+
+#sitename {
+    font-size:xx-large;   
+}
+
+#footer {
+    border-top: #000;
+    border-top-style: double;
+    
+    border-bottom: #000;
+    border-bottom-style: solid;
+}
