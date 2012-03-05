@@ -18,6 +18,9 @@
 				// @todo: We need to understand the difference between content types and non-content types
 				include e4_findtemplate('forms/data-types/' .  strtolower($content['type']) . '.php'); 
                                 if ($content['iscontent'] == 1){
+                                    if (strtolower($content['type']) !== 'content'){
+                                        include e4_findtemplate('forms/data-types/content.php');
+                                    }
                                     include e4_findtemplate('forms/data-types/seo.php');
                                     include e4_findtemplate('forms/data-types/owner.php');
                                 }
@@ -31,11 +34,11 @@
 			?>
 			<tr><td class="nobg" colspan="2"><h2 class="SectionHeading">Save and Continue</h2></td></tr>
 			<tr><td>Item Status:</td><td>
-										<select name="e4_form_content_status">
-											<option value="0" <?php if($content['status'] == 0) { print 'selected="selected"'; }?>>Unpublished/Disabled</option>
-											<option value="1" <?php if($content['status'] == 1) { print 'selected="selected"'; }?>>Published/Active</option>
-										</select>
-									</td></tr>
+                                <select name="e4_form_content_status">
+                                        <option value="0" <?php if($content['status'] == 0) { print 'selected="selected"'; }?>>Unpublished/Disabled</option>
+                                        <option value="1" <?php if($content['status'] == 1) { print 'selected="selected"'; }?>>Published/Active</option>
+                                </select>
+                        </td></tr>
 			<tr><td></td><td><input name="save" type="submit" value="Save Content"></td></tr>					
 		</table>
 	</form>
