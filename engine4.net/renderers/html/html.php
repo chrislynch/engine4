@@ -34,17 +34,23 @@ function e4_renderer_html_html_go($templates){
 					}
 					foreach($contentArray as $content){
 						if($bodytemplate[0] == '?'){
-							$bodytemplate[0] = e4_pickContentTemplate($content);	
-						}
-						include e4_findtemplate($bodytemplate[0]);		
+                                                    $pickedbodytemplate = e4_pickContentTemplate($content);	
+						} else {
+                                                    $pickedbodytemplate = $bodytemplate[0];
+                                                }
+						include e4_findtemplate($pickedbodytemplate);		
 					}
 				} else {
 					if (sizeof(@$data['page']['body']['content']) == 0){
 						include e4_findtemplate($bodytemplate);
 					} else {
 						foreach($data['page']['body']['content'] as $content){
-							if($bodytemplate == '?'){ $bodytemplate = e4_pickContentTemplate($content); }
-							include e4_findtemplate($bodytemplate);
+							if($bodytemplate == '?'){ 
+                                                            $pickedbodytemplate = e4_pickContentTemplate($content); 
+                                                        }  else { 
+                                                            $pickedbodytemplate = $bodytemplate;
+                                                        }
+							include e4_findtemplate($pickedbodytemplate);
 							break; // Only do this once. We just use the loop to get at the first item in the array without knowing its key
 						}	
 					}
