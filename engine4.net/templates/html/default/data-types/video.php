@@ -5,7 +5,8 @@
 	print Markdown(@$content['data']['body']); 
     } else {
         print '<h2 class="articleteaserheading"><a href="' . @$content['link'] . '">' . @$content['name'] . '</a></h2>';
-        print '<img src="http://img.youtube.com/vi/' . @$content['data']['video']['youtubeid'] . '/1.jpg">';
+        print '<img src="http://img.youtube.com/vi/' . @$content['data']['video']['youtubeid'] . '/1.jpg" style="float:left; padding-right: 10px">';
 	print Markdown(@$content['data']['teaser']); 
+        print '<div class="clear"></div>';
     }
 ?>

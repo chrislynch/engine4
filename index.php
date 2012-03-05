@@ -204,7 +204,12 @@ function e4_data_save($saveData){
                 if(isset($saveData['linkages'])){
                     foreach($saveData['linkages'] as $linkType=>$linkID){
                         if (is_array($linkID)){
-                            // @todo: Add support to save an array
+                            foreach($linkID as $iLinkID){
+                                e4_db_query('INSERT INTO e4_linkage SET 
+                                        ID = ' . $saveData['ID'] . ', 
+                                        LinkType = "' . $linkType . '",
+                                        LinkID = ' . $ilinkID);
+                            }
                         } else {
                             e4_db_query('INSERT INTO e4_linkage SET 
                                         ID = ' . $saveData['ID'] . ', 
