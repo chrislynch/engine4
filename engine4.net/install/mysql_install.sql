@@ -38,3 +38,13 @@ CREATE TABLE  `e4_linkage` (
   `LinkID` int(11) NOT NULL,
   KEY `IDX_LINKAGE` (`ID`,`LinkType`,`LinkID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `e4_tag` (
+  `tagID` int(11) NOT NULL AUTO_INCREMENT,
+  `ID` int(11) DEFAULT NULL,
+  `TagType` varchar(45) DEFAULT NULL,
+  `Tag` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`tagID`),
+  KEY `idxTags` (`ID`,`TagType`,`Tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+

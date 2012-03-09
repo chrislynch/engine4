@@ -133,15 +133,16 @@ function e4_admin_save_formData($forceContent = array()){
                                 $content[$key[0]][$key[1]][$key[2]] = $value;
                                 break;
                 }
-            } else {
-                // Now process any "linkages"
-                if(strstr($key,'e4_form_linkage_')){
-                    // Add a linkage.
-                    $key = explode('_',$key);
-                    $content['linkages'][$key[3]] = $value;
-                }
-            }
-            
+            } elseif(strstr($key,'e4_form_linkage_')){
+                // Process linkages    
+                $key = explode('_',$key);
+                $content['linkages'][$key[3]] = $value;
+            } elseif (strstr($key,'e4_form_tag')){
+                // Process tags
+                $key = explode('_',$key);
+                if (!isset($content['tags'][$key[3]])){ $content['tags'][$key[3]] = array();}
+                $content['tags'][$key[3]][] = $value;
+            }   
 	}
         foreach($_FILES as $key=>$file){
             // @todo: Need a way to ensure that we remember our old file types.

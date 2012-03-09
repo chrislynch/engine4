@@ -96,6 +96,7 @@ function e4_data_new(){
 	$newitem = array('ID'=>0,'name'=>'','type' => '', 'url' => '', 'folder' => '', 'iscontent' => 1, 'status' => 1);
         $newitem['data'] = array();
         $newitem['linkages'] = array();
+        $newitem['tags'] = array();
 	return $newitem;
 }
 
