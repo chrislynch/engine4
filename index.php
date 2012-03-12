@@ -144,6 +144,13 @@ function e4_data_load($ID,$addToData = TRUE,$loadLinkages = TRUE){
                 $newdata['linkages'][$linkagerecord['LinkType']][] = $linkagerecord['LinkID'];
             }
         }
+        
+        $newdata['tags'] = array();
+        $tagquery = e4_db_query('SELECT TagType,Tag FROM e4_tags WHERE ID = ' . $ID);
+        while($tagrecord = mysql_fetch_assoc($tagquery)){
+            if(!isset($newdata['tags'][$tagrecord['TagType']])){ $newdata['tags'][$tagrecord['TagType']] = array(); }
+            $newdata['tags'][$tagrecord['TagType']][] = $tagrecord['Tag'];
+        }
 	
         if ($addToData){
             $data['page']['body']['content'][$newdata['ID']] = $newdata;
@@ -171,24 +178,24 @@ function e4_data_save($saveData){
 	
 	if (strlen($saveData['name']) > 0 AND strlen($saveData['type']) > 0){
 		$saveQuery = 'INSERT INTO e4_data 
-						SET  ID = ' . $saveID . ',
-							 Name = "' . $saveData['name'] . '",
-							 Type = "' . $saveData['type'] . '",
-							 URL = "' . $saveData['url'] . '",
-                                                         Folder = "' . $saveData['folder'] . '",
-							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-							 XML  = "' . $xmlData . '",
-							 is_content = ' . $saveData['iscontent'] . ',
-							 status = ' . $saveData['status'] . '
-					  ON DUPLICATE KEY UPDATE 
-					  		 Name = "' . $saveData['name'] . '",
-							 Type = "' . $saveData['type'] . '",
-							 URL = "' . $saveData['url'] . '",
-                                                         Folder = "' . $saveData['folder'] . '",
-							 Data = "' . mysql_escape_string($serialisedSaveData) . '",
-							 XML  = "' . $xmlData . '",
-							 is_content = ' . $saveData['iscontent'] . ',
-							 status = ' . $saveData['status'];
+                            SET  ID = ' . $saveID . ',
+                                        Name = "' . $saveData['name'] . '",
+                                        Type = "' . $saveData['type'] . '",
+                                        URL = "' . $saveData['url'] . '",
+                                        Folder = "' . $saveData['folder'] . '",
+                                        Data = "' . mysql_escape_string($serialisedSaveData) . '",
+                                        XML  = "' . $xmlData . '",
+                                        is_content = ' . $saveData['iscontent'] . ',
+                                        status = ' . $saveData['status'] . '
+                        ON DUPLICATE KEY UPDATE 
+                                        Name = "' . $saveData['name'] . '",
+                                        Type = "' . $saveData['type'] . '",
+                                        URL = "' . $saveData['url'] . '",
+                                        Folder = "' . $saveData['folder'] . '",
+                                        Data = "' . mysql_escape_string($serialisedSaveData) . '",
+                                        XML  = "' . $xmlData . '",
+                                        is_content = ' . $saveData['iscontent'] . ',
+                                        status = ' . $saveData['status'];
 		// Run the query through our traced query function
 		e4_db_query($saveQuery); 
 		// If this was an insert using the next available ID, return that ID rather than the ID given
@@ -216,6 +223,19 @@ function e4_data_save($saveData){
                                         ID = ' . $saveData['ID'] . ', 
                                         LinkType = "' . $linkType . '",
                                         LinkID = ' . $linkID);
+                        }
+                    }
+                }
+                
+                // Save tags
+                e4_db_query('DELETE FROM e4_tags WHERE ID = ' . $saveData['ID']);
+                if(isset($saveData['tags'])){
+                    foreach($saveData['tags'] as $TagType=>$TagValues){
+                        foreach($TagValues as $tagvalue){
+                            e4_db_query('INSERT INTO e4_tags SET 
+                                            TagType = "' . $TagType . '",
+                                            Tag = "' . $tagvalue . '",
+                                            ID = ' . $saveData['ID']);
                         }
                     }
                 }
@@ -294,6 +314,7 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 	 * Now build the real search query
 	 */
 	$searchQuery = '';
+        $searchQueryJoin = '';
 	$searchQueryCriteria = '';
 	$searchQueryKeywords = array();
 	$searchQueryHaving = '';
@@ -304,19 +325,21 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 	}
 	
 	if (is_array($criteria) && sizeof($criteria) > 0){
-		foreach($criteria as $field=>$value){
-			if (strtoupper($field) == 'XML'){
-				$searchQueryKeywords[]= '"' . $value . '"';
-			} else {
-				if(strlen($searchQueryCriteria) > 0) { $searchQueryCriteria .= ' AND '; }
-				$searchQueryCriteria .= ' ' . $field . ' = ';
-				if (is_numeric($value)){
-					$searchQueryCriteria .= $value . ' ';
-				} else {
-					$searchQueryCriteria .= '"' . $value . '" ';
-				}
-			}
-		}
+            foreach($criteria as $field=>$value){
+                if (strtoupper($field) == 'XML'){
+                    $searchQueryKeywords[]= '"' . $value . '"';
+                } elseif(strtoupper($field) == 'TAGS'){
+                    $searchQueryJoin = ' JOIN e4_tags ON e4_tags.ID = e4_data.ID AND e4_tags.tag = "' . $value . '" ';
+                } else {
+                    if(strlen($searchQueryCriteria) > 0) { $searchQueryCriteria .= ' AND '; }
+                    $searchQueryCriteria .= ' ' . $field . ' = ';
+                    if (is_numeric($value)){
+                            $searchQueryCriteria .= $value . ' ';
+                    } else {
+                            $searchQueryCriteria .= '"' . $value . '" ';
+                    }
+                }
+            }
 	}
 	if(isset($_REQUEST['e4_search'])){
 		$searchQueryKeywords[] = '"' . $_REQUEST['e4_search'] . '"';
@@ -324,18 +347,18 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 	
 	if(!$suppressID &&  isset($_REQUEST['e4_ID'])){
             // Find an item based on its ID
-            $searchQuery = 'SELECT ID FROM e4_data';
+            $searchQuery = 'SELECT e4_data.ID FROM e4_data';
             if(isset($_REQUEST['e4_ID'])){
                     $searchQueryCriteria = 'ID =' . $_REQUEST['e4_ID'];
             }		
 	} else {
 		if(sizeof($searchQueryKeywords) > 0){
 			// Perform a search of some type
-			$searchQuery = 'SELECT ID, MATCH(XML) AGAINST (' . implode(',',$searchQueryKeywords) . ' IN BOOLEAN MODE) AS score FROM e4_data';
+			$searchQuery = 'SELECT e4_data.ID, MATCH(XML) AGAINST (' . implode(',',$searchQueryKeywords) . ' IN BOOLEAN MODE) AS score FROM e4_data';
 			$searchQueryHaving = 'score > 0';
 		} else {
 			// Generic search that just goes looking for anything
-			$searchQuery = 'SELECT ID FROM e4_data';
+			$searchQuery = 'SELECT e4_data.ID FROM e4_data';
 		}	
 	}
 
@@ -347,6 +370,9 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 		}
 		$searchQueryCriteria .= ' status <> 0 ';
 	}
+        if (strlen($searchQueryJoin) > 0){
+            $searchQuery .= $searchQueryJoin;
+        }
 	if (strlen($searchQueryCriteria) > 0){
 		$searchQuery .= ' WHERE ' . $searchQueryCriteria;	
 	}

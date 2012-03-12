@@ -24,14 +24,6 @@ CREATE TABLE `e4_stats` (
 )
 ENGINE = MyISAM DEFAULT CHARSET=latin1;
 
-CREATE  TABLE `e4_log` (
-  `ID` INT NOT NULL AUTO_INCREMENT ,
-  `Message` TEXT NULL ,
-  `Timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ID`) 
-)
-ENGINE = MyISAM DEFAULT CHARSET=latin1;
-
 CREATE TABLE  `e4_linkage` (
   `ID` int(11) NOT NULL,
   `LinkType` varchar(50) NOT NULL,
@@ -39,12 +31,11 @@ CREATE TABLE  `e4_linkage` (
   KEY `IDX_LINKAGE` (`ID`,`LinkType`,`LinkID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `e4_tag` (
-  `tagID` int(11) NOT NULL AUTO_INCREMENT,
-  `ID` int(11) DEFAULT NULL,
-  `TagType` varchar(45) DEFAULT NULL,
-  `Tag` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`tagID`),
-  KEY `idxTags` (`ID`,`TagType`,`Tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE  `e4_tags` (
+  `TagID` int(11) NOT NULL AUTO_INCREMENT,
+  `TagType` varchar(50) NOT NULL,
+  `Tag` varchar(255) NOT NULL,
+  `ID` int(11) NOT NULL,
+  PRIMARY KEY (`TagID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

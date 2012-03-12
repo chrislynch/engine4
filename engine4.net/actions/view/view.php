@@ -14,7 +14,9 @@ function e4_action_view_view_go(&$data){
 	 * If another action has not already loaded up content, we need to load it up 
 	 */
 	if (sizeof(@$data['page']['body']['content']) == 0){
-		e4_data_search();	
+            $criteria = array();
+            if (isset($_REQUEST['e4_tag'])){$criteria['tags'] = $_REQUEST['e4_tag'];}
+            e4_data_search($criteria);
 	}
 	
 	/*
