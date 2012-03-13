@@ -183,19 +183,22 @@
 		border-bottom: solid 1px #eeeeee;
 		
 	}
+        /*
 	.DataTable tr:hover {
-		color:#ffffff;
-		background-color: #385b7b;
+		color:#ff0000;
+		background-color: #385b7b !important;
 		background-image: -moz-linear-gradient(100% 100% 90deg, #385b7b,#48739c);
 		background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#48739c), to(#385b7b));
 		-webkit-box-shadow: 0 1px 3px rgba(0,0,0, .4);
 		-moz-box-shadow: 0 1px 3px rgba(0,0,0, .4);
 	}
-					
+        				
 	.DataTable tr:hover a {
 		color: #ffffff;
 		border-bottom: solid 1px #ffffff;
 	}
+        */
+        
 	.PaginationWidget {
 		text-align:center;
 	}
