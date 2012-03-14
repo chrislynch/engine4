@@ -15,7 +15,7 @@
 		<ul id="MainMenuList">
 			<li><a href="?e4_action=admin" class="MenuTab" id="HomeMenuItem">Home</a></li>
 			<li><a href="#" class="MenuTab" id="ContentMenuItem">Content</a></li>
-			<li><a href="#" class="MenuTab" id="UsersMenuItem">Users</a></li>
+			<li><a href="#" class="MenuTab" id="UsersMenuItem">Users &amp; Security</a></li>
 			<!-- 
 			<li><a href="#" class="MenuTab" id="MessagesMenuItem">Messages</a></li>
 			 -->
@@ -37,7 +37,7 @@
 -->	
   <div id="ContentMenuContent" class="MenuContent">
 		<ul>
-			<li><a href="?e4_action=admin&e4_op=create">Create Content</a></li>
+			<li><a href="?e4_action=admin&e4_op=create">Create Content</a><br></li>
 			<li><a href="?e4_action=admin&e4_op=search">Edit Content</a></li>
 		</ul>
 		<p>
