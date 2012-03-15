@@ -12,9 +12,11 @@ function e4_action_view_view_go(&$data){
 	
 	/*
 	 * If another action has not already loaded up content, we need to load it up 
-	 */
+	 */     
+    
 	if (sizeof(@$data['page']['body']['content']) == 0){
             $criteria = array();
+            // TODO: Move this to index.php's main search function!
             if (isset($_REQUEST['e4_tag'])){$criteria['tags'] = $_REQUEST['e4_tag'];}
             e4_data_search($criteria);
 	}
@@ -32,13 +34,13 @@ function e4_action_view_view_go(&$data){
 				case 0: $data['configuration']['renderers']['all']['templates'][0] = '404.php'; e4_trace('Action VIEW selected template 404 for no items'); break;
 				case 1: $data['configuration']['renderers']['all']['templates'][0] = '?'; e4_trace('Action VIEW selected template ? for single item'); break;
 				default: 
-					if (isset($_REQUEST['e4_search'])){
-						include_once e4_findinclude('actions/view/viewtype/search.php');
-						e4_trace('Action VIEW included template search.php for multiple items');
-					} else {
-						include_once e4_findinclude('actions/view/viewtype/home.php');
-						e4_trace('Action VIEW included action home.php for home page');
-					}
+                                    if (isset($_REQUEST['e4_search'])){
+                                        include e4_findinclude('actions/view/viewtype/search.php');
+                                        e4_trace('Action VIEW included template search.php for multiple items');
+                                    } else {
+                                        include e4_findinclude('actions/view/viewtype/home.php');
+                                        e4_trace('Action VIEW included action home.php for home page');
+                                    }
 			}
 		}	
 	}

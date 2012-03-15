@@ -412,8 +412,6 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
             $searchQuery .= ' LIMIT ' . $data['configuration']['paging']['page-size'];
         }
         
-               
-        
 	// Perform the ACTUAL SEARCH!  
 	$searchData = e4_db_query($searchQuery);
 	
