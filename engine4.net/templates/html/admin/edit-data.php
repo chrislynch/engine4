@@ -21,8 +21,8 @@
                                     if (strtolower($content['type']) !== 'content'){
                                         include e4_findtemplate('forms/data-types/content.php');
                                     }
-                                    include e4_findtemplate('forms/data-types/seo.php');
-                                    include e4_findtemplate('forms/data-types/owner.php');
+                                    include e4_findtemplate('forms/data-types/shared/seo.php');
+                                    include e4_findtemplate('forms/data-types/shared/owner.php');
                                 }
                                 /*
 				switch ($content['type']){
