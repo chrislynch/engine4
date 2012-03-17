@@ -7,3 +7,4 @@
         <div id="footer" class="span-24 last">
             About engine4.net
         </div>
+</div>
