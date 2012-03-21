@@ -23,7 +23,6 @@
 */
 
 function e4_action_search_search_go(&$data){
-    
     e4_data_search();
 }
 ?>

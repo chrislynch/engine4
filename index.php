@@ -321,9 +321,20 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 	$searchQueryOrderBy = '';
 	
 	if ($onlyContent){
-		$searchQueryCriteria = ' is_content = 1 ';
+            $searchQueryCriteria = ' is_content = 1 ';
 	}
 	
+        if(isset($_REQUEST['e4_search'])){
+            $searchQueryKeywords[] = '"' . $_REQUEST['e4_search'] . '"';
+        }
+        foreach($_REQUEST as $field=>$value){
+            if (strstr($field,'e4_search_criteria')){
+                if(!is_array($criteria)){$criteria = array();}
+                $field = str_ireplace('e4_search_criteria_', '', $field);
+                $criteria[$field] = $value;
+            }
+        }
+        
 	if (is_array($criteria) && sizeof($criteria) > 0){
             foreach($criteria as $field=>$value){
                 if (strtoupper($field) == 'XML'){
@@ -340,12 +351,9 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
                     }
                 }
             }
-	}
-	if(isset($_REQUEST['e4_search'])){
-		$searchQueryKeywords[] = '"' . $_REQUEST['e4_search'] . '"';
-	}
+	}        
 	
-	if(!$suppressID &&  isset($_REQUEST['e4_ID'])){
+	if(!$suppressID && isset($_REQUEST['e4_ID'])){
             // Find an item based on its ID
             $searchQuery = 'SELECT e4_data.ID FROM e4_data';
             if(isset($_REQUEST['e4_ID'])){
