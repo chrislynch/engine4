@@ -150,7 +150,7 @@ function e4_admin_save_formData($forceContent = array()){
             }
 
 	}
-        print_r($_FILES);
+        
         foreach($_FILES as $key=>$file){
             
             if ($file['error'] == 0){
