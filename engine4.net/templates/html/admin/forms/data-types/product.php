@@ -7,6 +7,6 @@
 <tr><td>Primary Image</td>
     <td>
         <a target="_blank" href="@@configuration.basedir@@<?php print $content['data']['files']['images']['primary']['path'];?>"><?php print $content['data']['files']['images']['primary']['name'];?></a><br>
-        <input type="file" name="e4_form_content_files_images_primary">
+        <input type="file" name="e4_form_files_images_primary">
     </td>
 </tr>

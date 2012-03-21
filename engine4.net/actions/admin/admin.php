@@ -150,8 +150,9 @@ function e4_admin_save_formData($forceContent = array()){
             }
 
 	}
+        print_r($_FILES);
         foreach($_FILES as $key=>$file){
-            // @todo: Need a way to ensure that we remember our old file types.
+            
             if ($file['error'] == 0){
                 // Move the uploaded file to a sensible place.
                 e4_trace('Copying uploaded file from ' . $file["tmp_name"] . ' to ' . e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name']);
@@ -164,21 +165,21 @@ function e4_admin_save_formData($forceContent = array()){
                 if(!isset($content['data']['files'])){$content['data']['files'] = array();}
 
                 $file['path'] = e4_domaindir() . 'uploads/' . $content['ID'] . '/' . $file['name'];
-                $key = str_ireplace('e4_form_content_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
+                $key = str_ireplace('e4_form_files_', '', $key);	// Get rid of the pre-amble. This was only to identify our form elements.
                 $key=explode('_',$key);								// Explode the key at the underscores
 
                 switch (sizeof($key)){
                         case 1:
-                                $content['data'][$key[0]] = $file;
+                                $content['data']['files'][$key[0]] = $file;
                                 break;
                         case 2:
-                                if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
-                                $content[$key[0]][$key[1]] = $file;
+                                if (!isset($content['data']['files'][$key[0]])){ $content['data']['files'][$key[0]] = array();}
+                                $content['data']['files'][$key[0]][$key[1]] = $file;
                                 break;
                         case 3:
-                                if (!isset($content['data'][$key[0]])){ $content['data'][$key[0]] = array();}
-                                if (!isset($content['data'][$key[0]][$key[1]])){ $content['data'][$key[0]][$key[1]] = array();}
-                                $content['data'][$key[0]][$key[1]][$key[2]] = $file;
+                                if (!isset($content['data']['files'][$key[0]])){ $content['data']['files'][$key[0]] = array();}
+                                if (!isset($content['data']['files'][$key[0]][$key[1]])){ $content['data']['files'][$key[0]][$key[1]] = array();}
+                                $content['data']['files'][$key[0]][$key[1]][$key[2]] = $file;
                                 break;
                 }
             }
