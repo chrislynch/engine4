@@ -21,16 +21,21 @@ if (isset($data['page']['pager']) &&
     print '<ul class="pager">';
     if ($page > 0){
         print '<li class="pager-first"><a href="' . pager_BuildURL(0) . '">First</a></li>';
-        print '<li class="pager-first"><a href="' . pager_BuildURL($page - 1) . '">Previous</a></li>';
+        print '<li class="pager-prev"><a href="' . pager_BuildURL($page - 1) . '">Previous</a></li>';
     }
     for ($index = 1; $index <= $pagecount; $index++) {
-        print '<li class="pager-first"><a href="' . pager_BuildURL($index - 1) . '">' . $index . '</a></li>';
+        if (($index -1) == $page){
+            print '<li class="pager-active">' . $index . '</li>';
+        } else {
+            print '<li class="pager-inactive"><a href="' . pager_BuildURL($index - 1) . '">' . $index . '</a></li>';
+        }
+        
     }
     if ($page < $pagecount -1){
-        print '<li class="pager-first"><a href="' . pager_BuildURL($page + 1) . '">Next</a></li>';
-        print '<li class="pager-first"><a href="' . pager_BuildURL($pagecount -1) . '">Last</a></li>';
+        print '<li class="pager-next"><a href="' . pager_BuildURL($page + 1) . '">Next</a></li>';
+        print '<li class="pager-last"><a href="' . pager_BuildURL($pagecount -1) . '">Last</a></li>';
     }
-    
+    print '</ul>';
 }
 
 function pager_BuildURL($gotoPage){

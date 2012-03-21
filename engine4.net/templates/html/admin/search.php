@@ -29,4 +29,7 @@
 			?>
 		</table>
 	</div>
+        <div class="span-16 last">
+            <?php include e4_findtemplate('widgets/pager.php'); ?>
+        </div>
 </div>

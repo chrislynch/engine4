@@ -390,7 +390,7 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
         $pagerQuery = e4_db_query($pagerQuery);
         if ($pagerQuery){
             $pageCount = mysql_result($pagerQuery, 0);
-            $data['page']['body']['pager']['recordcount'] = $pageCount;
+            $data['page']['pager']['recordcount'] = $pageCount;
             if ($pageCount < $data['configuration']['paging']['page-size']) {
                 $pageCount = 1;
             } else {
@@ -399,7 +399,7 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
         } else {
             $pageCount = 0;
         }
-        $data['page']['body']['pager']['pagecount'] = $pageCount;
+        $data['page']['pager']['pagecount'] = $pageCount;
         if ($pageCount > 0){
             
         }
