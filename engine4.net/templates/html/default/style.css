@@ -37,6 +37,10 @@ h2 {
     #header #sitename {
         font-size:xx-large;   
     }
+    
+    #header #sociallinks {
+        text-align: right;
+    }
 
 
 #sidebar {
@@ -56,7 +60,8 @@ h2 {
 /* CONTENT ELEMENTS */
 
 .content-info{
-    font-size: 8pt;
+    font-size: small;
+    background: gainsboro;
 }
 
 /* PAGER */
