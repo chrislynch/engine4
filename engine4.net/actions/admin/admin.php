@@ -182,6 +182,9 @@ function e4_admin_save_formData($forceContent = array()){
                                 $content['data']['files'][$key[0]][$key[1]][$key[2]] = $file;
                                 break;
                 }
+            } else {
+                // There has been an error with the file upload.
+                e4_message('There is a problem with your file "' . $file['name'] . '"<br>. The file may be too large, an incompatible file type, or may have been corrupted during transmission', 'Error');
             }
         }
         
