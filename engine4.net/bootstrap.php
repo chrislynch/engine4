@@ -85,4 +85,8 @@ $data['page']['body']['contentByFolder'] = array();#
  * Supported 3rd party services
  */
 $data['configuration']['3rdparty']['disqus']['shortname'] = '';
+
+$data['configuration']['3rdparty']['facebook']['account'] = 'thefictionalist';
+
+$data['configuration']['3rdparty']['twitter']['account'] = 'chrislynch_mwm';
 ?>
