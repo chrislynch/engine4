@@ -402,20 +402,20 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
             if ($pageCount < $data['configuration']['paging']['page-size']) {
                 $pageCount = 1;
             } else {
-                $pageCount = intval(1 + ($pageCount / $data['configuration']['paging']['page-size']));
+                $pageCount = intval(1 + ($pageCount / $data['configuration']['paging']['page-size'])) - 1;
             }
         } else {
             $pageCount = 0;
         }
         $data['page']['pager']['pagecount'] = $pageCount;
         if ($pageCount > 0){
-            
+            // TODO: Anything to do with pager?
         }
         
         // Now adding the paging to the query
         if (isset($_REQUEST['e4_page'])){
             $pageStart = $_REQUEST['e4_page'] * $data['configuration']['paging']['page-size'];
-            $searchQuery .= ' LIMIT ' . $pageStart . ',' . ($pageStart + $data['configuration']['paging']['page-size']);
+            $searchQuery .= ' LIMIT ' . ($pageStart + $data['configuration']['paging']['page-size']) . ',' . $data['configuration']['paging']['page-size'] ;
         } else {
             $searchQuery .= ' LIMIT ' . $data['configuration']['paging']['page-size'];
         }
@@ -626,8 +626,36 @@ function e4_pickContentTemplate($content){
 }
 
 /*
- * REDIRECTION AND ERROR HANDLING
+ * REDIRECTION, URLs, AND ERROR HANDLING
  */
+
+function e4_BuildURL($params = array(),$retainExisting = TRUE,$path = ''){
+    /*
+     * Build a new URL, retaining and overwriting OR replacing URLs as required
+     */
+    
+    $return = '';
+    $returnParams = array();
+    
+    if ($retainExisting){
+        foreach($_GET as $getKey=>$getValue){
+            if (key_exists($getKey, $params)){
+                $returnParams[] = $getKey . '=' . $params[$getKey];
+                unset($params[$getKey]);
+            } else {
+                $returnParams[$getKey] = $getKey . '=' . $getValue;
+            }
+        }
+    }
+        
+    foreach($params as $key=>$value){
+        $returnParams[] = $key . '=' . $value;
+    }
+    
+    $return = implode('&', $returnParams);
+    $return = $path . '?' . $return;
+    return $return;
+}
 
 function e4_message($message,$messagetype = 'Info'){
 	global $data;
