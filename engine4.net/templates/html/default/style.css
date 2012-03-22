@@ -1,10 +1,4 @@
-/* 
-    Document   : styles.css
-    Created on : 02-Mar-2012, 23:28:19
-    Author     : chris
-    Description:
-        Purpose of the stylesheet follows.
-*/
+/* BASIC ELEMENTS */
 
 root { 
     display: block;
@@ -33,9 +27,7 @@ h2 {
         color: black;
     }
 
-.container {
-    background: white;
-}
+/* PAGE ELEMENTS */
 
 #header {
     border-bottom: #000;
@@ -47,6 +39,27 @@ h2 {
     }
 
 
+#sidebar {
+    margin-top: 12px;
+}
+   
+#footer {
+    border-top: #000;
+    border-top-style: double;
+    
+    border-bottom: #000;
+    border-bottom-style: solid;
+    
+    margin-top: 60px;
+}
+
+/* CONTENT ELEMENTS */
+
+.content-info{
+    font-size: 8pt;
+}
+
+/* PAGER */
 .PaginationWidget {
 		text-align:center;
 	}
@@ -95,16 +108,6 @@ h2 {
                     background-image: -moz-linear-gradient(100% 100% 90deg, #eeeeee, #ffffff);
                     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#eeeeee));
             }
-   
-#footer {
-    border-top: #000;
-    border-top-style: double;
-    
-    border-bottom: #000;
-    border-bottom-style: solid;
-    
-    margin-top: 60px;
-}
 
 /* ERROR MESSAGES */
 
