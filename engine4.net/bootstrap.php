@@ -35,7 +35,7 @@ $data['configuration']['seo'] = array();
 $data['configuration']['seo']['keywords'] = array();
 $data['configuration']['seo']['keywords']['count'] = 8;
 
-$data['configuration']['paging']['page-size'] = 10;
+$data['configuration']['paging']['page-size'] = 5;
 
 /* 
  * All data lives in this array as well

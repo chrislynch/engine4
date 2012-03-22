@@ -23,12 +23,12 @@
 		<meta name="robots" content="index,follow" />
 		
 		<!-- Blueprint CSS http://www.blueprintcss.org -->
-		<link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/grid.css" type="text/css" media="screen, projection">
-		<!-- <link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/typography.css" type="text/css" media="screen, projection"> -->
-		
+		<link rel="stylesheet" href="@@configuration.basedir@@engine4.net/lib/blueprint/src/grid.css" type="text/css" media="screen, projection">		
 		<!--[if lt IE 8]>
 			<link rel="stylesheet" href="engine4.net/lib/blueprint/ie.css" type="text/css" media="screen, projection">
 		<![endif]-->
+                <!-- Droid Sans Font -->
+                <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
 		
 		<!-- Page or Host specific CSS -->
 		<?php
@@ -72,3 +72,4 @@
 			})();
 		</script>
 	</head>
+        <body>
