@@ -402,7 +402,7 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
             if ($pageCount < $data['configuration']['paging']['page-size']) {
                 $pageCount = 1;
             } else {
-                $pageCount = intval(1 + ($pageCount / $data['configuration']['paging']['page-size'])) - 1;
+                $pageCount = intval($pageCount / $data['configuration']['paging']['page-size']);
             }
         } else {
             $pageCount = 0;
@@ -413,9 +413,9 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
         }
         
         // Now adding the paging to the query
-        if (isset($_REQUEST['e4_page'])){
+        if (isset($_REQUEST['e4_page']) && is_numeric($_REQUEST['e4_page'])){
             $pageStart = $_REQUEST['e4_page'] * $data['configuration']['paging']['page-size'];
-            $searchQuery .= ' LIMIT ' . ($pageStart + $data['configuration']['paging']['page-size']) . ',' . $data['configuration']['paging']['page-size'] ;
+            $searchQuery .= ' LIMIT ' . $data['configuration']['paging']['page-size'] . ',' . $pageStart;
         } else {
             $searchQuery .= ' LIMIT ' . $data['configuration']['paging']['page-size'];
         }
