@@ -13,7 +13,7 @@
 		
 		<!-- Google, Yahoo, and Bing tracking -->
 		<meta name="google-site-verification" content="" />
-		<META name="y_key" content="" />
+		<meta name="y_key" content="" />
 		<meta name="msvalidate.01" content="" />
 		
 		<!-- URL canonicalisation -->
@@ -33,6 +33,7 @@
 		<!-- Page or Host specific CSS -->
 		<?php
                     print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('style.css') . '" type="text/css" media="screen, projection">';
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/social-buttons.css') . '" type="text/css" media="screen, projection">';
                     if (isset($data['page']['head']['stylesheet'])){
                         foreach($data['page']['head']['stylesheet'] as $css){
                             print '<link rel="stylesheet" href="@@configuration.basedir@@' . $css . '" type="text/css" media="screen, projection">';

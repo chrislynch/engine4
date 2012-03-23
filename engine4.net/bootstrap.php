@@ -26,7 +26,7 @@ $data['configuration']['database']['username'] = 'root';
 $data['configuration']['database']['password'] = '';
 $data['configuration']['database']['schema'] = 'engine4';
 
-$data['configuration']['debug'] = TRUE;
+$data['configuration']['debug'] = FALSE;
 
 $data['configuration']['actions'] = array();
 $data['configuration']['renderers'] = array();
@@ -88,4 +88,8 @@ $page['page']['body']['sociallinks']['twitter'] = '';
  * Supported 3rd party services
  */
 $data['configuration']['3rdparty']['disqus']['shortname'] = '';
+
+$data['configuration']['3rdparty']['facebook']['account'] = 'thefictionalist';
+
+$data['configuration']['3rdparty']['twitter']['account'] = 'chrislynch_mwm';
 ?>

@@ -1,3 +1,4 @@
+<div class="content-info">
 <?php
 if (isset($content['linkages']['owner'])){
     print 'Posted By: ';
@@ -20,5 +21,5 @@ if (sizeof(@$content['tags']) > 0){
         }
     }
 }
-
 ?>
+</div>
