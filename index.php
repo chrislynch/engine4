@@ -419,6 +419,7 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
                 $pageCount = 1;
             } else {
                 $pageCount = intval($pageCount / $data['configuration']['paging']['page-size']);
+                if ($pageCount % $data['configuration']['paging']['page-size'] > 0) { $pageCount += 1;}
             }
         } else {
             $pageCount = 0;
@@ -652,16 +653,19 @@ function e4_BuildURL($params = array(),$retainExisting = TRUE,$path = ''){
     
     $return = '';
     $returnParams = array();
+    $disposableParams = array('e4_url');
     
     if ($retainExisting){
         foreach($_GET as $getKey=>$getValue){
-            if (key_exists($getKey, $params)){
-                if ($params[$getKey] !== ''){
-                    $returnParams[] = $getKey . '=' . $params[$getKey];
+            if (!key_exists($getKey,$disposableParams)){
+                if (key_exists($getKey, $params)){
+                    if ($params[$getKey] !== ''){
+                        $returnParams[] = $getKey . '=' . $params[$getKey];
+                    }
+                    unset($params[$getKey]);
+                } else {
+                    $returnParams[$getKey] = $getKey . '=' . $getValue;
                 }
-                unset($params[$getKey]);
-            } else {
-                $returnParams[$getKey] = $getKey . '=' . $getValue;
             }
         }
     }
