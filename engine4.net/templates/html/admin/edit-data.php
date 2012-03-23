@@ -18,10 +18,11 @@
 				// @todo: We need to understand the difference between content types and non-content types
 				include e4_findtemplate('forms/data-types/' .  strtolower($content['type']) . '.php'); 
                                 if ($content['iscontent'] == 1){
-                                    if (strtolower($content['type']) !== 'content'){
-                                        include e4_findtemplate('forms/data-types/content.php');
+                                    if (isset($data['configuration']['datatypes'][$content['type']])){
+                                        if (@$data['configuration']['datatypes'][$content['type']]['content']){include e4_findtemplate('forms/data-types/shared/content.php');}
+                                        if (@$data['configuration']['datatypes'][$content['type']]['social']){include e4_findtemplate('forms/data-types/shared/social.php');}
+                                        if (@$data['configuration']['datatypes'][$content['type']]['seo']){include e4_findtemplate('forms/data-types/shared/seo.php');}
                                     }
-                                    include e4_findtemplate('forms/data-types/shared/seo.php');
                                     include e4_findtemplate('forms/data-types/shared/owner.php');
                                 }
                                 /*

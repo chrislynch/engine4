@@ -271,12 +271,28 @@ function e4_action_search(){
             }
 	}
 	
+        // Final check. Look at the first element of the URL and decide if this could be an action
+        
+        if (!isset($_REQUEST['e4_action']) && isset($_REQUEST['e4_url'])){
+            $actionURL = $_REQUEST['e4_url'];
+            $actionURL = explode('/',$actionURL);
+            $testAction = 'actions/' . $actionURL[0] . '/' . $actionURL[0] . '.php';
+            $testAction = e4_findinclude($testAction);
+            if ($testAction !== 'engine4.net/void.php'){
+                $_REQUEST['e4_action'] = $actionURL[0];
+                if (isset($actionURL[1])){
+                    $_REQUEST['e4_op'] = $actionURL[1];
+                }
+                unset($_REQUEST['e4_url']);              // Unset the requesting URL to ensure the we don't try to load up content from it later.
+            }
+        }
+        
         if(isset($_REQUEST['e4_action'])){
             if ($_REQUEST['e4_action'] !== 'security'){
                 array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
             }
 	} 
-	
+        
 	// Once we have picked up the actions to run *before* view, we need to enforce mandatory pre-cursor actions
 	// Security is already called before ANYTHING else, so that is no longer needed here.
 	// @todo This is where any "modules", like eCommerce, would be loaded. 
@@ -292,7 +308,7 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 	global $db;
 	$searchQuery = '';
 	
-	if (isset($_REQUEST['e4_action']) && $_REQUEST['e4_action'] = 'admin'){
+	if (isset($_REQUEST['e4_action']) && $_REQUEST['e4_action'] == 'admin'){
 		$admin=TRUE;
 	} else {
 		$admin=FALSE;	
