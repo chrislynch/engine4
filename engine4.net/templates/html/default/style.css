@@ -46,6 +46,14 @@ h2 {
         font-size:xx-large;   
     }
 
+    #header #sociallinks{
+        margin-top: 10px;
+    }
+    
+    #header a{
+        text-decoration: none;
+        color: inherit;
+    }
 
 .PaginationWidget {
 		text-align:center;

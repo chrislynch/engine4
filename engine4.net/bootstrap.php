@@ -81,6 +81,9 @@ $data['page']['body']['content'] = array();
 $data['page']['body']['contentByType'] = array();
 $data['page']['body']['contentByFolder'] = array();#
 
+$page['page']['body']['sociallinks']['facebook'] = '';
+$page['page']['body']['sociallinks']['twitter'] = '';
+
 /*
  * Supported 3rd party services
  */
