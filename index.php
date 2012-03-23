@@ -640,7 +640,9 @@ function e4_BuildURL($params = array(),$retainExisting = TRUE,$path = ''){
     if ($retainExisting){
         foreach($_GET as $getKey=>$getValue){
             if (key_exists($getKey, $params)){
-                $returnParams[] = $getKey . '=' . $params[$getKey];
+                if ($params[$getKey] !== ''){
+                    $returnParams[] = $getKey . '=' . $params[$getKey];
+                }
                 unset($params[$getKey]);
             } else {
                 $returnParams[$getKey] = $getKey . '=' . $getValue;

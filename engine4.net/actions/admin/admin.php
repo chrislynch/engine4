@@ -184,7 +184,9 @@ function e4_admin_save_formData($forceContent = array()){
                 }
             } else {
                 // There has been an error with the file upload.
-                e4_message('There is a problem with your file "' . $file['name'] . '"<br>. The file may be too large, an incompatible file type, or may have been corrupted during transmission', 'Error');
+                if ($file['name'] !== ''){
+                    e4_message('There is a problem with your file "' . $file['name'] . '"<br>. The file may be too large, an incompatible file type, or may have been corrupted during transmission', 'Error');
+                }                
             }
         }
         

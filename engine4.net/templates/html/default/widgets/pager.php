@@ -39,7 +39,12 @@ if (isset($data['page']['pager']) &&
 }
 
 function pager_BuildURL($gotoPage){
-    return e4_BuildURL(array('e4_page'=>$gotoPage));
+    if ($gotoPage >= 1){
+        return e4_BuildURL(array('e4_page'=>$gotoPage));
+    } else {
+        return e4_BuildURL(array('e4_page'=>''));
+    }
+    
 }
 
 ?>
