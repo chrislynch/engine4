@@ -17,6 +17,15 @@ function e4_action_blog_blog_go(&$data){
     }
     
     $data['page']['body']['widgets']['tag']['data'] = $tags;
+    
+    $archives = array();
+    $archivesSQL = 'SELECT MONTH(timestamp) as adate,COUNT(0) as size FROM e4_data GROUP BY MONTH(timestamp)';
+    $archivesData = e4_db_query($archivesSQL);
+    while($archive = mysql_fetch_assoc($archivesData)){
+        $archives[$archive['adate']] = $archive['size'];
+    }
+    
+    $data['page']['body']['widgets']['archive']['data'] = $archives;
 }
 
 ?>

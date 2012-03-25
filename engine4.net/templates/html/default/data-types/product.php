@@ -1,8 +1,12 @@
-<h1>Product: <?=@$content['name'];?></h1>
 <div class="span-4">
 	<img src="<?php print $content['data']['files']['images']['primary']['path']; ?>">
 </div>
-<div class="span-12 last">
+<div class="span-8">
+        <?=@$content['data']['teaser'];?>
+</div>
+<div class="span-4 last">
+        <?=@$content['data']['product']['listprice'];?><br>
+        <?=@$content['data']['product']['sellingprice'];?><br>
 	<form action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/627458445324618" id="BB_BuyButtonForm" method="post" name="BB_BuyButtonForm" target="_top">
 	    <input name="item_name_1" type="hidden" value="<?=@$content['name'];?>"/>
 	    <input name="item_description_1" type="hidden" value="<?=@$content['name'];?>"/>
@@ -13,3 +17,4 @@
 	    <input alt="" src="https://checkout.google.com/buttons/buy.gif?merchant_id=627458445324618&amp;w=117&amp;h=48&amp;style=white&amp;variant=text&amp;loc=en_US" type="image"/>
 	</form>
 </div>
+<div class="clear">

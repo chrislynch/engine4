@@ -4,8 +4,14 @@
     </div>
     <div id="sidebar" class="span-5 prepend-1 last">
         <?php include e4_findtemplate('widgets/tagcloud.php'); ?>
+        <?php include e4_findtemplate('widgets/archive.php'); ?>
     </div>
     <div id="footer" class="span-24 last">
-        About engine4.net
+        <div class="span-18">
+            About engine4.net
+        </div>
+        <div id="sociallinks" class="span-6 last">
+            <?php include e4_findtemplate('widgets/sociallinks.php'); ?>    
+        </div>
     </div>
 </div>
