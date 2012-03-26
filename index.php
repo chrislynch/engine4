@@ -279,6 +279,7 @@ function e4_action_search(){
         // Final check. Look at the first element of the URL and decide if this could be an action
         
         if (!isset($_REQUEST['e4_action']) && isset($_REQUEST['e4_url'])){
+            
             $actionURL = $_REQUEST['e4_url'];
             $actionURL = explode('/',$actionURL);
             $testAction = 'actions/' . $actionURL[0] . '/' . $actionURL[0] . '.php';
