@@ -48,6 +48,9 @@ $data['configuration']['paging']['page-size'] = 10;
  * What actions are we running?
  */
 $data['actions'] = array();
+$data['actions'][] = 'blog/blog.php';
+$data['actions'][] = 'cart/cart.php';
+$data['actions'][] = 'folder/folder.php';
 $data['actions'][] = 'view/view.php';
 
 /*
