@@ -33,7 +33,10 @@
 		<!-- Page or Host specific CSS -->
 		<?php
                     print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('style.css') . '" type="text/css" media="screen, projection">';
-                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/social-buttons.css') . '" type="text/css" media="screen, projection">';
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/social-buttons/social-buttons.css') . '" type="text/css" media="screen, projection">';
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/menus/css/dropdown/dropdown.css') . '" media="screen"  type="text/css" />';
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/menus/css/dropdown/themes/default/default.css') . '" media="screen"  type="text/css" />';
+
                     if (isset($data['page']['head']['stylesheet'])){
                         foreach($data['page']['head']['stylesheet'] as $css){
                             print '<link rel="stylesheet" href="@@configuration.basedir@@' . $css . '" type="text/css" media="screen, projection">';
