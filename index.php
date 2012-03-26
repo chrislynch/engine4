@@ -29,17 +29,22 @@ e4_action_security_security_go($data);
 include_once e4_findinclude('actions/analytics/analytics.php');
 
 if (!e4_redirect()){
+    $data['actions-completed'] = array();
     foreach($data['actions'] as $action){
-	include_once e4_findinclude('actions/' . $action);
-	e4_trace('Looking for function ' . e4_getGoFunction($action,'action'));
-	if (function_exists(e4_getGoFunction($action,'action'))){
-		e4_trace('Found function ' . e4_getGoFunction($action,'action'));
-		$parameters = array( &$data );
-		call_user_func_array(e4_getGoFunction($action,'action'),$parameters);
-	} else {
-		e4_trace('Could not find function ' . e4_getGoFunction($action,'action'));
-	}
+        if (!key_exists($action, $data['actions-completed'])){
+            include_once e4_findinclude('actions/' . $action);
+            e4_trace('Looking for function ' . e4_getGoFunction($action,'action'));
+            if (function_exists(e4_getGoFunction($action,'action'))){
+                    e4_trace('Found function ' . e4_getGoFunction($action,'action'));
+                    $parameters = array( &$data );
+                    call_user_func_array(e4_getGoFunction($action,'action'),$parameters);
+            } else {
+                    e4_trace('Could not find function ' . e4_getGoFunction($action,'action'));
+            }
+            $data['actions-completed'][$action] = $action;
+        }
     }
+    unset($data['actions-completed']);
 }
 
 // Record generic stats
