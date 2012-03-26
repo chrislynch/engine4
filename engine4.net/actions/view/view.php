@@ -18,7 +18,7 @@ function e4_action_view_view_go(&$data){
             $criteria = array();
             // TODO: Move this to index.php's main search function!
             if (isset($_REQUEST['e4_tag'])){$criteria['tags'] = $_REQUEST['e4_tag'];}
-            // e4_data_search($criteria);
+            e4_data_search($criteria);
 	}
 	
 	/*
