@@ -6,4 +6,7 @@
                 <?php include e4_findtemplate('widgets/cart.php'); ?>
             </div>
         </div>
+        <div id="menu-primary" class="span-24 last">
+            <?php include e4_findtemplate('widgets/menu.php'); ?>
+        </div>
         <div id="content" class="span-18">
