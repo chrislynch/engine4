@@ -1,7 +1,7 @@
 <div class="span-16">
 <?php foreach($data['page']['body']['content'] as $content){?>
 	<h2 class="SectionHeading">Edit <?=@$content['type']; ?></h2>
-	<form action="?e4_action=admin&e4_op=save&e4_ID=<?php print $content['ID']; ?>" method="POST" enctype="multipart/form-data">
+	<form action="?e4_action=admin&e4_admin_op=save&e4_ID=<?php print $content['ID']; ?>" method="POST" enctype="multipart/form-data">
 		<table>
 			<tr><td>ID</td>
 				<td><?php print $content['ID'];?>

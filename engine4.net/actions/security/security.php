@@ -24,17 +24,13 @@ function e4_action_security_security_go(&$data){
         // The current user must be an administrator to do this.
         if(!(@$data['configuration']['install'] == TRUE)){
             if(!e4_security_user_hasRole($data['user'], 'Administrator')){
-                e4_goto('?e4_action=security&e4_op=authenticate', 403);
+                e4_goto('?e4_action=security&e4_security_op=authenticate', 403);
             }
         }
     }
     
-    /*
-     * After processing security constraints, look to see if there are any security operations taking place
-     * @todo: The code below raises the question of whether we need a different e4_op for each action. Probably we do!
-     */
-    if(isset($_REQUEST['e4_op'])){
-        switch($_REQUEST['e4_op']){
+    if(isset($_REQUEST['e4_security_op'])){
+        switch($_REQUEST['e4_security_op']){
             case 'authenticate':
                 if (isset($_REQUEST['e4_form_security_username']) && isset($_REQUEST['e4_form_security_password'])){
                     // Load a list of users who match this name

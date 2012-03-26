@@ -45,8 +45,8 @@ function e4_action_admin_admin_go(&$data){
 	/*
 	 * Then override these defaults if necessary
 	 */
-	if (isset($_REQUEST['e4_op'])){
-		switch ($_REQUEST['e4_op']){
+	if (isset($_REQUEST['e4_admin_op'])){
+		switch ($_REQUEST['e4_admin_op']){
 			case 'save':
 				// Save the data that has been submitted, assuming we can.
 				// Automatically drop into the edit page again, overriding the ID parameter in case this was a create.

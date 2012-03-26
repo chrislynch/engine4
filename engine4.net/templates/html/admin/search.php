@@ -1,13 +1,13 @@
 <div class="span-16">
 	<div class="span-16 last">
 		<h2 class="SectionHeading">Edit Existing Contents</h2>
-		<form action="?e4_action=admin&e4_op=search" method="POST">
+		<form action="?e4_action=admin&e4_admin_op=search" method="POST">
 			<div class="span-10">
 				<input name="e4_search" type="text" size="40" value="<?=@$_REQUEST['e4_search']?>">
 			</div>
 			<div class="span-6 last">
 			<input type="submit" name="Search" value="Search">
-			&nbsp;<a href="?e4_action=admin&e4_op=search">Clear Search</a>
+			&nbsp;<a href="?e4_action=admin&e4_admin_op=search">Clear Search</a>
 			</div>
 		</form>
 		<hr>
@@ -23,7 +23,7 @@
 						print '<td>' . $content['name'] . '</td>';
 						print '<td>' . $content['timestamp'] . '</td>';
 						print '<td>' . $content['status'] . '</td>';
-						print '<td><a href="?e4_action=admin&e4_op=edit&e4_ID=' . $content['ID'] . '">Edit</a></td>';
+						print '<td><a href="?e4_action=admin&e4_admin_op=edit&e4_ID=' . $content['ID'] . '">Edit</a></td>';
 					print '</tr>';
 				}
 			?>

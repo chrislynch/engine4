@@ -1,6 +1,6 @@
 <div class="span-16">
 	<h2 class="SectionHeading">Create Content</h2>
-	<form action="?e4_action=admin&e4_op=save&e4_ID=0" method="POST">
+	<form action="?e4_action=admin&e4_admin_op=save&e4_ID=0" method="POST">
 		<table>
 			<tr><td>Name</td><td><input name="e4_form_content_name" type="text" size="60" value=""></td></tr>
 			<tr><td>Type</td><td>

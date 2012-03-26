@@ -263,7 +263,7 @@ function e4_action_search(){
             if (mysql_num_rows($findURLQuery) == 1){
                 $newaction = e4_data_load(mysql_result($findURLQuery, 0),FALSE);
                 if (!isset($_REQUEST['e4_action'])){ $_REQUEST['e4_action'] = $newaction['data']['e4']['action']; }
-                if (!isset($_REQUEST['e4_op'])){ $_REQUEST['e4_op'] = $newaction['data']['e4']['op']; }
+                if (!isset($_REQUEST['e4_' . $_REQUEST['e4_action'] . '_op'])){ $_REQUEST['e4_' . $_REQUEST['e4_action'] . '_op'] = $newaction['data']['e4']['op']; }
                 if (isset($newaction['data']['e4']['params'])){
                     $params = explode('&',$newaction['data']['e4']['params']);
                     foreach($params as $param){
@@ -286,7 +286,7 @@ function e4_action_search(){
             if ($testAction !== 'engine4.net/void.php'){
                 $_REQUEST['e4_action'] = $actionURL[0];
                 if (isset($actionURL[1])){
-                    $_REQUEST['e4_op'] = $actionURL[1];
+                    $_REQUEST['e4_' . $_REQUEST['e4_action'] . '_op'] = $actionURL[1];
                 }
                 unset($_REQUEST['e4_url']);              // Unset the requesting URL to ensure the we don't try to load up content from it later.
             }

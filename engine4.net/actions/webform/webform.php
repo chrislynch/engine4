@@ -19,9 +19,9 @@ function e4_action_webform_webform_go(&$data){
 	}
 	
 	if(!isset($_REQUEST['e4_webform_op'])){
-		if (isset($_REQUEST['e4_op']) && strlen($_REQUEST['e4_op']) > 0){
+		if (isset($_REQUEST['e4_webform_op']) && strlen($_REQUEST['e4_webform_op']) > 0){
 			// If an operation is passed, use this as our form template.
-			$data['configuration']['renderers']['all']['templates'][0] = $_REQUEST['e4_op'];
+			$data['configuration']['renderers']['all']['templates'][0] = $_REQUEST['e4_webform_op'];
 		} else {
 			// If an operation is not passed, display a default contact form.
 			$data['configuration']['renderers']['all']['templates'][0] = 'contact.php';

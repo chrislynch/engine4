@@ -10,8 +10,8 @@ function e4_action_contribute_contribute_go(&$data){
      * Works in the same way as the admin action, but using contribution forms
      * and overriding the data from newData() when creating content
      */
-    if (isset($_REQUEST['e4_op'])){
-	switch ($_REQUEST['e4_op']){
+    if (isset($_REQUEST['e4_contribute_op'])){
+	switch ($_REQUEST['e4_contribute_op']){
             case 'save':
                 include_once e4_findinclude('actions/admin/admin.php');
                 $content = e4_data_new();               // Get a new content item
