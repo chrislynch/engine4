@@ -37,6 +37,8 @@ $data['configuration']['seo']['keywords']['count'] = 8;
 
 $data['configuration']['paging']['page-size'] = 10;
 
+$data['configuration']['renderers']['html']['skins'] = array('default');
+
 /* 
  * All data lives in this array as well
  * Data is populated by actions as the system runs
@@ -54,7 +56,7 @@ $data['actions'][] = 'folder/folder.php';
 $data['actions'][] = 'view/view.php';
 
 /*
- * What views are we rendering?
+ * What renders are we rendering?
  */
 $data['renderers'] = array();
 $data['renderers'][] = 'html/html.php';
@@ -101,8 +103,6 @@ $data['configuration']['datatypes']['Product']  = array('content'=>TRUE,'seo'=>T
  * Supported 3rd party services
  */
 $data['configuration']['3rdparty']['disqus']['shortname'] = '';
-
 $data['configuration']['3rdparty']['facebook']['account'] = 'thefictionalist';
-
 $data['configuration']['3rdparty']['twitter']['account'] = 'chrislynch_mwm';
 ?>

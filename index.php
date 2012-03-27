@@ -574,29 +574,11 @@ function e4_prepareTemplates(){
 	
 	$templates = array();
 	if(isset($data['configuration']['renderers']['html']['templates'])){
-		$templates = $data['configuration']['renderers']['html']['templates'];
+            $templates = $data['configuration']['renderers']['html']['templates'];
 	} else {
-		if (isset($data['configuration']['renderers']['all']['templates'])){
-			$templates = $data['configuration']['renderers']['all']['templates'];
-		}
-	}
-	
-	if (sizeof($templates) == 0){
-		$templates['header'] = 'header.php';
-		$templates['footer'] = 'footer.php';
-	}
-	if (!isset($templates['header'])){
-		// Ensure we **always** have a header, even if someone forgets to put one in the templates array
-		$templates['header'] = 'header.php';
-	}
-	if (!isset($templates['footer'])){
-		// Ensure we **always** have a header, even if someone forgets to put one in the templates array
-		$templates['footer'] = 'footer.php';
-	}
-	if (sizeof($templates) == 2){
-		// Ensure we **always** at least one body template.
-		// This is also the mechanism for default template selection
-		$templates[] = 'home.php';
+            if (isset($data['configuration']['renderers']['all']['templates'])){
+                $templates = $data['configuration']['renderers']['all']['templates'];
+            }
 	}
 	
 	/*
