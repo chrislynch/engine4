@@ -9,4 +9,11 @@
         <div id="menu-primary" class="span-24 last">
             <?php include e4_findtemplate('widgets/menu.php'); ?>
         </div>
+        <div id="search" class="span-24 last">
+            <form action="@@configuration.basedir@@search" method="GET">
+                <strong>Search: </strong>
+                <input type="text" name="e4_search" size="130">
+                <input type="submit" value="search">
+            </form>
+        </div>
         <div id="content" class="span-18">
