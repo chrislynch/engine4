@@ -628,24 +628,58 @@ function e4_findtemplate($template,$useBaseDir = FALSE){
 	return $return;
 }
 
-function e4_pickContentTemplate($content){
-	/*
-	 * Look at the piece of content array, and maybe the query parameters, and select an appropriate template for this piece of content
-	 */
-	if(is_array($content) && isset($content['type'])){
-		$template = e4_findtemplate('data-types/' . strtolower($content['type']) . '.php');
-		if ($template !== 'void.php'){
-			$template = explode('/',$template);
-			$templateReturn = array_pop($template);
-			$templateReturn = array_pop($template) . '/' . $templateReturn;
-			$template = $templateReturn;
-		}
-	}
-	if ($template == 'void.php'){
-		$template = 'content.php';
-	}
-	return $template;
-	// return $content['type'] . '.php';	
+function e4_pickContentTemplate($content,$viewtype = 'all',$component = '',$contentTypeOverride = '', $viewtypeOverride = ''){
+    /*
+    * Look at the piece of content, the type of view we are on, and try to find the relevant component.
+    */
+    
+    // Work out our target file name based on the components
+    $targetfilename = 'data-types/';
+    
+    if($contentTypeOverride !== ''){ $targetfilename .= $contentTypeOverride . '-';} 
+        else { $targetfilename .= strtolower($content['type']) . '-'; }
+    
+    if ($viewtypeOverride !== ''){ $targetfilename .= $viewtypeOverride;}
+        else {$targetfilename .= $viewtype;}
+    
+    if ($component !== ''){ $targetfilename .=  '-' . $component . '.php'; }
+    
+    // Look for the file that we want
+    $template = e4_findtemplate($targetfilename);
+    e4_trace('Picking template ' . $targetfilename . ' and found ' . $template);
+     
+    // If the file exists, return it
+    if ($template == 'void.php'){
+        // We did not find the file. 
+        // Recurse and look for something less specific
+        if ($viewtypeOverride == '' && $contentTypeOverride == ''){
+            // No overrides tried yet - try a viewtype override
+            return e4_pickContentTemplate($content, $viewtype, $component, '', 'all');
+        } 
+        if ($viewtypeOverride !== '' && $contentTypeOverride == ''){
+            // Second standby, try moving to the generic "content" content type
+            return e4_pickContentTemplate($content, $viewtype, $component, 'content','');
+        }
+        if ($viewtypeOverride == '' && $contentTypeOverride !== ''){
+            // Second standby, try moving to the generic "content" content type
+            return e4_pickContentTemplate($content, $viewtype, $component, 'content','all');
+        }
+        if ($viewtypeOverride !== '' && $contentTypeOverride !== ''){
+            // We have failed to find an override that matches.
+            return '';
+        }
+    } elseif ($template == '') {
+        // We have given up looking. Return void.php
+        return 'void.php';
+    } else {
+        // We have found the template
+        $template = explode('/',$template);
+        $templateReturn = array_pop($template);
+        $templateReturn = array_pop($template) . '/' . $templateReturn;
+        $template = $templateReturn;
+        return $template;
+    }
+    
 }
 
 /*

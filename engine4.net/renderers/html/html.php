@@ -15,6 +15,12 @@ function e4_renderer_html_html_go($templates){
 		$data['configuration']['renderers']['html']['skins'][] = 'default';
 	}
 	
+        if (isset($data['renders']['all']['viewtype'])){
+            $viewtype = $data['renders']['all']['viewtype'];
+        } else {
+            $viewtype = 'all';
+        }
+        
 	/*
 	 * Buffering output, start to include files in the right order.
 	 * Keep all the output until the end.
@@ -36,13 +42,11 @@ function e4_renderer_html_html_go($templates){
                                         
 					foreach($contentArray as $content){
                                             if($bodytemplate[0] == '?'){
-                                                $pickedbodytemplate = e4_pickContentTemplate($content);	
-                                                include e4_findtemplate('content-start.php');
-                                                include e4_findtemplate($pickedbodytemplate);		
-                                                include e4_findtemplate('content-end.php');
+                                                include e4_findtemplate(e4_pickContentTemplate($content, $viewtype, 'start'));
+                                                include e4_findtemplate(e4_pickContentTemplate($content, $viewtype, 'body'));
+                                                include e4_findtemplate(e4_pickContentTemplate($content, $viewtype, 'end'));
                                             } else {
-                                                $pickedbodytemplate = $bodytemplate[0];
-                                                include e4_findtemplate($pickedbodytemplate);		
+                                                include e4_findtemplate($bodytemplate[0]);		
                                             }
 					}
 				} else {
@@ -51,10 +55,9 @@ function e4_renderer_html_html_go($templates){
 					} else {
                                             foreach($data['page']['body']['content'] as $content){
                                                 if($bodytemplate == '?'){ 
-                                                    $pickedbodytemplate = e4_pickContentTemplate($content); 
-                                                    include e4_findtemplate('content-start.php');
-                                                    include e4_findtemplate($pickedbodytemplate);
-                                                    include e4_findtemplate('content-end.php');
+                                                    include e4_findtemplate(e4_pickContentTemplate($content, $viewtype, 'start'));
+                                                    include e4_findtemplate(e4_pickContentTemplate($content, $viewtype, 'body'));
+                                                    include e4_findtemplate(e4_pickContentTemplate($content, $viewtype, 'end'));
                                                 }  else { 
                                                     $pickedbodytemplate = $bodytemplate;
                                                     include e4_findtemplate($pickedbodytemplate);

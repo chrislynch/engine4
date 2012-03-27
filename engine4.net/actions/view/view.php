@@ -31,22 +31,36 @@ function e4_action_view_view_go(&$data){
 			$data['configuration']['renderers']['all']['templates'][0] = '?';	
 		} else {
 			switch (sizeof($data['page']['body']['content'])){
-				case 0: $data['configuration']['renderers']['all']['templates'][0] = '404.php'; e4_trace('Action VIEW selected template 404 for no items'); break;
-				case 1: $data['configuration']['renderers']['all']['templates'][0] = '?'; e4_trace('Action VIEW selected template ? for single item'); break;
+				case 0: 
+                                    $data['configuration']['renderers']['all']['templates'][0] = '404.php'; 
+                                    e4_trace('Action VIEW selected template 404 for no items'); 
+                                    break;
+                                
+				case 1: 
+                                    $data['configuration']['renderers']['all']['templates'][0] = '?'; 
+                                    e4_trace('Action VIEW selected template ? for single item'); 
+                                    include e4_findinclude('actions/view/viewtype/view.php');
+                                    $data['renders']['all']['viewtype'] = 'view';
+                                    e4_trace('Action VIEW included viewtype view.php');
+                                    break;
+                                
 				default: 
                                     // See if there is a viewtype for our current action
                                     if (isset($_REQUEST['e4_action'])){
                                         if (e4_findinclude('actions/view/viewtype/' . $_REQUEST['e4_action'] . '.php') !== 'void.php'){
                                             include e4_findinclude('actions/view/viewtype/' . $_REQUEST['e4_action'] . '.php');
+                                            $data['renders']['all']['viewtype'] = $_REQUEST['e4_action'];
                                             e4_trace('Action VIEW included viewtype ' . $_REQUEST['e4_action'] . '.php');
                                         } else {
                                             include e4_findinclude('actions/view/viewtype/search.php');
+                                            $data['renders']['all']['viewtype'] = 'search';
                                             e4_trace('Action VIEW included viewtype search.php for generic multi item page');
                                         }
                                     } else {
                                         // Treat an undefined page as the homepage.
                                         // It is impossible for any other un-actioned page to generate multiple items (isn't it?)
                                         include e4_findinclude('actions/view/viewtype/home.php');
+                                        $data['renders']['all']['viewtype'] = 'search';
                                         e4_trace('Action VIEW included action home.php for home page');
                                     }
 			}
