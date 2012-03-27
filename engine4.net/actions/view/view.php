@@ -36,7 +36,7 @@ function e4_action_view_view_go(&$data){
 				default: 
                                     // See if there is a viewtype for our current action
                                     if (isset($_REQUEST['e4_action'])){
-                                        if (e4_findinclude('actions/view/viewtype/' . $_REQUEST['e4_action'] . '.php') !== 'engine4.net/void.php'){
+                                        if (e4_findinclude('actions/view/viewtype/' . $_REQUEST['e4_action'] . '.php') !== 'void.php'){
                                             include e4_findinclude('actions/view/viewtype/' . $_REQUEST['e4_action'] . '.php');
                                             e4_trace('Action VIEW included viewtype ' . $_REQUEST['e4_action'] . '.php');
                                         } else {

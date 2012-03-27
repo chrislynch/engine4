@@ -284,7 +284,7 @@ function e4_action_search(){
             $actionURL = explode('/',$actionURL);
             $testAction = 'actions/' . $actionURL[0] . '/' . $actionURL[0] . '.php';
             $testAction = e4_findinclude($testAction);
-            if ($testAction !== 'engine4.net/void.php'){
+            if ($testAction !== 'void.php'){
                 $_REQUEST['e4_action'] = $actionURL[0];
                 if (isset($actionURL[1])){
                     $_REQUEST['e4_' . $_REQUEST['e4_action'] . '_op'] = $actionURL[1];
@@ -525,7 +525,7 @@ function e4_findinclude($filepath){
 	 * @todo Extending the list of search directories will enabled plugins that do not have to go into core.
 	 */
 	global $data;
-	$return = 'engine4.net/void.php';
+	$return = 'void.php';
 	
 	if (strlen($filepath) > 0){
 		$searchpaths = array();
@@ -540,7 +540,7 @@ function e4_findinclude($filepath){
 				break;	// Stop looking as soon as we have found the file we want and drop out to the return
 			}
 		}
-		if ($return == 'engine4.net/void.php'){
+		if ($return == 'void.php'){
 			e4_trace("No matches for $filepath, returning void.php");
 		}	
 	}
@@ -613,11 +613,11 @@ function e4_findtemplate($template,$useBaseDir = FALSE){
 	 * We need to find a template. Ideally we have a list of skins that we can use.
 	 */
 	global $data;
-	$return = 'engine4.net/void.php';
+	$return = 'void.php';
 	if (strlen($template) > 0){
 		foreach($data['configuration']['renderers']['html']['skins'] as $skin){
 			$return = e4_findinclude('templates/html/' . $skin . '/' . $template);
-			if ($return !== 'engine4.net/void.php'){
+			if ($return !== 'void.php'){
 				break;
 			}
 		}	
@@ -634,14 +634,14 @@ function e4_pickContentTemplate($content){
 	 */
 	if(is_array($content) && isset($content['type'])){
 		$template = e4_findtemplate('data-types/' . strtolower($content['type']) . '.php');
-		if ($template !== 'engine4.net/void.php'){
+		if ($template !== 'void.php'){
 			$template = explode('/',$template);
 			$templateReturn = array_pop($template);
 			$templateReturn = array_pop($template) . '/' . $templateReturn;
 			$template = $templateReturn;
 		}
 	}
-	if ($template == 'engine4.net/void.php'){
+	if ($template == 'void.php'){
 		$template = 'content.php';
 	}
 	return $template;

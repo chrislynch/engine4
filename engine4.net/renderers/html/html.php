@@ -28,38 +28,40 @@ function e4_renderer_html_html_go($templates){
 					// This is a repeater
 					$bodytemplate = explode('*',$bodytemplate);
 					if ($bodytemplate[1] !== 'content'){ 
-						$contentArray = $data['page']['body']['content'][$bodytemplate[1]]; 
+                                            //TODO: This needs to be rewritten - it doesn't actually work!
+                                            $contentArray = $data['page']['body']['content'][$bodytemplate[1]]; 
 					} else {
-						$contentArray = $data['page']['body']['content'];
+                                            $contentArray = $data['page']['body']['content'];
 					}
+                                        
 					foreach($contentArray as $content){
-						if($bodytemplate[0] == '?'){
-                                                    $pickedbodytemplate = e4_pickContentTemplate($content);	
-                                                    include e4_findtemplate('content-start.php');
-                                                    include e4_findtemplate($pickedbodytemplate);		
-                                                    include e4_findtemplate('content-end.php');
-						} else {
-                                                    $pickedbodytemplate = $bodytemplate[0];
-                                                    include e4_findtemplate($pickedbodytemplate);		
-                                                }
+                                            if($bodytemplate[0] == '?'){
+                                                $pickedbodytemplate = e4_pickContentTemplate($content);	
+                                                include e4_findtemplate('content-start.php');
+                                                include e4_findtemplate($pickedbodytemplate);		
+                                                include e4_findtemplate('content-end.php');
+                                            } else {
+                                                $pickedbodytemplate = $bodytemplate[0];
+                                                include e4_findtemplate($pickedbodytemplate);		
+                                            }
 					}
 				} else {
 					if (sizeof(@$data['page']['body']['content']) == 0){
 						include e4_findtemplate($bodytemplate);
 					} else {
-						foreach($data['page']['body']['content'] as $content){
-                                                    if($bodytemplate == '?'){ 
-                                                        $pickedbodytemplate = e4_pickContentTemplate($content); 
-                                                        include e4_findtemplate('content-start.php');
-                                                        include e4_findtemplate($pickedbodytemplate);
-                                                        include e4_findtemplate('content-end.php');
-                                                    }  else { 
-                                                        $pickedbodytemplate = $bodytemplate;
-                                                        include e4_findtemplate($pickedbodytemplate);
-                                                    }
-                                                    
-                                                    break; // Only do this once. We just use the loop to get at the first item in the array without knowing its key
-						}	
+                                            foreach($data['page']['body']['content'] as $content){
+                                                if($bodytemplate == '?'){ 
+                                                    $pickedbodytemplate = e4_pickContentTemplate($content); 
+                                                    include e4_findtemplate('content-start.php');
+                                                    include e4_findtemplate($pickedbodytemplate);
+                                                    include e4_findtemplate('content-end.php');
+                                                }  else { 
+                                                    $pickedbodytemplate = $bodytemplate;
+                                                    include e4_findtemplate($pickedbodytemplate);
+                                                }
+
+                                                break; // Only do this once. We just use the loop to get at the first item in the array without knowing its key
+                                            }	
 					}
 				}
 			}

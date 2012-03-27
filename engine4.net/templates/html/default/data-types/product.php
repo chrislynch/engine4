@@ -1,10 +1,7 @@
-<div class="span-4">
+<div class="span-7 append-1">
 	<img src="<?php print $content['data']['files']['images']['primary']['path']; ?>">
 </div>
-<div class="span-8">
-        <?=@$content['data']['teaser'];?>
-</div>
-<div class="span-4 last">
+<div class="span-10 last">
         <?=@$content['data']['product']['listprice'];?><br>
         <?=@$content['data']['product']['sellingprice'];?><br>
 	<form action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/627458445324618" id="BB_BuyButtonForm" method="post" name="BB_BuyButtonForm" target="_top">
