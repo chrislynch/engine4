@@ -278,31 +278,32 @@ function e4_action_search(){
 	
         // Final check. Look at the first element of the URL and decide if this could be an action
         
-        if (!isset($_REQUEST['e4_action']) && isset($_REQUEST['e4_url'])){
-            
-            $actionURL = $_REQUEST['e4_url'];
-            $actionURL = explode('/',$actionURL);
-            $testAction = 'actions/' . $actionURL[0] . '/' . $actionURL[0] . '.php';
-            $testAction = e4_findinclude($testAction);
-            if ($testAction !== 'void.php'){
-                $_REQUEST['e4_action'] = $actionURL[0];
-                if (isset($actionURL[1])){
-                    $_REQUEST['e4_' . $_REQUEST['e4_action'] . '_op'] = $actionURL[1];
+        if (!isset($_REQUEST['e4_action'])){
+            if (isset($_REQUEST['e4_url']) && $_REQUEST['e4_url'] !== ''){
+                $actionURL = $_REQUEST['e4_url'];
+                $actionURL = explode('/',$actionURL);
+                $testAction = 'actions/' . $actionURL[0] . '/' . $actionURL[0] . '.php';
+                $testAction = e4_findinclude($testAction);
+                if ($testAction !== 'void.php'){
+                    $_REQUEST['e4_action'] = $actionURL[0];
+                    if (isset($actionURL[1])){
+                        $_REQUEST['e4_' . $_REQUEST['e4_action'] . '_op'] = $actionURL[1];
+                    }
+                    unset($_REQUEST['e4_url']);              // Unset the requesting URL to ensure the we don't try to load up content from it later.
                 }
-                unset($_REQUEST['e4_url']);              // Unset the requesting URL to ensure the we don't try to load up content from it later.
+            } else {
+                $_REQUEST['e4_action'] = 'home';
             }
         }
         
         if(isset($_REQUEST['e4_action'])){
             if ($_REQUEST['e4_action'] !== 'security'){
-                array_unshift($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
+                array_push($data['actions'],$_REQUEST['e4_action'] . '/' . $_REQUEST['e4_action'] . '.php');
             }
 	} 
         
-        if (!isset($_REQUEST['e4_action'])){
-            // No action has been found. Default to view.
-            $data['actions'][] = 'view/view.php';
-        }
+        // Add in VIEW as the last and final action every time.
+        array_push($data['actions'],'view/view.php');
         
 }
 
