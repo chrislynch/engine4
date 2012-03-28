@@ -299,10 +299,11 @@ function e4_action_search(){
             }
 	} 
         
-	// Once we have picked up the actions to run *before* view, we need to enforce mandatory pre-cursor actions
-	// Security is already called before ANYTHING else, so that is no longer needed here.
-	// @todo This is where any "modules", like eCommerce, would be loaded. 
-	// array_unshift($data['actions'],'security/security.php');
+        if (!isset($_REQUEST['e4_action'])){
+            // No action has been found. Default to view.
+            $data['actions'][] = 'view/view.php';
+        }
+        
 }
 
 function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$suppressID=FALSE){

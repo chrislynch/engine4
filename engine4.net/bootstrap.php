@@ -53,7 +53,7 @@ $data['actions'] = array();
 $data['actions'][] = 'blog/blog.php';
 $data['actions'][] = 'cart/cart.php';
 $data['actions'][] = 'folder/folder.php';
-$data['actions'][] = 'view/view.php';
+// $data['actions'][] = 'view/view.php';
 
 /*
  * What renders are we rendering?
