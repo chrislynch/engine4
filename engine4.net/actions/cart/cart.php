@@ -48,5 +48,20 @@ function e4_action_cart_cart_go(&$data){
     }
     
     $data['cart'] = $cart;
+    
+    if (isset($_REQUEST['e4_cart_op']) && $_REQUEST['e4_cart_op'] == 'view'){
+        e4_action_cart_cart_view($data);
+    }
+}
+
+function e4_action_cart_cart_view(&$data){
+    /*
+     * Load data from the cart into the content array so that we can display it.
+     */
+    foreach($data['cart']['items'] as $cartitemID=>$cartitem){
+        e4_data_load($cartitemID);
+        $data['page']['body']['content'][$cartitemID]['cart'] = $cartitem;
+    }
+    
 }
 ?>
