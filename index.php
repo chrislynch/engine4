@@ -271,6 +271,13 @@ function e4_data_save($saveData){
 	
 }
 
+function e4_data_save_link($linkFrom,$linkTo,$linkType){
+    e4_db_query('INSERT INTO e4_linkage SET 
+                    ID = ' . $linkFrom . ', 
+                    LinkType = "' . $linkType . '",
+                    LinkID = ' . $linkTo);
+}
+
 function e4_action_search(){
 	/*
 	 * Check the URL and other parameters to find our actions

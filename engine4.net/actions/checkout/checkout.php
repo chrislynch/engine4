@@ -39,6 +39,11 @@ function e4_action_checkout_checkout_go(&$data){
             cookie_set('completed_orderID',$orderID);
             cookie_set('orderID',0);
             
+            // Before we unset the cart, add linkages so that we can track the purchase.
+            foreach($data['cart']['items'] as $cartItemID=>$cartItem){
+                e4_data_save_link($data['user']['ID'], $cartItemID, 'purchaser');
+            }
+            
             unset($data['cart']);
             cookie_set('cart','');
             
