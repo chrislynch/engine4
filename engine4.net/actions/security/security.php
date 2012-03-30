@@ -43,7 +43,11 @@ function e4_action_security_security_go(&$data){
                                 $data['user'] = $user;
                                 cookie_set('userid',$user['ID']);
                                 e4_message('Welcome back ' . $user['name']);
-                                e4_goto('?e4_action=my');
+                                if (isset($_REQUEST['e4_destination_action'])){
+                                    e4_goto('?e4_action=' . $_REQUEST['e4_destination_action']);
+                                } else {
+                                    e4_goto('?e4_action=my');
+                                }
                                 break;
                             } else {
                                 // This is not the right user

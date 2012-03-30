@@ -39,6 +39,11 @@ $data['configuration']['paging']['page-size'] = 10;
 
 $data['configuration']['renderers']['html']['skins'] = array('default');
 
+/*
+ * Action specific configurations
+ */
+$data['configuration']['checkout']['require-login'] = TRUE;
+
 /* 
  * All data lives in this array as well
  * Data is populated by actions as the system runs
@@ -53,7 +58,6 @@ $data['actions'] = array();
 $data['actions'][] = 'blog/blog.php';
 $data['actions'][] = 'cart/cart.php';
 $data['actions'][] = 'folder/folder.php';
-// $data['actions'][] = 'view/view.php';
 
 /*
  * What renders are we rendering?
