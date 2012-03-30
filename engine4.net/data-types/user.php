@@ -14,4 +14,8 @@ function e4_datatype_user_validate(&$content){
     }
 }
 
+function e4_datatype_user_new(&$newitem){    
+    $newitem['iscontent'] = FALSE;
+}
+
 ?>
