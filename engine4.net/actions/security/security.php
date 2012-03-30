@@ -49,29 +49,6 @@ function e4_action_security_security_go(&$data){
     }
 }
 
-
-function cookie_set($cookiename,$cookievalue){
-    $cookiename = 'e4_' . e4_domain() . '_' . $cookiename;
-    $cookiename = str_ireplace('.', '_', $cookiename);
-    setcookie($cookiename,$cookievalue,0,'/');
-    $_REQUEST['cookie_' . $cookiename] = $cookievalue; // Tuck cookie value here in case it is needed during this page render 
-}
-
-function cookie_get($cookiename,$defaultvalue = '',$widget = FALSE){
-    if (!$widget) {$cookiename = 'e4_' . e4_domain() . '_' . $cookiename;}
-    $cookiename = str_ireplace('.', '_', $cookiename);
-
-    if (isset($_REQUEST['cookie_' . $cookiename])){
-        return $_REQUEST['cookie_' . $cookiename];
-    } else {
-        if (isset($_COOKIE[$cookiename])){
-                return $_COOKIE[$cookiename];
-        } else {
-                return $defaultvalue;	
-        }
-    }
-}
-
 function e4_security_user_hasRole($user,$role){
     /*
      * Look into a user array and see if a certain role exists.
