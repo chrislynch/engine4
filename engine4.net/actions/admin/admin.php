@@ -56,14 +56,14 @@ function e4_action_admin_admin_go(&$data){
 				}
 				
 			case 'edit':
+                                e4_data_search();   // Run search to load the content we are editing
 				$data['configuration']['renderers']['all']['templates'][1] = 'edit-data.php';
 				break;
 				
 			case 'create':
 				if(isset($_REQUEST['e4_adminType'])){
-					$content = e4_data_new();
-					$content['type'] = $_REQUEST['e4_adminType'];
-                                        if(isset($_REQUEST['e4_adminTypeIsContent'])){
+					$content = e4_data_new($_REQUEST['e4_adminType']);
+					if(isset($_REQUEST['e4_adminTypeIsContent'])){
                                             $content['iscontent'] = $_REQUEST['e4_adminTypeIsContent'];
                                         }
 					$data['page']['body']['content'][] = $content;
@@ -196,11 +196,11 @@ function e4_admin_save_formData($forceContent = array()){
         include_once e4_findinclude('data-types/all.php');
         include_once e4_findinclude('data-types/' . $content['type'] . '.php');
         
-        e4_action_admin_validate($content);
+        e4_datatype_all_validate($content);
         
-        if (function_exists('e4_action_admin_validate_' . $content['type'])){
+        if (function_exists('e4_datatype_' . $content['type'] . '_validate')){
             $parameters = array( &$content );
-            call_user_func_array('e4_action_admin_validate_' . $content['type'], $parameters);
+            call_user_func_array('e4_datatype_' . $content['type'] . '_validate', $parameters);
         }
         
         if (isset($content['valid']) && $content['valid'] == TRUE){

@@ -1,6 +1,6 @@
 <?php
 
-function e4_action_admin_validate(&$content){
+function e4_datatype_all_validate(&$content){
     // Establish a "state of grace" on new data - all data is good until we find out otherwise.
     $content['valid'] = TRUE;
     
