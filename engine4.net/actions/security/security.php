@@ -32,44 +32,18 @@ function e4_action_security_security_go(&$data){
     if(isset($_REQUEST['e4_security_op'])){
         switch($_REQUEST['e4_security_op']){
             case 'authenticate':
-                if (isset($_REQUEST['e4_form_security_username']) && isset($_REQUEST['e4_form_security_password'])){
-                    // Load a list of users who match this name
-                    print 'Looking for ' . $_REQUEST['e4_form_security_username'];
-                    $users = e4_data_search(array('name'=>$_REQUEST['e4_form_security_username'],'type'=>'user'),FALSE,FALSE);
-                    if (sizeof($users) > 0){
-                        foreach($users as $user){
-                            if ($user['data']['password'] = $_REQUEST['e4_form_security_password']){
-                                // This is our user, and the password is good.
-                                $data['user'] = $user;
-                                cookie_set('userid',$user['ID']);
-                                e4_message('Welcome back ' . $user['name']);
-                                if (isset($_REQUEST['e4_destination_action'])){
-                                    e4_goto('?e4_action=' . $_REQUEST['e4_destination_action']);
-                                } else {
-                                    e4_goto('?e4_action=my');
-                                }
-                                break;
-                            } else {
-                                // This is not the right user
-                                e4_message('Invalid password for user "' . $user['name'] . '"');
-                                $data['configuration']['renderers']['all']['templates'][0] = 'forms/security/authenticate.php';
-                                break;
-                            }
-                        }    
-                    } else {
-                        e4_message('Invalid account. There is no such user as "' . $_REQUEST['e4_form_security_username'] . '"');
-                        $data['configuration']['renderers']['all']['templates'][0] = 'forms/security/authenticate.php';
-                    }
-                } else {
-                    // This is a request for a log in form
-                    $data['configuration']['renderers']['all']['templates'][0] = 'forms/security/authenticate.php';
-                }
+                e4_action_security_security_authenticate($data);
                 break;
             
             case 'deauthenticate':
                 // Log out of the system.
                 cookie_set('userid', '');
                 e4_goto('?');
+                break;
+            
+            case 'register':
+                // Registation is essentially a content creation step.
+                e4_action_security_security_register($data);
                 break;
         }
     }
@@ -120,6 +94,61 @@ function e4_security_user_hasRole($user,$role){
         }
         // User has NO roles. Return FALSE
         return false;
+    }
+}
+
+function e4_action_security_security_authenticate(&$data){
+    if (isset($_REQUEST['e4_form_security_username']) && isset($_REQUEST['e4_form_security_password'])){
+        // Load a list of users who match this name
+        print 'Looking for ' . $_REQUEST['e4_form_security_username'];
+        $users = e4_data_search(array('name'=>$_REQUEST['e4_form_security_username'],'type'=>'user'),FALSE,FALSE);
+        if (sizeof($users) > 0){
+            foreach($users as $user){
+                if ($user['data']['password'] = $_REQUEST['e4_form_security_password']){
+                    // This is our user, and the password is good.
+                    $data['user'] = $user;
+                    cookie_set('userid',$user['ID']);
+                    e4_message('Welcome back ' . $user['name']);
+                    if (isset($_REQUEST['e4_destination_action'])){
+                        e4_goto('?e4_action=' . $_REQUEST['e4_destination_action']);
+                    } else {
+                        e4_goto('?e4_action=my');
+                    }
+                    break;
+                } else {
+                    // This is not the right user
+                    e4_message('Invalid password for user "' . $user['name'] . '"');
+                    $data['configuration']['renderers']['all']['templates'][0] = 'forms/security/authenticate.php';
+                    break;
+                }
+            }    
+        } else {
+            e4_message('Invalid account. There is no such user as "' . $_REQUEST['e4_form_security_username'] . '"');
+            $data['configuration']['renderers']['all']['templates'][0] = 'forms/security/authenticate.php';
+        }
+    } else {
+        // This is a request for a log in form
+        $data['configuration']['renderers']['all']['templates'][0] = 'forms/security/authenticate.php';
+    }
+}
+
+function e4_action_security_security_register(&$data){
+    // Registration is essentially the act of creating a user account, which is a data-type/content form.
+    
+    // Create a new user object
+    $newUser = e4_data_new('user');
+    
+    // Attempt to save data to it
+    include_once e4_findinclude('actions/admin/admin.php');
+    $userID = e4_admin_save_formData($newUser);
+    
+    if ($userID > 0){
+        // We have registered.
+        // Automatically log the user in and drop them off at their page
+        cookie_set('userid',$userID);
+        e4_goto('?e4_action=my');
+    } else {
+        
     }
 }
 

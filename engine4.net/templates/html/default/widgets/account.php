@@ -5,7 +5,7 @@
         <?php
     } else {  
         ?>
-        <strong>My Account: </strong><a href="?e4_action=security&e4_security_op=authenticate">Log In</a>
+        <strong>My Account: </strong><a href="?e4_action=security&e4_security_op=authenticate">Log In/Register</a>
         <?
     }
 ?>
