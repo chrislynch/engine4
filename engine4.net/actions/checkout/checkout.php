@@ -41,7 +41,7 @@ function e4_action_checkout_checkout_go(&$data){
             
             // Before we unset the cart, add linkages so that we can track the purchase.
             foreach($data['cart']['items'] as $cartItemID=>$cartItem){
-                e4_data_save_link($data['user']['ID'], $cartItemID, 'purchaser');
+                e4_data_save_link($cartItemID, $data['user']['ID'], 'purchaser');
             }
             
             unset($data['cart']);
