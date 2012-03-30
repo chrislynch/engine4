@@ -202,7 +202,7 @@ function e4_admin_save_formData($forceContent = array()){
             $parameters = array( &$content );
             call_user_func_array('e4_datatype_' . $content['type'] . '_validate', $parameters);
         }
-        
+        print_r('in admin=' . $content);
         if (isset($content['valid']) && $content['valid'] == TRUE){
             e4_trace('Submitted content is valid. Attempting save');
             $savedID = e4_data_save($content);

@@ -63,5 +63,9 @@ function e4_action_cart_cart_view(&$data){
         $data['page']['body']['content'][$cartitemID]['cart'] = $cartitem;
     }
     
+    $data['configuration']['renderers']['all']['templates'][-1] = 'forms/cart/cart-begin.php';
+    $data['configuration']['renderers']['all']['templates'][0] = 'forms/cart/cart-body.php*content';
+    $data['configuration']['renderers']['all']['templates'][1] = 'forms/cart/cart-end.php';
+    
 }
 ?>
