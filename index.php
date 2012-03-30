@@ -94,7 +94,7 @@ if (! e4_redirect()){
  * Lots of actions have cause to do this, so the functions live here for all to share. 
  */
 
-function e4_data_new(){
+function e4_data_new($type = ''){
 	/*
 	 * Create a new data item array and return it for use.
 	 */
@@ -102,6 +102,18 @@ function e4_data_new(){
         $newitem['data'] = array();
         $newitem['linkages'] = array();
         $newitem['tags'] = array();
+        
+        // Check for a general content_new function that is specific to this content type
+        if ($type !== ''){
+            $newitem['type'] = $type;
+            include_once e4_findinclude('data-types/' . $type . '.php');
+            $newfunction = 'e4_datatype_' . $type . '_new';
+            if (function_exists($newfunction)){
+                $parameters = array( &$newitem );
+                call_user_func_array($newfunction,$parameters);
+            }
+        }
+               
 	return $newitem;
 }
 
@@ -140,13 +152,21 @@ function e4_data_load($ID,$addToData = TRUE,$loadLinkages = TRUE){
 	}
         
         $newdata['linkages'] = array();
-        $linkagequery = e4_db_query('SELECT ID,LinkType,LinkID FROM e4_linkage WHERE ID = ' . $ID);
+        $linkagequery = e4_db_query('SELECT ID,LinkType,LinkID FROM e4_linkage WHERE ID = ' . $ID . ' OR LinkID = ' . $ID);
         
         while($linkagerecord = mysql_fetch_assoc($linkagequery)){
             if ($loadLinkages === TRUE){
-                $newdata['linkages'][$linkagerecord['LinkType']][] = e4_data_load($linkagerecord['LinkID'], FALSE, FALSE);
+                if ($linkagerecord['ID'] == $ID){
+                    $newdata['linkages']['to'][$linkagerecord['LinkType']][] = e4_data_load($linkagerecord['LinkID'], FALSE, FALSE);
+                } else {
+                    $newdata['linkages']['from'][$linkagerecord['LinkType']][] = e4_data_load($linkagerecord['ID'], FALSE, FALSE);
+                }
             } else {
-                $newdata['linkages'][$linkagerecord['LinkType']][] = $linkagerecord['LinkID'];
+                if ($linkagerecord['ID'] == $ID){
+                    $newdata['linkages']['to'][$linkagerecord['LinkType']][] = $linkagerecord['LinkID'];
+                } else {
+                    $newdata['linkages']['from'][$linkagerecord['LinkType']][] = $linkagerecord['LinkID'];
+                }
             }
         }
         
@@ -323,16 +343,18 @@ function e4_data_search($criteria=array(),$addToData = TRUE,$onlyContent=TRUE,$s
 	}
 	
 	/*
-	 * Start with a URL lookup, if a URL has been specified
+	 * Start with a URL lookup, if a URL has been specified and no criteria exist
 	 */
-	if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
+        if (sizeof($criteria) == 0){
+            if (isset($_REQUEST['e4_url']) AND !(isset($_REQUEST['e4_ID']))){
 		$findURLQuery = e4_db_query('SELECT ID FROM e4_data WHERE URL = "' . $_REQUEST['e4_url'] . '" AND status <> 0 AND Type<>"Action"');
 		if (mysql_num_rows($findURLQuery) == 1){
 			$_REQUEST['e4_ID'] = mysql_result($findURLQuery, 0);
 		} else {
 			$_REQUEST['e4_ID'] = -1;
 		}
-	}
+            }
+        }
 	
 	/*
 	 * Now build the real search query

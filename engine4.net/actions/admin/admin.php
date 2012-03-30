@@ -115,7 +115,7 @@ function e4_admin_save_formData($forceContent = array()){
             $content = $forceContent;
         }
 	
-        // Now add in some standard data, to represent what we are saving
+        // Make sure this content is owned by someone.
         if (!isset($content['linkages'])) { $content['linkages'] = array(); }
         $content['linkages']['owner'] = $data['user']['ID'];
         

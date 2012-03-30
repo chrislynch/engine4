@@ -13,7 +13,7 @@ function e4_action_security_security_go(&$data){
     $data['user'] = array();
     $data['user']['ID'] = cookie_get('userid',0);
     if ($data['user']['ID'] > 0){
-        $data['user'] = e4_data_load($data['user']['ID'],FALSE);
+        $data['user'] = e4_data_load($data['user']['ID'],FALSE,FALSE);
     }
 
     /*
@@ -34,6 +34,7 @@ function e4_action_security_security_go(&$data){
             case 'authenticate':
                 if (isset($_REQUEST['e4_form_security_username']) && isset($_REQUEST['e4_form_security_password'])){
                     // Load a list of users who match this name
+                    print 'Looking for ' . $_REQUEST['e4_form_security_username'];
                     $users = e4_data_search(array('name'=>$_REQUEST['e4_form_security_username'],'type'=>'user'),FALSE,FALSE);
                     if (sizeof($users) > 0){
                         foreach($users as $user){
