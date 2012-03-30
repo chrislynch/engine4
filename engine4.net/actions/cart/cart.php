@@ -14,22 +14,30 @@ function e4_action_cart_cart_go(&$data){
             $qty = 1;
         }
         
+        $cartitem = e4_data_load($_REQUEST['e4_cart_item'],FALSE,FALSE);
+        $readyToCheckoutMessage = ' Are you ready to <a href="?e4_action=checkout">checkout</a>?';
+        
         switch($_REQUEST['e4_cart_op']){
             case 'add':                
                 if (isset($cart['items'][$_REQUEST['e4_cart_item']])){
                     $cart['items'][$_REQUEST['e4_cart_item']]['qty'] += $qty;
+                    e4_message('Updated quantity of ' . $cartitem['name'] . ' to ' . $cart['items'][$_REQUEST['e4_cart_item']]['qty'] . ' in your cart.' . $readyToCheckoutMessage);
                 } else {
                     $cart['items'][$_REQUEST['e4_cart_item']] = array('qty'=>$qty);
-                }
+                    e4_message('Added ' . $cartitem['name'] . ' to your cart.' . $readyToCheckoutMessage);
+                }                
                 break;
             case 'update':
                 $cart['items'][$_REQUEST['e4_cart_item']] = array('qty'=>$qty);
+                e4_message('Updated quantity of ' . $cartitem['name'] . ' to ' . $qty . ' in your cart' . $readyToCheckoutMessage);
                 break;
             case 'remove':
                 unset($cart['items'][$_REQUEST['e4_cart_item']]);
+                e4_message('Removed ' . $cartitem['name'] . ' from your cart');
                 break;
             case 'empty':
                 $cart['items'] = array();
+                e4_message('Your cart is now empty.');
                 break;
         }
     }

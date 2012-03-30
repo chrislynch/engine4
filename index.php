@@ -13,6 +13,14 @@ $db = mysql_connect($data['configuration']['database']['server'],
 mysql_select_db($data['configuration']['database']['schema'],$db);
 
 /*
+ * MESSAGE COOKIES
+ * We may have some messages stashed in cookies from a previous page run.
+ * Grab them and put them back in the data array for output later
+ */
+
+$data['page']['messages'] = unserialize(cookie_get('messages', serialize(array())));
+
+/*
  * ACTIONS
  * We will perform a series of actions in order to load up the data array, ready for the render,
  * and to do any tasks that we are required to do.
@@ -55,6 +63,9 @@ e4_action_analytics_analytics_go($data);
  */
 mysql_close($db);
 
+// Serialise the messages from the actions into a cookie in case the renderer does not show them immediately.
+cookie_set('messages',  serialize($data['page']['messages']));
+
 /*
  * The result of all our processing *could* be a redirect.
  * Run the redirection function in case this is the case.
@@ -87,6 +98,32 @@ if (! e4_redirect()){
 }
 
 // 
+
+/*
+ * COOKIE FUNCTIONS
+ */
+
+function cookie_set($cookiename,$cookievalue){
+    $cookiename = 'e4_' . e4_domain() . '_' . $cookiename;
+    $cookiename = str_ireplace('.', '_', $cookiename);
+    setcookie($cookiename,$cookievalue,0,'/');
+    $_REQUEST['cookie_' . $cookiename] = $cookievalue; // Tuck cookie value here in case it is needed during this page render 
+}
+
+function cookie_get($cookiename,$defaultvalue = '',$widget = FALSE){
+    if (!$widget) {$cookiename = 'e4_' . e4_domain() . '_' . $cookiename;}
+    $cookiename = str_ireplace('.', '_', $cookiename);
+
+    if (isset($_REQUEST['cookie_' . $cookiename])){
+        return $_REQUEST['cookie_' . $cookiename];
+    } else {
+        if (isset($_COOKIE[$cookiename])){
+                return $_COOKIE[$cookiename];
+        } else {
+                return $defaultvalue;	
+        }
+    }
+}
 
 /*
  * CONTENT DATA FUNCTIONS
@@ -735,7 +772,8 @@ function e4_BuildURL($params = array(),$retainExisting = TRUE,$path = ''){
 function e4_message($message,$messagetype = 'Info'){
 	global $data;
 	if (!isset($data['page']['messages'])){ $data['page']['messages'] = array();}
-	$data['page']['messages'][] = array('message' => $message, 'type' => $messagetype); 
+	$data['page']['messages'][] = array('message' => $message, 'type' => $messagetype);
+        cookie_set('messages',  serialize($data['page']['messages']));
 }
 
 function e4_goto($redirectPath,$redirectMethod = 301){
@@ -774,5 +812,7 @@ function e4_redirect(){
 	
 	return $return;
 }
+
+
 
 ?>

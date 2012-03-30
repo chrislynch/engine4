@@ -7,5 +7,6 @@
         }
         // As we have now output the messages, it is safe to destroy them.
         $data['page']['messages'] = array();
+        cookie_set('messages', '');
     }
 ?>
