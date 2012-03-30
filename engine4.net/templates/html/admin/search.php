@@ -23,7 +23,8 @@
 						print '<td>' . $content['name'] . '</td>';
 						print '<td>' . $content['timestamp'] . '</td>';
 						print '<td>' . $content['status'] . '</td>';
-						print '<td><a href="?e4_action=admin&e4_admin_op=edit&e4_ID=' . $content['ID'] . '">Edit</a></td>';
+						print '<td><a href="?e4_action=admin&e4_admin_op=edit&e4_ID=' . $content['ID'] . '">Edit</a>&nbsp;|&nbsp;';
+                                                print '<a href="?e4_action=admin&e4_admin_op=raw&e4_ID=' . $content['ID'] . '">View Raw</a></td>';
 					print '</tr>';
 				}
 			?>

@@ -59,6 +59,12 @@ function e4_action_admin_admin_go(&$data){
                                 e4_data_search();   // Run search to load the content we are editing
 				$data['configuration']['renderers']['all']['templates'][1] = 'edit-data.php';
 				break;
+                            
+                        case 'raw':
+                            // View the raw XML of an item
+                            e4_data_search();
+                            $data['configuration']['renderers']['all']['templates'][1] = 'raw-data.php';
+                            break;
 				
 			case 'create':
 				if(isset($_REQUEST['e4_adminType'])){
@@ -202,7 +208,7 @@ function e4_admin_save_formData($forceContent = array()){
             $parameters = array( &$content );
             call_user_func_array('e4_datatype_' . $content['type'] . '_validate', $parameters);
         }
-        print_r('in admin=' . $content);
+
         if (isset($content['valid']) && $content['valid'] == TRUE){
             e4_trace('Submitted content is valid. Attempting save');
             $savedID = e4_data_save($content);

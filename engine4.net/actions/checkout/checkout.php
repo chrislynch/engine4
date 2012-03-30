@@ -29,10 +29,18 @@ function e4_action_checkout_checkout_go(&$data){
             
             // Now use the admin features to write to the order
             $orderID = e4_admin_save_formData($order);
-            print_r($order);
+
+            // Is this the last post, or is there more to come?
             
             // Set our cookie to make sure we can still see our order on the next post
-            cookie_set('orderID',$orderID);
+            
+            // If complete, set the thankyou page up and clear the cookies
+            $data['configuration']['renderers']['all']['templates'][0] = 'forms/checkout/complete.php';
+            cookie_set('completed_orderID',$orderID);
+            cookie_set('orderID',0);
+            
+            unset($data['cart']);
+            cookie_set('cart','');
             
         } else {
             // We are at the very start of the checkout process.
