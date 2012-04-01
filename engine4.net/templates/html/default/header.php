@@ -27,8 +27,6 @@
 		<!--[if lt IE 8]>
 			<link rel="stylesheet" href="engine4.net/lib/blueprint/ie.css" type="text/css" media="screen, projection">
 		<![endif]-->
-                <!-- Droid Sans Font -->
-                <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
 		
 		<!-- Page or Host specific CSS -->
 		<?php

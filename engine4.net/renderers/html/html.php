@@ -17,9 +17,10 @@ function e4_renderer_html_html_go($templates){
 	
         if (isset($data['renders']['all']['viewtype'])){
             $viewtype = $data['renders']['all']['viewtype'];
+            // $data['page']['head']['stylesheet'][] = $viewtype . '.css';
         } else {
             $viewtype = 'all';
-        }
+        }       
         
 	/*
 	 * Buffering output, start to include files in the right order.
