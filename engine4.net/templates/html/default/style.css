@@ -7,6 +7,7 @@ root {
 body {
     font-family: sans-serif;
     font-size: 8pt;
+    color: black;
 }
 
 h1 {
@@ -31,7 +32,27 @@ h2 {
 h3,h4 {
     font-size: 1.0em;
 }
-    
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+    a:visited {
+        color: black;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: red;
+        text-decoration: none;
+    }
+
+    a:active {
+        color: red;
+        text-decoration: none;
+    }
+
 /* HEADER ELEMENTS */
 
 #header {
@@ -42,6 +63,12 @@ h3,h4 {
 
     #header #sitename #sitename-sitename {
         font-size:xx-large;   
+    }
+    
+    #header #sitename img{
+        float: left;
+        height: 40px;
+        padding-right: 5px;
     }
     
     #header #sociallinks {

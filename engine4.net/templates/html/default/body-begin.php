@@ -2,6 +2,7 @@
     <div class="container">
         <div id="header" class="span-24 last">
             <div id="sitename" class="span-18">
+                <img src="@@configuration.basedir@@www.christopherwilliamlynch.com/logo.png">
                 <a id="sitename-sitename" href="@@configuration.basedir@@"><?=@$data['page']['body']['H1']?></a><br>
                 <span id="sitename-slogan">The home of great eCommerce</span>
             </div>
