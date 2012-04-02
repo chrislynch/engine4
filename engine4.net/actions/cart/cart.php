@@ -6,7 +6,7 @@ function e4_action_cart_cart_go(&$data){
     $cart = unserialize($cartstring);
     
     // Check to see if there are any cart actions due
-    if (isset($_REQUEST['e4_cart_op'])){
+    if (isset($_REQUEST['e4_cart_op']) && $_REQUEST['e4_cart_op'] !== 'view'){
         
         if (isset($_REQUEST['e4_cart_item_qty'])){
             $qty = $_REQUEST['e4_cart_item_qty'];
@@ -57,7 +57,8 @@ function e4_action_cart_cart_go(&$data){
     
     $data['cart'] = $cart;
     
-    if (isset($_REQUEST['e4_cart_op']) && $_REQUEST['e4_cart_op'] == 'view'){
+    // if (isset($_REQUEST['e4_cart_op']) && $_REQUEST['e4_cart_op'] == 'view'){
+    if (isset($_REQUEST['e4_cart_op'])){
         e4_action_cart_cart_view($data);
     }
 }

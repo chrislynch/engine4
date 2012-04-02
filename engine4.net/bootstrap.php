@@ -109,4 +109,6 @@ $data['configuration']['datatypes']['Product']  = array('content'=>TRUE,'seo'=>T
 $data['configuration']['3rdparty']['disqus']['shortname'] = '';
 $data['configuration']['3rdparty']['facebook']['account'] = 'thefictionalist';
 $data['configuration']['3rdparty']['twitter']['account'] = 'chrislynch_mwm';
+
+$data['configuration']['3rdparty']['google-analytics']['account'] = '';
 ?>

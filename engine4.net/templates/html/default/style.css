@@ -6,7 +6,7 @@ root {
 
 body {
     font-family: sans-serif;
-    font-size: 10pt;
+    font-size: 8pt;
 }
 
 h1 {
@@ -28,6 +28,10 @@ h2 {
         color: black;
     }
 
+h3,h4 {
+    font-size: 1.0em;
+}
+    
 /* HEADER ELEMENTS */
 
 #header {
@@ -74,6 +78,72 @@ h2 {
     
 #sidebar {
     margin-top: 12px;
+}
+
+#sidebar-left #nav{
+    width: 150px;
+}
+
+#sidebar-right .sidebar-heading{
+    background-image: linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
+    background-image: -o-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
+    background-image: -moz-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
+    background-image: -webkit-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
+    background-image: -ms-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
+
+    background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	right bottom,
+	color-stop(0.39, rgb(0,0,168)),
+	color-stop(0.7, rgb(187,192,230)),
+	color-stop(0.85, rgb(0,0,168))
+    );  
+    
+    font-size: 1.5em;
+    color: white;
+    
+    margin-bottom: -11px;
+    
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    
+    -webkit-border-top-left-radius: 12px;
+    -webkit-border-top-right-radius: 12px;
+    -moz-border-radius-topleft: 12px;
+    -moz-border-radius-topright: 12px;
+}
+
+#sidebar-right .sidebar-item {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    
+    margin-bottom: 10px;
+    
+    border-left-style: solid;
+    border-left-color: blue;
+    border-left-width: 2px;
+    
+    border-right-style: solid;
+    border-right-color: blue;
+    border-right-width: 2px;
+    
+    border-bottom-style: solid;
+    border-bottom-color: blue;
+    border-bottom-width: 2px;
+    
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    
+    -webkit-border-bottom-left-radius: 6px;
+    -webkit-border-bottom-right-radius: 6px;
+    -moz-border-radius-bottomleft: 6px;
+    -moz-border-radius-bottomright: 6px;
 }
 
 /* FOOTER */
@@ -216,7 +286,59 @@ PRODUCT SPECIFIC ELEMENTS
 ==============================================================================
 */
 
-.product .product-image img{
-    width: 270px;
-    overflow: hidden;
+.product {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    
+    margin-bottom: 10px;
+    
+    border-style: solid;
+    border-color: gainsboro;
+    border-width: 2px;
+    border-radius: 6px;
+    
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
 }
+
+
+.product .product-image img{
+    width: 95%;
+    overflow: hidden;
+    padding-top: 15px;
+    padding-left: 5px;
+}
+
+/* BUTTONS */
+
+.button-highlight {
+   border-top: 1px solid #96d1f8;
+   background: #e36a00;
+   background: -webkit-gradient(linear, left top, left bottom, from(#fc0000), to(#e36a00));
+   background: -webkit-linear-gradient(top, #fc0000, #e36a00);
+   background: -moz-linear-gradient(top, #fc0000, #e36a00);
+   background: -ms-linear-gradient(top, #fc0000, #e36a00);
+   background: -o-linear-gradient(top, #fc0000, #e36a00);
+   padding: 9px 18px;
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: #000000;
+   font-size: 14px;
+   font-family: Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button-highlight:hover {
+   border-top-color: #d40000;
+   background: #d40000;
+   color: #fafafa;
+   }
+.button-highlight:active {
+   border-top-color: #c40000;
+   background: #c40000;
+   }
