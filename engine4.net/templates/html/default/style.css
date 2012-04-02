@@ -1,3 +1,9 @@
+@import url("http://fonts.googleapis.com/css?family=Sonsie+One");
+/* COLOUR SCHEME SOURCED FROM 
+http://www.colorcombos.com/color-schemes/2/ColorCombo2.html
+*/
+ 
+
 /* BASIC ELEMENTS */
 
 root { 
@@ -59,10 +65,11 @@ a {
     border-bottom: #000;
     border-bottom-style: solid;
     padding-bottom: 5px;
-}
+} 
 
     #header #sitename #sitename-sitename {
-        font-size:xx-large;   
+        color: #097054;
+        font-family: 'Sonsie One', cursive;
     }
     
     #header #sitename img{
@@ -112,21 +119,7 @@ a {
 }
 
 #sidebar-right .sidebar-heading{
-    background-image: linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
-    background-image: -o-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
-    background-image: -moz-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
-    background-image: -webkit-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
-    background-image: -ms-linear-gradient(left , rgb(0,0,168) 39%, rgb(187,192,230) 70%, rgb(0,0,168) 85%);
-
-    background-image: -webkit-gradient(
-	linear,
-	left bottom,
-	right bottom,
-	color-stop(0.39, rgb(0,0,168)),
-	color-stop(0.7, rgb(187,192,230)),
-	color-stop(0.85, rgb(0,0,168))
-    );  
-    
+    background-color: #6599FF;
     font-size: 1.5em;
     color: white;
     
@@ -153,15 +146,15 @@ a {
     margin-bottom: 10px;
     
     border-left-style: solid;
-    border-left-color: blue;
+    border-left-color: #6599FF;
     border-left-width: 2px;
     
     border-right-style: solid;
-    border-right-color: blue;
+    border-right-color: #6599FF;
     border-right-width: 2px;
     
     border-bottom-style: solid;
-    border-bottom-color: blue;
+    border-bottom-color: #6599FF;
     border-bottom-width: 2px;
     
     border-bottom-left-radius: 6px;
@@ -339,33 +332,25 @@ PRODUCT SPECIFIC ELEMENTS
 /* BUTTONS */
 
 .button-highlight {
-   border-top: 1px solid #96d1f8;
-   background: #e36a00;
-   background: -webkit-gradient(linear, left top, left bottom, from(#fc0000), to(#e36a00));
-   background: -webkit-linear-gradient(top, #fc0000, #e36a00);
-   background: -moz-linear-gradient(top, #fc0000, #e36a00);
-   background: -ms-linear-gradient(top, #fc0000, #e36a00);
-   background: -o-linear-gradient(top, #fc0000, #e36a00);
+ 
+   background: #FF9900;
+ 
    padding: 9px 18px;
    -webkit-border-radius: 8px;
    -moz-border-radius: 8px;
    border-radius: 8px;
-   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   box-shadow: rgba(0,0,0,1) 0 1px 0;
-   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   
+   
    color: #000000;
    font-size: 14px;
-   font-family: Helvetica, Arial, Sans-Serif;
+   
    text-decoration: none;
    vertical-align: middle;
    }
 .button-highlight:hover {
-   border-top-color: #d40000;
    background: #d40000;
    color: #fafafa;
    }
 .button-highlight:active {
-   border-top-color: #c40000;
    background: #c40000;
    }

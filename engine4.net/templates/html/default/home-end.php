@@ -23,7 +23,7 @@
     height: 300,
     theme: {
         shell: {
-        background: '#333333',
+        background: '#6599FF',
         color: '#ffffff'
         },
         tweets: {
