@@ -1,4 +1,3 @@
-<!--
 <div id="sidebar-left" class="home span-3 append-1">
     <ul id="nav" class="dropdown dropdown-vertical">
             <li><a href="./">Home</a></li>
@@ -61,6 +60,5 @@
             </li>
     </ul>
 </div>
--->
-<div class="span-17">
+<div class="span-16">
     
