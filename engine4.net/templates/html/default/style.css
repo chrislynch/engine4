@@ -70,6 +70,7 @@ a {
     #header #sitename #sitename-sitename {
         color: #097054;
         font-family: 'Sonsie One', cursive;
+        font-size: 16pt;
     }
     
     #header #sitename img{
@@ -183,11 +184,6 @@ a {
 .content-info{
     font-size: small;
     background: gainsboro;
-}
-
-.sellingprice {
-    color: red;
-    font-size: 1.5em;
 }
 
 /* PAGER */
@@ -306,27 +302,53 @@ PRODUCT SPECIFIC ELEMENTS
 ==============================================================================
 */
 
-.product {
+.product-4 {
     padding-top: 10px;
     padding-bottom: 10px;
     
     margin-bottom: 10px;
     
     border-style: solid;
-    border-color: gainsboro;
+    border-color: #FFDE00;
     border-width: 2px;
     border-radius: 6px;
     
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
+    
+    height: 350px;
 }
 
+.product-4 .product-heading {
+    background-color: #FFDE00;
+    margin-top: -10px;
+}
 
-.product .product-image img{
+.product-4 .product-image {
+    height: 150px;
+    overflow: hidden;
+}
+
+.product-4 .product-name {
+    height: 100px;
+}
+
+.product-4 .wasprice {
+    text-decoration: line-through;
+    font-size: 1.25em;
+}
+
+.product-4 .sellingprice {
+    color: red;
+    font-size: 2em;
+}
+
+.product-4 .product-image img{
     width: 95%;
     overflow: hidden;
     padding-top: 15px;
     padding-left: 5px;
+    padding-right: 5px;
 }
 
 /* BUTTONS */
@@ -354,3 +376,9 @@ PRODUCT SPECIFIC ELEMENTS
 .button-highlight:active {
    background: #c40000;
    }
+   
+/* GENERAL */
+
+.centered {
+    text-align: center;
+}
