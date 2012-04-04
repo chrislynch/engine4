@@ -39,6 +39,7 @@ function e4_renderer_html_html_go($templates){
         
             foreach($templates as $key=>$bodytemplate){
                     e4_trace('HTML Renderer processing template ' . $bodytemplate);
+                    
                     if (strstr($bodytemplate,'*')){
                             // This is a repeater
                             $bodytemplate = explode('*',$bodytemplate);
