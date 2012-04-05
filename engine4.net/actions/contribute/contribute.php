@@ -17,7 +17,7 @@ function e4_action_contribute_contribute_go(&$data){
                 $content = e4_data_new();               // Get a new content item
                 $content['status'] = 1;                 // Override to default published status
                 $content['type'] = $_REQUEST['e4_contributeType'];
-                $savedID = e4_admin_save_formData($content);
+                $savedID = e4_admin_admin_formData_save($content);
                 if ($savedID !== @$_REQUEST['e4_ID']){
                     e4_data_load($savedID);
                     if (is_numeric($savedID)){

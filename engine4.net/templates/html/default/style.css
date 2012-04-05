@@ -354,7 +354,7 @@ PRODUCT SPECIFIC ELEMENTS
     -moz-border-radius: 6px;
     
     float: left;
-    height: 300px;
+    height: 340px;
     width: 145px;
     margin-right: 8px;
 }
@@ -370,7 +370,7 @@ PRODUCT SPECIFIC ELEMENTS
 }
 
 .product-4 .product-name {
-    height: 40px;
+    height: 80px;
 }
 
 .product-4 .wasprice {
@@ -409,13 +409,15 @@ PRODUCT SPECIFIC ELEMENTS
    text-decoration: none;
    vertical-align: middle;
    }
-.button-highlight:hover {
-   background: #d40000;
-   color: #fafafa;
-   }
-.button-highlight:active {
-   background: #c40000;
-   }
+
+   .button-highlight:hover {
+        background: #d40000;
+        color: #fafafa;
+    }
+
+    .button-highlight:active {
+        background: #c40000;
+    }
    
 /* GENERAL */
 

@@ -50,7 +50,7 @@ function e4_action_admin_admin_go(&$data){
 			case 'save':
 				// Save the data that has been submitted, assuming we can.
 				// Automatically drop into the edit page again, overriding the ID parameter in case this was a create.
-				$savedID = e4_admin_save_formData();
+				$savedID = e4_admin_admin_formData_save();
 				if ($savedID !== $_REQUEST['e4_ID']){
 					e4_data_load($savedID);
 				}
@@ -103,7 +103,7 @@ function e4_action_admin_admin_go(&$data){
 /*
  * FORM SAVE FUNCTIONS - Reads form data and saves it to the e4_data table using functions from index.php
  */
-function e4_admin_save_formData($forceContent = array()){
+function e4_admin_admin_formData_save($forceContent = array()){
     global $data;
 	/*
 	 * Parse through the submitted form data and build up a piece of content to save.
@@ -145,11 +145,18 @@ function e4_admin_save_formData($forceContent = array()){
 
                 // Add a linkage.
                 $key = explode('_',$key);
-                $content['linkages'][$key[3]] = $value;   
+                $content['linkages'][$key[3]] = $value; 
+                
             } elseif(strstr($key,'e4_form_tags_')){
+                // Add a tag
+                
                 $key = explode('_',$key);
                 if (!isset($content['tags'][$key[3]])){ $content['tags'][$key[3]] = array();}
-                $value = explode(',',$value);
+                
+                if (!is_array($value)){
+                    $value = explode(',',$value);
+                }
+                
                 foreach($value as $realvalue){
                     $content['tags'][$key[3]][] = trim($realvalue);
                 }
@@ -196,6 +203,36 @@ function e4_admin_save_formData($forceContent = array()){
             }
         }
         
+        // Check to make sure that we have not lost any files
+        foreach($_POST as $key=>$value){
+            if (strstr($key,'previous_e4_form_files_')){
+                
+                $key = str_ireplace('previous_e4_form_files_', '', $key);
+                $key=explode('_',$key);								// Explode the key at the underscores
+
+                switch (sizeof($key)){
+                    case 1:
+                            if (!isset($content['data']['files'][$key[0]])){
+                                $content['data']['files'][$key[0]] = unserialize(base64_decode($value));
+                            }
+                            break;
+                    case 2:
+                            if (!isset($content['data']['files'][$key[0]][$key[1]])){
+                                if (!isset($content['data']['files'][$key[0]])){ $content['data']['files'][$key[0]] = array();}
+                                $content['data']['files'][$key[0]][$key[1]] = unserialize(base64_decode($value));
+                            }
+                            break;
+                    case 3:
+                            if (!isset($content['data']['files'][$key[0]][$key[1]][$key[2]])){
+                                if (!isset($content['data']['files'][$key[0]])){ $content['data']['files'][$key[0]] = array();}
+                                if (!isset($content['data']['files'][$key[0]][$key[1]])){ $content['data']['files'][$key[0]][$key[1]] = array();}
+                                $content['data']['files'][$key[0]][$key[1]][$key[2]] = unserialize(base64_decode($value));
+                            }
+                            break;
+                }    
+            }
+        }
+        
         /*
          * Validate the data that we are saving using our validators
          */
@@ -221,6 +258,63 @@ function e4_admin_save_formData($forceContent = array()){
 	
 }
 
+function e4_admin_admin_formData_buildInput_selectorcheckorradio($inputType,$inputName,$contentData = array(),$inputData = array()){
+    /*
+     * Build an input widget of either radio, select, or checkbox type
+     * Ensure that the selected or checked parameters are set based on the content of the item
+     */
+    
+    $return = '';
+    if (!(is_array($contentData))){
+        $contentData = array($contentData => $contentData);
+    }
+    
+    if ($inputType == 'select'){ $return = '<select name="' . $inputName . '">'; }
+    
+    foreach($inputData as $value=>$text){
+        switch($inputType){
+            case 'select':
+                $return .= '<option value="' . $value . '"';
+                if (in_array($value, $contentData)){ $return .= ' selected="selected"';}
+                $return .= '>' . $text . '</option>';
+                break;
+                
+            case 'checkbox':
+                $return .= '<input type="checkbox" name="' . $inputName . '" value="' . $value . '"';
+                if (in_array($value, $contentData)){ $return .= ' checked="checked"';}
+                $return .= '>' . $text . '<br>';
+                break;
+        }
+    }
+    
+    return $return;
+    
+}
 
+function e4_admin_admin_formData_buildInput_file($inputName,$content){
+    /*
+     * Create a new file upload. File inputs are simpler to locate in the data structure, 
+     * so we can use this to locate the data in the content item
+     */
+    
+    $return = '';
+    
+    $fileLocation = str_ireplace('e4_form_files_', '', $inputName);
+    $fileLocation = explode('_',$fileLocation);
+    
+    if (isset($content['data']['files'][$fileLocation[0]][$fileLocation[1]])){
+        // There is an existing file
+        // Display a link to see it, and a checkbox to remove it.
+        $return .= '<a target="_blank" href="@@configuration.basedir@@' . 
+                    $content['data']['files'][$fileLocation[0]][$fileLocation[1]]['path'] . '">' .
+                    @$content['data']['files']['images']['primary']['name'] . '</a><br>';
+        $return .= '<input type="hidden" name="previous_' . $inputName . '" value=' . base64_encode(serialize($content['data']['files'][$fileLocation[0]][$fileLocation[1]])) . '">';
+    } else {
+        
+    }
+    $return .= '<input type="file" name="' . $inputName . '">';
+    
+    return $return;
+}
 
 ?>
