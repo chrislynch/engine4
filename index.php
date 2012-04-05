@@ -216,8 +216,8 @@ function e4_data_load($ID,$addToData = TRUE,$loadLinkages = TRUE){
 	
         if ($addToData){
             $data['page']['body']['content'][$newdata['ID']] = $newdata;
-            $data['page']['body']['contentByType'][$newdata['type']][$newdata['ID']] = $newdata;
-            $data['page']['body']['contentByFolder'][$newdata['folder']][$newdata['ID']] = $newdata;
+            // $data['page']['body']['contentByType'][$newdata['type']][$newdata['ID']] = $newdata;
+            // $data['page']['body']['contentByFolder'][$newdata['folder']][$newdata['ID']] = $newdata;
         }
         
 	return $newdata;
