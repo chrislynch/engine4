@@ -30,9 +30,13 @@
 		
 		<!-- Page or Host specific CSS -->
 		<?php
-                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('style.css') . '" type="text/css" media="screen, projection">';
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/style.css') . '" type="text/css" media="screen, projection">';
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/palette.css') . '" type="text/css" media="screen, projection">';
+                    print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/typography.css') . '" type="text/css" media="screen, projection">';
+                    
                     print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/social-buttons/social-buttons.css') . '" type="text/css" media="screen, projection">';
                     print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/menus/css/dropdown/dropdown.css') . '" media="screen"  type="text/css" />';
+                    
                     print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/menus/css/dropdown/dropdown.vertical.css') . '" media="screen"  type="text/css" />';
                     print '<link rel="stylesheet" href="@@configuration.basedir@@' . e4_findtemplate('css/menus/css/dropdown/themes/default/default.css') . '" media="screen"  type="text/css" />';
 

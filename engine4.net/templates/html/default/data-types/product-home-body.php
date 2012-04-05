@@ -1,5 +1,5 @@
 <div class="product-4 centered">
-    <div class="product-heading">NEW PRODUCT</div>
+    <div class="product-heading <?=@$content['tags']['productpromo'][0];?>"><?=@$content['tags']['productpromo'][0];?></div>
     <div class="product-image">
         <a href="<?=@$content['link'];?>">
             <img src="<?php print $content['data']['files']['images']['primary']['path']; ?>">

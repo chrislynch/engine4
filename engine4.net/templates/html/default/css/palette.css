@@ -1,14 +1,11 @@
-@import url("http://fonts.googleapis.com/css?family=Sonsie+One");
-/* COLOUR SCHEME SOURCED FROM 
-http://www.colorcombos.com/color-schemes/2/ColorCombo2.html
+/* 
+    Document   : palette.css
+    Created on : 05-Apr-2012, 16:40:48
+    Author     : chris
+    Description:
+        Purpose of the stylesheet follows.
 */
- 
 
-/* BASIC ELEMENTS */
-
-root { 
-    display: block;
-}
 
 body {
     font-family: sans-serif;
@@ -371,6 +368,10 @@ PRODUCT SPECIFIC ELEMENTS
 
 .product-4 .product-name {
     height: 80px;
+}
+
+.product-4 .Sale {
+    background-color: #FF0000;
 }
 
 .product-4 .wasprice {
