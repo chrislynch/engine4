@@ -26,7 +26,7 @@ $data['configuration']['database']['username'] = 'root';
 $data['configuration']['database']['password'] = '';
 $data['configuration']['database']['schema'] = 'engine4';
 
-$data['configuration']['debug'] = TRUE;
+$data['configuration']['debug'] = FALSE;
 
 $data['configuration']['actions'] = array();
 $data['configuration']['renderers'] = array();
@@ -37,7 +37,7 @@ $data['configuration']['seo']['keywords']['count'] = 8;
 
 $data['configuration']['paging']['page-size'] = 20;
 
-$data['configuration']['renderers']['html']['skins'] = array('default');
+$data['configuration']['renderers']['html']['skins'] = array('_default');
 
 /*
  * Action specific configurations
@@ -77,6 +77,7 @@ $data['debug']['trace'] = array();
 $data['page'] = array();
 $data['page']['head'] = array();
 $data['page']['head']['title'] = 'engine4 Content Management';
+$data['page']['head']['sitename'] = 'engine4 Content Management';
 $data['page']['head']['keywords'] = '';
 $data['page']['head']['abstract'] = '';
 $data['page']['head']['description'] = '';

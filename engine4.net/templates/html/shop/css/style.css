@@ -1,0 +1,44 @@
+@import url("http://fonts.googleapis.com/css?family=Ubuntu:400,500,700");
+  
+root { 
+    display: block;
+}
+
+body {
+    
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+#container-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 980px;
+    
+    
+    box-shadow:         0px 0px 20px 3px #ccc;
+    -moz-box-shadow:    0px 0px 20px 3px #ccc;
+    -webkit-box-shadow: 0px 0px 20px 3px #ccc;
+}
+
+#header-top-right{
+    text-align: right;
+}
+
+#header-bottom-right{
+    text-align: right;
+}
+
+#footer-top {
+    background: gainsboro;
+}
+
+#footer-top h3 {
+    color: gray;
+}
+
+#footer-bottom h3 {
+    color: cornflowerblue;
+}
