@@ -77,7 +77,6 @@ function e4_security_user_hasRole($user,$role){
 function e4_action_security_security_authenticate(&$data){
     if (isset($_REQUEST['e4_form_security_username']) && isset($_REQUEST['e4_form_security_password'])){
         // Load a list of users who match this name
-        print 'Looking for ' . $_REQUEST['e4_form_security_username'];
         $users = e4_data_search(array('name'=>$_REQUEST['e4_form_security_username'],'type'=>'user'),FALSE,FALSE);
         if (sizeof($users) > 0){
             foreach($users as $user){
@@ -117,7 +116,7 @@ function e4_action_security_security_register(&$data){
     
     // Attempt to save data to it
     include_once e4_findinclude('actions/admin/admin.php');
-    $userID = e4_admin_save_formData($newUser);
+    $userID = e4_admin_admin_formData_save($newUser);
     
     if ($userID > 0){
         // We have registered.

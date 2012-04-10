@@ -373,8 +373,19 @@ PRODUCT SPECIFIC ELEMENTS
     height: 80px;
 }
 
+.product-4 .product-heading {
+    width: 135px;
+    position: relative;
+    left: 5px;
+    top: 5px;
+    z-index: 1;
+}
+
 .product-4 .Sale {
+    margin-bottom: -18px;
     background-color: #FF0000;
+    color: white;
+    font-size: 12pt;
 }
 
 .product-4 .wasprice {
