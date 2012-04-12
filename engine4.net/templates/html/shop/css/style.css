@@ -13,6 +13,21 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Ubuntu', sans-serif;
 }
 
+h1 {
+    font-size: 24pt;
+}
+
+h2 {
+    font-size: 18pt;
+    border-bottom-color: #DDD;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+h3 {
+    font-size: 12pt;
+}
+
 #container-container {
     margin-left: auto;
     margin-right: auto;
@@ -42,4 +57,12 @@ h1, h2, h3, h4, h5, h6 {
 
 #footer-bottom h3 {
     color: cornflowerblue;
+}
+
+.product-home{
+    text-align: center;
+}
+
+.product-home .product-image img{
+    width: 90%;
 }
