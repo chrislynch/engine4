@@ -26,7 +26,7 @@ $data['configuration']['database']['username'] = 'root';
 $data['configuration']['database']['password'] = '';
 $data['configuration']['database']['schema'] = 'engine4';
 
-$data['configuration']['debug'] = FALSE;
+$data['configuration']['debug'] = TRUE;
 
 $data['configuration']['actions'] = array();
 $data['configuration']['renderers'] = array();
