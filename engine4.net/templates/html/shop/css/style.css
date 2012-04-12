@@ -1,5 +1,6 @@
 @import url("http://fonts.googleapis.com/css?family=Ubuntu:400,500,700");
-  
+@import url("http://fonts.googleapis.com/css?family=Sonsie+One");
+
 root { 
     display: block;
 }
@@ -39,6 +40,10 @@ h3 {
     -webkit-box-shadow: 0px 0px 20px 3px #ccc;
 }
 
+#header-top-left-logo{
+    font-family: 'Sonsie One', cursive;
+}
+
 #header-top-right{
     text-align: right;
 }
@@ -49,6 +54,7 @@ h3 {
 
 #footer-top {
     background: gainsboro;
+    margin-top: 20px;
 }
 
 #footer-top h3 {
@@ -57,6 +63,10 @@ h3 {
 
 #footer-bottom h3 {
     color: cornflowerblue;
+}
+
+#content-home-welcome p {
+    font-size: 11pt;
 }
 
 .product-home{

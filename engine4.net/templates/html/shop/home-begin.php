@@ -1,3 +1,8 @@
+<div id="content-home-welcome" class="span-24 last">
+    <h1>Welcome to Sunday Marketplace</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consequat tempor faucibus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec ante massa, placerat eget consequat vitae, mollis varius mi. Ut non scelerisque orci. Maecenas sit amet erat erat, ut bibendum lacus. Aliquam sed varius orci. Maecenas eu est diam. Donec in lectus non neque ultricies facilisis. Phasellus rutrum nibh non lacus elementum quis luctus risus feugiat.</p>
+</div>
+
 <div id="content-products-latest" class="span-24 last">
     <div class="span-24 last"><h2>New Products</h2></div>
     <?php
