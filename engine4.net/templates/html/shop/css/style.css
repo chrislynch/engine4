@@ -9,7 +9,7 @@ body {
     font-family: sans-serif;
     font-size: 8pt;
     background-image: url("images/texture.png");
-    background-color: #A9E2F3;
+    background-color: #CEE3F6;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -43,6 +43,10 @@ h3 {
     -webkit-box-shadow: 0px 0px 20px 3px #ccc;
 }
 
+#header-bottom {
+    margin-bottom: 20px;
+}
+
 #header-top-left-logo{
     font-family: 'Sonsie One', cursive;
     font-size: 14pt;
@@ -72,6 +76,54 @@ h3 {
 
 #content-home-welcome p {
     font-size: 11pt;
+}
+
+#banner-top {
+    background-image: url("images/background.jpg");
+}
+
+#banner-top img {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 40px;
+    padding-right: 20px;
+    float: left;
+}
+
+#banner-top h3 {
+    padding-right: 20px;
+    font-size: 36pt;
+}
+
+#banner-top h3 {
+    padding-right: 40px;
+    margin-bottom: 5px;
+    font-size: 36pt;
+    text-align: right;
+}
+
+#banner-top p {
+    padding-right: 40px;
+    font-size: 14pt;
+    text-align: right;
+}
+
+#banner-top .product-price-was{
+    padding-left: 120px;
+    font-size: 24pt;
+    font-weight: bold;
+    text-align: right;
+    float: left;
+}
+
+#banner-top .product-price-selling{
+    padding-right: 40px;
+    padding-left: 40px;
+    font-size: 24pt;
+    font-weight: bold;
+    color: #F12B63;
+    text-align: right;
+    
 }
 
 .product-home{

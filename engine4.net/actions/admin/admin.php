@@ -14,10 +14,10 @@ function e4_action_admin_admin_go(&$data){
 	
 	$data['configuration']['renderers']['html']['skins'] = array('_admin','_default');
 	
-	$data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/admin/benevolentdictator/BenevolentDictator.css';
+	$data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/_admin/benevolentdictator/BenevolentDictator.css';
         $data['page']['head']['stylesheet'][] = 'engine4.net/lib/blueprint/src/typography.css';
         $data['page']['head']['stylesheet'][] = 'engine4.net/lib/blueprint/src/form.css';
-	$data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/admin/css/engine4.css';
+	$data['page']['head']['stylesheet'][] = 'engine4.net/templates/html/_admin/css/engine4.css';
 	
 	$data['page']['head']['scripting'][] =
 		'var currentMenuItem = "";
