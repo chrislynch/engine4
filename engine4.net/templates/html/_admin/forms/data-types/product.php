@@ -20,7 +20,7 @@
 <tr><td>Product Promotions</td>
     <td>
         <?php
-        print e4_admin_admin_formData_buildInput_selectorcheckorradio('radio','e4_form_tags_productpromo[]',$content['tags']['productpromo'],
+        print e4_admin_admin_formData_buildInput_selectorcheckorradio('radio','e4_form_tags_productpromo[]',@$content['tags']['productpromo'],
                                                                         array(  'promo_banner_product'=>'Banner Product',
                                                                                 'promo_new_product'=>'New Product',
                                                                                 'promo_best_seller'=>'Best Seller',
