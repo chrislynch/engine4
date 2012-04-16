@@ -8,6 +8,8 @@ root {
 body {
     font-family: sans-serif;
     font-size: 8pt;
+    background-image: url("images/texture.png");
+    background-color: #A9E2F3;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -34,6 +36,7 @@ h3 {
     margin-right: auto;
     width: 980px;
     
+    background: white;
     
     box-shadow:         0px 0px 20px 3px #ccc;
     -moz-box-shadow:    0px 0px 20px 3px #ccc;
@@ -42,6 +45,8 @@ h3 {
 
 #header-top-left-logo{
     font-family: 'Sonsie One', cursive;
+    font-size: 14pt;
+    margin-top: 10px;
 }
 
 #header-top-right{
