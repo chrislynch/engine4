@@ -218,6 +218,14 @@ function e4_data_load($ID,$addToData = TRUE,$loadLinkages = TRUE){
             $data['page']['body']['content'][$newdata['ID']] = $newdata;
             $data['page']['body']['contentByType'][$newdata['type']][$newdata['ID']] = $newdata;
             $data['page']['body']['contentByFolder'][$newdata['folder']][$newdata['ID']] = $newdata;
+            foreach($newdata['tags'] as $TagType => $Tag){
+                if (!isset($data['page']['body']['contentByTag'][$TagType])){ $data['page']['body']['contentByTag'][$TagType] = array();}
+                foreach($Tag as $TagID=>$TagName){
+                    if (!isset($data['page']['body']['contentByTag'][$TagType][$TagName])) { $data['page']['body']['contentByTag'][$TagType][$TagName] = array();}
+                     $data['page']['body']['contentByTag'][$TagType][$TagName][] = $newdata;
+                }
+                
+            }
         }
         
 	return $newdata;

@@ -6,20 +6,14 @@
 <div id="content-products-latest" class="span-24 last">
     <div class="span-24 last"><h2>New Products</h2></div>
     <?php
-        foreach($data['page']['body']['contentByType'] as $type=>$contentarray){
-            template_shop_home_begin_grid($contentarray);
-        }
-        
+        template_shop_home_begin_grid($data['page']['body']['contentByTag']['productpromo']['promo_new_product']);
     ?>
 </div>
 
 <div id="content-products-bestsellers" class="span-24 last">
     <div class="span-24 last"><h2>Best Sellers</h2></div>
     <?php
-        foreach($data['page']['body']['contentByType'] as $type=>$contentarray){
-            template_shop_home_begin_grid($contentarray);
-        }
-        
+        template_shop_home_begin_grid($data['page']['body']['contentByTag']['productpromo']['promo_best_seller']);
     ?>
 </div>
 
