@@ -284,6 +284,13 @@ function e4_admin_admin_formData_buildInput_selectorcheckorradio($inputType,$inp
                 if (in_array($value, $contentData)){ $return .= ' checked="checked"';}
                 $return .= '>' . $text . '<br>';
                 break;
+                
+            case 'radio':
+                $return .= '<input type="radio" name="' . $inputName . '" value="' . $value . '"';
+                if (in_array($value, $contentData)){ $return .= ' checked="checked"';}
+                $return .= '>' . $text . '<br>';
+                break;
+                
         }
     }
     
