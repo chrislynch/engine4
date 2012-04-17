@@ -1,37 +1,4 @@
-<script type="text/javascript">
 
-    this.randomtip = function(){
-
-            var pause = 3000; // define the pause for each tip (in milliseconds) 
-            var length = $("#banner-top .banner-item").length; 
-            var temp = -1;		
-
-            this.getRan = function(){
-                    // get the random number
-                    var ran = Math.floor(Math.random() * length) + 1;
-                    return ran;
-            };
-            this.show = function(){
-                    var ran = getRan();
-                    // to avoid repeating
-                    while (ran == temp){
-                            ran = getRan();
-                    };
-                    // $("#banner-top .banner-item:nth-child(" + temp + ")").fadeOut("fast");
-                    $("#banner-top .banner-item").hide();	
-                    $("#banner-top .banner-item:nth-child(" + ran + ")").fadeIn("fast");
-            };
-
-            show(); 
-            setInterval(show,pause);
-
-    };
-
-    $(document).ready(function(){	
-            randomtip();
-    });
-
-</script>
 
 <div id="container-container">
     <div class="container">
@@ -69,24 +36,6 @@
                 <?=@$data['cart']['totalitems'];?> items&nbsp;/&nbsp;&pound;<?=@$data['cart']['totalvalue'];?>
                 <a href="@@configuration.basedir@@checkout" class="checkout">Click to Checkout</a>
             </div>
-        </div>
-        
-        <div id="banner-top" class="span-24 last">
-            <div class="banner-item span-24 last">
-                <img src="engine4.net/templates/html/shop/images/banner.png">
-                <h3>Acer Portable CD Player</h3>
-                <p>The compact disc is back and better than ever - GQ</p>
-                <div class="product-price-was">RRP: £9.99&nbsp;</div><div class="product-price-selling">Our Price: £4.99!</div>
-            </div>
-            <div class="banner-item span-24 last">
-                <img src="engine4.net/templates/html/shop/images/banner.png">
-                <h3>Acer Portable DVD Player</h3>
-                <p>An incredibly small and versatile unit - Stuff Magazine</p>
-                <div class="product-price-was">RRP: £89.99&nbsp;</div><div class="product-price-selling">Our Price: £17.99!</div>
-            </div>
-        </div>
-        <div id="banner-bottom" class="span-24 last">
-            
         </div>
         
         <div id="content" class="span-24 last">
