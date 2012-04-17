@@ -1,6 +1,8 @@
 <div class="span-4<?=@$last;?> product-home">
     <div class="product-image">
-        <img src="<?php print $content['data']['files']['images']['primary']['path']; ?>">
+        <a href="<?=@$content['link'];?>">
+            <img src="<?php print $content['data']['files']['images']['primary']['path']; ?>">
+        </a>
     </div>
     <div class="product-name">
         <a href="<?=@$content['link'];?>">

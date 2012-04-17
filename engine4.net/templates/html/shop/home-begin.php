@@ -84,7 +84,7 @@ function template_shop_home_begin_grid($contentarray){
         $grid ++;
         $items ++;
         if ($grid % $cols == 0) { $last = ' last '; } else { $last = ''; }
-        include e4_findtemplate('data-types/product-home.php');
+        include e4_findtemplate('data-types/product-home-content.php');
         if ($items == $maxitems){
             break;
         }

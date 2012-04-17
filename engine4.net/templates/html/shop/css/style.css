@@ -90,6 +90,12 @@ h3 {
     float: left;
 }
 
+#banner-top h1 {
+    padding-right: 20px;
+    padding-left: 20px;
+    font-size: 32pt;
+}
+
 #banner-top h3 {
     padding-right: 20px;
     font-size: 36pt;
@@ -130,6 +136,29 @@ h3 {
     text-align: center;
 }
 
+.product-home .product-image {
+    height: 140px;
+    overflow: hidden;
+}
+
 .product-home .product-image img{
     width: 90%;
+}
+
+.product-home h3, .product-home a {
+    font-size: 10pt;
+    height: 40px;
+}
+
+.product-home a {
+    text-decoration: none;
+    color: black;
+}
+
+.product-home a:hover {
+    color: #F12B63;
+}
+
+.product-home .product-addtocart{
+    margin-top: 5px;
 }
