@@ -159,6 +159,28 @@ h3 {
     color: #F12B63;
 }
 
+.product-home .wasprice {
+    text-decoration: line-through;
+}
+
+.product-home .sellingprice {
+    font-size: 12pt;
+    font-weight: bolder;
+    color: #F12B63;
+}
+
+.product-home .saving {
+    color: #52B3CB;
+    font-weight: bold;
+}
+
 .product-home .product-addtocart{
     margin-top: 5px;
+}
+
+.product-home .button-highlight{
+    background-color: #F12B63;
+    color: white;
+    font-size: 12pt;
+    border-color: red;
 }

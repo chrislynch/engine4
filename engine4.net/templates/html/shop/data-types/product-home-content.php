@@ -12,7 +12,7 @@
     <div class="product-price">
         <span class="wasprice">Was: &pound;<?=@$content['data']['product']['listprice'];?></span><br>
         <span class="sellingprice">Now: &pound;<?=@$content['data']['product']['sellingprice'];?></span><br>
-        <span class="saving">Saving: &pound;<?=@$content['data']['product']['saving'];?></span>
+        <span class="saving"><?=@$content['data']['product']['savingtext'];?></span>
     </div>
     <div class="product-addtocart">
         <form action="@@configuration.basedir@@" method="POST">

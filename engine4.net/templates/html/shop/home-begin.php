@@ -60,6 +60,7 @@
     <div class="span-24 last"><h2>New Products</h2></div>
     <?php
         template_shop_home_begin_grid($data['page']['body']['contentByTag']['productpromo']['promo_new_product']);
+        template_shop_home_begin_grid($data['page']['body']['contentByTag']['productpromo']['promo_new_product']);
     ?>
 </div>
 
@@ -67,6 +68,7 @@
     <div class="span-24 last"><h2>Best Sellers</h2></div>
     <?php
         template_shop_home_begin_grid($data['page']['body']['contentByTag']['productpromo']['promo_best_seller']);
+        template_shop_home_begin_grid($data['page']['body']['contentByTag']['productpromo']['promo_new_product']);
     ?>
 </div>
 
