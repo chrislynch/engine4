@@ -1,5 +1,20 @@
 <?php
 
+function e4_datatype_all_load(&$content){
+    // Perform "load" operations.
+    // This function is called AFTER data has been sent to the database
+}
+
+function e4_datatype_all_presave(&$content){
+    // Perform functions BEFORE this data item is saved.
+    // TODO: This is not yet implemented/called. Is it just another version of validate?
+}
+
+function e4_datatype_all_postsave(&$content){
+    // Perform functions AFTER this data item has been saved
+    // TODO: This is not yet implemented/called.
+}
+
 function e4_datatype_all_validate(&$content){
     // Establish a "state of grace" on new data - all data is good until we find out otherwise.
     $content['valid'] = TRUE;

@@ -1,6 +1,6 @@
 <?php
 
-function e4_datatype_order_new(&$newitem){
+function e4_datatype_Order_new(&$newitem){
     /* Build the new item defaults. */
     global $data;
     

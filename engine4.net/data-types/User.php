@@ -4,7 +4,7 @@
  * Attach a "valid" flag to the content if it is valid. Set messages if it isn't.
  */
 
-function e4_datatype_user_validate(&$content){
+function e4_datatype_User_validate(&$content){
     // Validate the user type.
     
     if (strlen($content['data']['password']) == 0){
