@@ -34,6 +34,9 @@ h3 {
 #container-container {
     margin-left: auto;
     margin-right: auto;
+    margin-top: 10px;
+    padding-top: 10px;
+    
     width: 980px;
     
     background: white;
@@ -132,8 +135,12 @@ h3 {
     
 }
 
+/* HOME PAGE */
+
 .product-home{
     text-align: center;
+    border-left-style: dotted;
+    border-left-color: grey;
 }
 
 .product-home .product-image {
@@ -145,9 +152,9 @@ h3 {
     width: 90%;
 }
 
-.product-home h3, .product-home a {
+.product-home .product-name h3{
     font-size: 10pt;
-    height: 40px;
+    height: 60px;
 }
 
 .product-home a {
@@ -179,6 +186,118 @@ h3 {
 }
 
 .product-home .button-highlight{
+    background-color: #F12B63;
+    color: white;
+    font-size: 12pt;
+    border-color: red;
+}
+
+/* SEARCH RESULTS */
+
+.product-search{
+    text-align: left;
+}
+
+.product-search .product-image {
+    height: 140px;
+    overflow: hidden;
+}
+
+.product-search .product-image img{
+    width: 90%;
+}
+
+.product-search .product-name h3{
+    font-size: 10pt;
+}
+
+.product-search a {
+    text-decoration: none;
+    color: black;
+}
+
+.product-search a:hover {
+    color: #F12B63;
+}
+
+.product-search .wasprice {
+    text-decoration: line-through;
+}
+
+.product-search .sellingprice {
+    font-size: 12pt;
+    font-weight: bolder;
+    color: #F12B63;
+}
+
+.product-search .saving {
+    color: #52B3CB;
+    font-weight: bold;
+}
+
+.product-search .product-addtocart{
+    margin-top: 5px;
+}
+
+.product-search .button-highlight{
+    background-color: #F12B63;
+    color: white;
+    font-size: 12pt;
+    border-color: red;
+}
+
+/* PRODUCT VIEW */
+
+
+.product-view{
+    text-align: left;
+}
+
+.product-view .product-image {
+    overflow: hidden;
+}
+
+.product-view .product-image img{
+    width: 90%;
+}
+
+.product-view .product-data {
+    padding-top: 40px;
+}
+
+.product-view .product-name h3{
+    font-size: 10pt;
+}
+
+.product-view a {
+    text-decoration: none;
+    color: black;
+}
+
+.product-view a:hover {
+    color: #F12B63;
+}
+
+.product-view .wasprice {
+    text-decoration: line-through;
+}
+
+.product-view .sellingprice {
+    font-size: 12pt;
+    font-weight: bolder;
+    color: #F12B63;
+}
+
+.product-view .saving {
+    color: #52B3CB;
+    font-weight: bold;
+}
+
+.product-view .product-addtocart{
+    margin-top: 5px;
+}
+
+.product-view .button-highlight{
     background-color: #F12B63;
     color: white;
     font-size: 12pt;
