@@ -332,24 +332,33 @@ function e4_admin_admin_Import_CSV_Fields(){
     // Import a CSV file, looking for field definitions in the first line of the file
     if (isset($_FILES['e4_import'])){
         $file = $_FILES['e4_import'];
-        print_r($file);
         $fields = array();
+        
+        $delimiter = ';';
+        $enclosure = '"';
+        $escape = '\\';
         
         $csvfilepath = e4_domaindir() . 'uploads/' . $file['name'];
         move_uploaded_file($file["tmp_name"], $csvfilepath);
         $csvfile = fopen($csvfilepath,'r');
         
-        // Start by getting the list of all fields
-        $fields = fgetcsv($csvfile);
-        print_r($fields);
-        while ($record = fgetcsv($csvfile)){
+        // Start by getting the list of all fields into an arry
+        // Put our prefix on automatically, to make the file more readable.
+        $fields = fgetcsv($csvfile,0,$delimiter,$enclosure,$escape);
+        for ($fieldindex = 0; $fieldindex < count($fields); $fieldindex++) {
+            $fields[$fieldindex] = 'e4_form_content_' . $fields[$fieldindex];
+        }
+        
+        while ($record = fgetcsv($csvfile,0,$delimiter,$enclosure,$escape)){
             // For each record, populate the $_REQUEST object
             for ($fieldindex = 0; $fieldindex < count($fields); $fieldindex++) {
                 $_POST[$fields[$fieldindex]] = $record[$fieldindex];
             }
-            print '<pre>' . print_r($_POST,TRUE) . '</pre>';
+            
             // Then call the admin form submission
+            print '<pre>' . print_r($_POST,TRUE) . '</pre>';
             e4_admin_admin_formData_save();
+            
             // Now unset everything for the next run
             for ($fieldindex = 0; $fieldindex < count($fields); $fieldindex++) {
                 unset($_POST[$fields[$fieldindex]]);
