@@ -37,6 +37,7 @@
 		<ul>
 			<li><a href="@@configuration.basedir@@?e4_action=admin&e4_admin_op=create">Create Content</a><br></li>
 			<li><a href="@@configuration.basedir@@?e4_action=admin&e4_admin_op=search">Edit Content</a></li>
+                        <li><a href="@@configuration.basedir@@?e4_action=admin&e4_admin_op=import">Import Content</a></li>
 		</ul>
 		<p>
 			<!-- You can put any HTML content you want for your menu: tables, grids of links, headings, etc. This entire div just displays below the menu when requested.  -->

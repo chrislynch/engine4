@@ -88,7 +88,11 @@ function e4_action_admin_admin_go(&$data){
 				}
 				$data['configuration']['renderers']['all']['templates'][1] = 'search.php';
 				break;
-			
+                                
+                        case 'import':
+                            e4_admin_admin_Import_CSV_Fields();
+                            $data['configuration']['renderers']['all']['templates'][1] = 'import-data.php';
+                            break;
 				
 		}
 	} else {
@@ -322,6 +326,36 @@ function e4_admin_admin_formData_buildInput_file($inputName,$content){
     $return .= '<input type="file" name="' . $inputName . '">';
     
     return $return;
+}
+
+function e4_admin_admin_Import_CSV_Fields(){
+    // Import a CSV file, looking for field definitions in the first line of the file
+    if (isset($_FILES['e4_import'])){
+        $file = $_FILES['e4_import'];
+        print_r($file);
+        $fields = array();
+        
+        $csvfilepath = e4_domaindir() . 'uploads/' . $file['name'];
+        move_uploaded_file($file["tmp_name"], $csvfilepath);
+        $csvfile = fopen($csvfilepath,'r');
+        
+        // Start by getting the list of all fields
+        $fields = fgetcsv($csvfile);
+        print_r($fields);
+        while ($record = fgetcsv($csvfile)){
+            // For each record, populate the $_REQUEST object
+            for ($fieldindex = 0; $fieldindex < count($fields); $fieldindex++) {
+                $_POST[$fields[$fieldindex]] = $record[$fieldindex];
+            }
+            print '<pre>' . print_r($_POST,TRUE) . '</pre>';
+            // Then call the admin form submission
+            e4_admin_admin_formData_save();
+            // Now unset everything for the next run
+            for ($fieldindex = 0; $fieldindex < count($fields); $fieldindex++) {
+                unset($_POST[$fields[$fieldindex]]);
+            }
+        }
+    }
 }
 
 ?>
