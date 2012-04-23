@@ -280,7 +280,8 @@ function e4_data_save($saveData){
                                         is_content = ' . $saveData['iscontent'] . ',
                                         status = ' . $saveData['status'];
 		// Run the query through our traced query function
-		e4_db_query($saveQuery); 
+		e4_db_query($saveQuery);
+                
 		// If this was an insert using the next available ID, return that ID rather than the ID given
 		if ($saveID == 0){ 
                     $saveID = mysql_insert_id($db);
@@ -555,9 +556,15 @@ function e4_db_query($SQL){
 	e4_trace($SQL);
 	
 	$return = mysql_query($SQL);
-	
-	e4_trace('SQL complete');
-	
+        $error = mysql_error($db);
+        
+        if (strlen($error > 0)){
+            e4_trace('SQL ERROR: ' . $error);
+            $return = FALSE;
+        } else {
+            e4_trace('SQL complete');
+        }
+		
 	return $return;
 }
 
