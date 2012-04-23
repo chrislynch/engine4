@@ -213,6 +213,19 @@ function e4_data_load($ID,$addToData = TRUE,$loadLinkages = TRUE){
             if(!isset($newdata['tags'][$tagrecord['TagType']])){ $newdata['tags'][$tagrecord['TagType']] = array(); }
             $newdata['tags'][$tagrecord['TagType']][] = $tagrecord['Tag'];
         }
+        
+        // Call the load function applicable to this datatype
+        if (isset($newdata['type'])){
+            include_once e4_findinclude('data-types/all.php');
+            include_once e4_findinclude('data-types/' . $newdata['type'] . '.php');
+
+            e4_datatype_all_load($newdata);
+
+            if (function_exists('e4_datatype_' . $newdata['type'] . '_load')){
+                $parameters = array( &$newdata );
+                call_user_func_array('e4_datatype_' . $newdata['type'] . '_load', $parameters);
+            }    
+        }
 	
         if ($addToData){
             $data['page']['body']['content'][$newdata['ID']] = $newdata;
