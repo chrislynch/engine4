@@ -330,13 +330,17 @@ function e4_admin_admin_formData_buildInput_file($inputName,$content){
 
 function e4_admin_admin_Import_CSV_Fields(){
     // Import a CSV file, looking for field definitions in the first line of the file
+    global $data;
+    
     if (isset($_FILES['e4_import'])){
         $file = $_FILES['e4_import'];
         $fields = array();
         
-        $delimiter = ';';
+        $delimiter = ',';
         $enclosure = '"';
         $escape = '\\';
+        
+        $data['page']['body']['importResult'] = '';
         
         $csvfilepath = e4_domaindir() . 'uploads/' . $file['name'];
         move_uploaded_file($file["tmp_name"], $csvfilepath);
@@ -356,8 +360,18 @@ function e4_admin_admin_Import_CSV_Fields(){
             }
             
             // Then call the admin form submission
-            print '<pre>' . print_r($_POST,TRUE) . '</pre>';
-            e4_admin_admin_formData_save();
+            $saveID = e4_admin_admin_formData_save();
+            
+            if ($saveID > 0){
+                $data['page']['body']['importResult'] .= 'Saved ' . $_POST['e4_form_content_name'] . ' as ID ' . $saveID . '<br>';
+            } else {
+                $data['page']['body']['importResult'] .= 'Unable to save ' . $_POST['e4_form_content_name'] . '<br>';
+                $data['page']['body']['importResult'] .= '<pre>' . print_r($_POST,TRUE) . '</pre>';
+            }
+            
+            // Clear out messages that we don't want to display
+            cookie_set('messages','');
+            $data['page']['messages'] = array();
             
             // Now unset everything for the next run
             for ($fieldindex = 0; $fieldindex < count($fields); $fieldindex++) {

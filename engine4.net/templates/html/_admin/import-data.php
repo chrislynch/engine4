@@ -6,4 +6,10 @@
 			<tr><td>&nbsp;</td><td><input name="save" type="submit" value="Import Content"></td></tr>			
 		</table>
 	</form>
+        <?php
+            if (isset($data['page']['body']['importResult'])){
+                print '<h2>Import Results</h2>';
+                print $data['page']['body']['importResult'];
+            }
+        ?>
 </div>
