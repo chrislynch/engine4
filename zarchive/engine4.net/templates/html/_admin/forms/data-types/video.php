@@ -1,2 +1,0 @@
-<tr><td class="nobg" colspan="2"><h2 class="SectionHeading">Video Data</h2></td></tr>
-<tr><td>YouTube Video ID</td><td><input name="e4_form_content_data_video_youtubeid" type="text" size="30" value="<?=@$content['data']['video']['youtubeid'];?>"></td></tr>			

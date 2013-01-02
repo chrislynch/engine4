@@ -1,1 +1,0 @@
-<h1>Checkout Complete: Thank you for your order!</h1>
