@@ -60,6 +60,12 @@ class e {
                     case 'php':
                         include($directory . '/' . $file);
                         break;
+                    case 'markdown':
+                    case 'md':
+                        include_once('_e/lib/phpmarkdownextra/markdown.php');
+                        $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
+                        $this->$directoryarray[0]->html = Markdown($this->$directoryarray[0]->$filearray[1]);
+                        break;
                     default:
                         // Check to see if the file is binary or text
                         $finfo = finfo_open(FILEINFO_MIME);
