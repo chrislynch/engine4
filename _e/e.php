@@ -1,24 +1,24 @@
 <?php
 
 $e = new e();
-$e->go();
+$e->_go();
 
 class e {
     
-    function go() {
+    function _go() {
         
         // Get initial list of directories
         $directories = scandir('.');
         
         foreach($directories as $directory){
             // Work through directories, processing each in order.
-            if ($this->isValidDirectory($directory)){
-                $this->find($directory);
+            if ($this->_isValidDirectory($directory)){
+                $this->_find($directory);
             }
         }
     }
     
-    private function find($inDirectory){
+    private function _find($inDirectory){
         $found = FALSE;
         
         if (isset($_REQUEST['q'])){
@@ -29,32 +29,41 @@ class e {
         
         while(strlen($q) > 0 && !$found){
             if (file_exists($inDirectory . '/' . $q)){
-                if ($this->isValidDirectory($inDirectory . '/' . $q)){
-                    if ($this->open($inDirectory . '/' . $q)) {
+                if ($this->_isValidDirectory($inDirectory . '/' . $q)){
+                    if ($this->_open($inDirectory . '/' . $q)) {
                         $found = TRUE;
                     } else {
-                        $q = $this->dirup($q);
+                        $q = $this->_dirup($q);
                     }
                 }
             } else {
-                $q = $this->dirup($q);
+                $q = $this->_dirup($q);
             }
         }
         
         if (!$found){
-            $this->open($inDirectory);
+            $this->_open($inDirectory);
         }
     }
     
-    private function open($directory){
+    private function _open($directory){
         $return = FALSE;
         $directoryarray = explode('/',$directory);
         $files = scandir($directory);
         
         foreach($files as $file){
-            if ($this->isValidFile($file,$directory)){
+            if ($this->_isValidFile($file,$directory)){
                 $return = TRUE;
                 $filearray = explode('.',$file);
+                
+                // Split the front off the first directory
+                // This is in case we use numbers on our directories to order them
+                if(strstr($directoryarray[0],'.')){
+                    $directoryarray[0] = explode('.',$directoryarray[0]);
+                    array_shift($directoryarray[0]);
+                    $directoryarray[0] = implode('.',$directoryarray[0]);
+                }
+                
                 $this->$directoryarray[0] = new stdClass();
                 switch(strtolower($filearray[1])){
                     case 'php':
@@ -84,14 +93,14 @@ class e {
         return $return;
     }
     
-    private function dirup($directory){
+    private function _dirup($directory){
         $directory = explode('/',$directory);
         array_pop($directory);
         $directory = implode('/',$directory);
         return $directory;
     }
     
-    private function isValidDirectory($directory){
+    private function _isValidDirectory($directory){
         $return = is_dir($directory);
         if ($return){
             if ($directory == '.') { $return = FALSE; }
@@ -103,12 +112,35 @@ class e {
         return $return;
     }
     
-    private function isValidFile($file,$directory){
+    private function _isValidFile($file,$directory){
         $return = TRUE;
         if (is_dir($directory . '/' . $file)) { $return = FALSE; }
         if ($file == '.') { $return = FALSE; }
         if ($file == '..') { $return = FALSE; }
         return $return;
+    }
+    
+    private function _domain() {
+        return $_SERVER['SERVER_NAME'];
+    }
+    
+    private function _basedir(){
+        $indexphp = $_SERVER['SCRIPT_FILENAME'];
+        $indexphp = explode('/',$indexphp);
+        array_pop($indexphp);
+        $indexphp = implode('/',$indexphp);
+        $indexphp .= '/';
+        return $indexphp;
+    }
+    
+    private function _basehref(){
+        $indexphp = $_SERVER['PHP_SELF'];
+        $indexphp = explode('/',$indexphp);
+        array_pop($indexphp);
+        $indexphp = implode('/',$indexphp);
+        $indexphp .= '/';
+               
+        return 'http://' . $this->_domain() . $indexphp;
     }
 }
 
