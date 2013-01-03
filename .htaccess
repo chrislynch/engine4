@@ -1,6 +1,3 @@
-# Make engine4 handle any 404 errors.
-ErrorDocument 404 /github/engine4/index.php
-
 # Make sure we can put sites live using symlinks
 Options +FollowSymLinks
 
@@ -11,5 +8,5 @@ Options +FollowSymLinks
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico
-  RewriteRule ^(.*)$ index.php?e4_url=$1 [L,QSA]
+  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
