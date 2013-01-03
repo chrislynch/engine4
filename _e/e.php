@@ -32,7 +32,7 @@ class e {
             print "Looking for $q in $inDirectory<br>";
             if (file_exists($inDirectory . '/' . $q)){
                 if ($this->isValidDirectory($inDirectory . '/' . $q)){
-                    
+                    $this->open($inDirectory . '/' . $q);
                 }
             } else {
                 $q = $this->dirup($q);
