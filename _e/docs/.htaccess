@@ -1,0 +1,12 @@
+# Make sure we can put sites live using symlinks
+Options +FollowSymLinks
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+  # Rewrite URLs of the form 'x' to the form 'index.php?e4_url=x'.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  # RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !=/favicon.ico
+  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+</IfModule>

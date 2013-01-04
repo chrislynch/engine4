@@ -151,6 +151,12 @@ class e {
                
         return 'http://' . $this->_domain() . $indexphp;
     }
+    
+    private function _loadplugin($plugin){
+        require_once("_e/plugins/$plugin/$plugin.php");
+        $pluginvar = '_' . $plugin;
+        $this->$pluginvar = new $plugin();
+    }
 }
 
 ?>
