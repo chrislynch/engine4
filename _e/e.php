@@ -1,7 +1,13 @@
 <?php
 
 $e = new e();
-$e->_go();
+try {
+    $e->_go();    
+} catch (Exception $exc) {
+    echo $exc->getTraceAsString();
+}
+
+if (isset($_REQUEST['debug'])){ print '<pre>' . print_r($e,TRUE) . '</pre>'; }
 
 class e {
     
@@ -48,7 +54,18 @@ class e {
     
     private function _open($directory){
         $return = FALSE;
+        
         $directoryarray = explode('/',$directory);
+        // Split the front off the first directory
+        // This is in case we use numbers on our directories to order them
+        if(strstr($directoryarray[0],'.')){
+            $directoryarray[0] = explode('.',$directoryarray[0]);
+            array_shift($directoryarray[0]);
+            $directoryarray[0] = implode('.',$directoryarray[0]);
+        }
+
+        $this->$directoryarray[0] = new stdClass();
+        
         $files = scandir($directory);
         
         foreach($files as $file){
@@ -56,21 +73,14 @@ class e {
                 $return = TRUE;
                 $filearray = explode('.',$file);
                 
-                // Split the front off the first directory
-                // This is in case we use numbers on our directories to order them
-                if(strstr($directoryarray[0],'.')){
-                    $directoryarray[0] = explode('.',$directoryarray[0]);
-                    array_shift($directoryarray[0]);
-                    $directoryarray[0] = implode('.',$directoryarray[0]);
-                }
-                
-                $this->$directoryarray[0] = new stdClass();
                 switch(strtolower($filearray[1])){
                     case 'php':
                         include($directory . '/' . $file);
                         break;
                     case 'markdown':
                     case 'md':
+                    case 'txt':
+		    case 'text':
                         include_once('_e/lib/phpmarkdownextra/markdown.php');
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
                         $this->$directoryarray[0]->html = Markdown($this->$directoryarray[0]->$filearray[1]);
@@ -86,7 +96,6 @@ class e {
                         }
                         
                 }
-                
             }
         }
         
