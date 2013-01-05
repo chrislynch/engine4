@@ -1,0 +1,61 @@
+# Building a simple website with engine4
+
+engine4 uses one or more subdirectories of the root folder, the folder containing `index.php`
+to build the webpage that it returns.
+
+There can be **any** number of folders, and they are always loaded and processed in alphabetical order.
+
+engine4 will ignore any folder that starts with `_` like, for example, the `_e` directory.
+
+For each folder that it encounters, engine4 will attempt to match the directory path that was
+requested by the web browser to a subdirectory of the folder being processed. 
+If it cannot find a match, it will move up level in the directory hierarchy until it either finds
+a match or reaches the root of the folder.
+
+### Example
+
+1. We create a `content` folder inside our engine4 installation.
+1. We request `http://localhost/engine4/give/me/help` from our browser.
+1. engine4 scans the installed directory for folders and finds
+    1. _e/
+    1. content/
+1. _e/ is ignored
+1. content is processed
+    1. We look for files in `content/give/me/help`. If no files exist or the directory is missing we move on to
+    1. Looking for files in `content/give/me/` then
+    1. Looking for files in `content/give/` and finally
+    1. Looking for files in `content/`
+
+When files are found, the system stops working up the hierarchy, and loads these files.
+
+## engine4 file types
+
+engine4 recognises .htm, .html, .txt, .text, .md, and .markdown as valid content files.
+
+engine4 also recognises .php files (typically used for themes, but applicable anywhere)
+
+If engine4 encounters an unrecognised filetype, it will attempt to reads its MIME information.
+Binary files are ignored. Text files are loaded, where possible.
+
+### engine4 and *Markdown*
+
+When it encounters a .txt, .text, .md, or .markdown file, engine4 will assume that the content
+needs to be parsed for Markdown syntax.
+
+engine4 uses **phpmarkdownextra* (included in the `_e/lib/phpmarkdown` folder) for this task.
+
+## Make sense? OK, time to go ahead and **create some content**
+
+1. Create your own `content` folder.
+1. Create an `index.txt` file in this folder
+1. Put some content into the index.txt file. This is your homepage content
+1. Now create a directory called about *inside* the content directory
+1. Create an `about.txt` file in this directory
+1. Put some more content in the about.txt file
+1. Go to your website and look at the homepage, your content from index.txt should be there.
+1. Go to *your website*/about. Your content from the about page should be there.
+
+That's it. No CMS, no fiddling around. You write, you save, you've published.
+
+*Except* your website isn't looking very pretty, is it? No, for the pretty-making you need to 
+take a look at [how to build an engine4 *theme*](3-adding-a-theme)

@@ -81,7 +81,7 @@ class e {
                     case 'md':
                     case 'txt':
 		    case 'text':
-                        include_once('_e/lib/phpmarkdownextra/markdown.php');
+                        if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
                         $this->$directoryarray[0]->html = Markdown($this->$directoryarray[0]->$filearray[1]);
                         break;

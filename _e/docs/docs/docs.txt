@@ -1,0 +1,26 @@
+# engine4 Documention
+
+## What is engine4?
+
+engine4 is an "anti-framework", a framework that does not require you to work in a
+particular way or to subscribe to a particular methodology. There is no MVC, no MVVM. 
+It doesn't drop twenty plus directories into your application or make you do anything you *don't* want to do.
+
+engine4's only job is kickstart your development with a core library to handle the
+job of pulling the various parts of your application together, a set of selected
+common libraries to save you time in picking and choosing 3rd party components, 
+and a set of "helper" classes to take the pain out of day-to-day tasks.
+
+## Who built engine4?
+
+engine4 was built by [Chris Lynch](http://www.planetofthepenguins.com), CTO of [eCommerce Centric](http://www.ecommercecentric.co.uk).
+
+## How do I use engine4?
+
+engine4's framework has as many steps and components as you want it to have.
+
+The simplest possible engine4 web site is just a hierarchical collection of HTML and/or Markdown files.
+
+1. [Installing engine4](1-installation)
+1. [Building a simple website](2-building-a-simple-website)
+1. [Adding a theme to your website](3-adding-a-theme)
