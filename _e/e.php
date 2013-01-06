@@ -2,7 +2,19 @@
 
 $e = new e();
 try {
-    $e->_go();    
+    ob_start();                 // Start buffering output
+    $e->_go();                  // Run e4
+    $output = ob_get_flush();   // Get the output buffer
+    if (strlen($output == 0)){
+        // There was no output. Print the default
+        if (isset($e->content->html)){
+            print $e->content->html;
+        } else {
+            // Print some default "Welcome to engine 4 guff"
+        }
+    } else {
+        print $output;
+    }
 } catch (Exception $exc) {
     echo $exc->getTraceAsString();
 }
