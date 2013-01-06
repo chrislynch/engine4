@@ -4,8 +4,10 @@ $e = new e();
 try {
     ob_start();                 // Start buffering output
     $e->_go();                  // Run e4
-    $output = ob_get_flush();   // Get the output buffer
-    if (strlen($output == 0)){
+    $output = ob_get_contents();
+    if (!$output){ print 'There was no output!'; }
+    ob_end_clean();
+    if (!$output){
         // There was no output. Print the default
         if (isset($e->content->html)){
             print $e->content->html;
@@ -106,7 +108,6 @@ class e {
                         } else {
                             $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
                         }
-                        
                 }
             }
         }
@@ -121,8 +122,25 @@ class e {
         return $directory;
     }
     
+    protected function _search($path, $parameters = array()){
+        $return = array();
+        $results = scandir($path);
+        foreach($results as $result){
+            if ($this->_isValidDirectory($path . '/' . $result,TRUE)){
+                $returnItem = new e();
+                $returnItem->_open($path . '/' . $result);
+                $return[] = $returnItem;
+            }
+        }
+        return $return;
+    }
+    
     private function _isValidDirectory($directory){
         $return = is_dir($directory);
+        if (strstr($directory,'/')){
+            $directory = explode('/',$directory);
+            $directory = array_pop($directory);
+        }
         if ($return){
             if ($directory == '.') { $return = FALSE; }
             if ($directory == '..') { $return = FALSE; }
