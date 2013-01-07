@@ -135,6 +135,9 @@ class e {
             }
         }
         
+        // Run the post-load event to make sure that everything is present and correct
+        $this->$directoryarray[0]->_postload();
+        
         return $return;
     }
     
@@ -228,6 +231,10 @@ class eThing extends stdClass {
         $url = implode('/',$url);
         if (strlen($url) == 0) { $url = '/'; }
         $this->url = $url;
+    }
+ 
+    function _postload() {
+        // Called after the content has been loaded
     }
     
 }
