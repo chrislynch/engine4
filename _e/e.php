@@ -79,7 +79,7 @@ class e {
         }
 
         // Create our new object
-        $this->$directoryarray[0] = new eThing();
+        $this->$directoryarray[0] = new eThing($directory);
         
         // Set the title of the item that we have found
         $title = $directoryarray[sizeof($directoryarray) - 1];
@@ -214,8 +214,21 @@ class e {
 
 class eThing extends stdClass {
     
+    var $path;
+    var $url;
+    
     var $title;
     var $timestamp;
+    
+    function __construct($path) {
+        $this->path = $path;
+        
+        $url = explode('/',$path);
+        array_shift($url);
+        $url = implode('/',$url);
+        if (strlen($url) == 0) { $url = '/'; }
+        $this->url = $url;
+    }
     
 }
 
