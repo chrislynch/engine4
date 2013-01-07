@@ -78,19 +78,41 @@ class e {
             $directoryarray[0] = implode('.',$directoryarray[0]);
         }
 
-        $this->$directoryarray[0] = new stdClass();
+        // Create our new object
+        $this->$directoryarray[0] = new eThing();
         
+        // Set the title of the item that we have found
+        $title = $directoryarray[sizeof($directoryarray) - 1];
+        // Take the date off the front of the directory, if it is there
+        if (strstr($title,'.')){
+            $title = explode('.',$title);    
+            array_shift($title);
+            $title = implode('.',$title);
+        }
+        $title = str_ireplace('-', ' ', $title);
+        $title = ucwords($title);
+        $this->$directoryarray[0]->title = $title;
+        
+        // Get the timestamp of the directory
+        $this->$directoryarray[0]->timestamp = date ("F d Y H:i:s.", filemtime($directory));
+                
+        // Go and get the content files from the directory that we are opening
         $files = scandir($directory);
         
         foreach($files as $file){
             if ($this->_isValidFile($file,$directory)){
+                // Set the return value to TRUE to acknowledge finding a file
                 $return = TRUE;
+                
+                // Breakdown the file name that we find.
                 $filearray = explode('.',$file);
                 
+                // Apply special loading routines depending on what content we find
                 switch(strtolower($filearray[1])){
                     case 'php':
                         include($directory . '/' . $file);
                         break;
+                    
                     case 'markdown':
                     case 'md':
                     case 'txt':
@@ -99,6 +121,7 @@ class e {
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
                         $this->$directoryarray[0]->html = Markdown($this->$directoryarray[0]->$filearray[1]);
                         break;
+                        
                     default:
                         // Check to see if the file is binary or text
                         $finfo = finfo_open(FILEINFO_MIME);
@@ -187,6 +210,13 @@ class e {
         $pluginvar = '_' . $plugin;
         $this->$pluginvar = new $plugin();
     }
+}
+
+class eThing extends stdClass {
+    
+    var $title;
+    var $timestamp;
+    
 }
 
 ?>
