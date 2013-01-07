@@ -110,13 +110,13 @@ class e {
                 // Apply special loading routines depending on what content we find
                 switch(strtolower($filearray[1])){
                     case 'php':
+                        // Run the PHP script. Run it here so that $this, in context, is $e
                         include($directory . '/' . $file);
                         break;
                     
-                    case 'markdown':
-                    case 'md':
-                    case 'txt':
-		    case 'text':
+                    case 'markdown': case 'md':
+                    case 'txt': case 'text':
+                        // Load up a recognised text file and mark it down
                         if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
                         $this->$directoryarray[0]->html = Markdown($this->$directoryarray[0]->$filearray[1]);
@@ -233,8 +233,12 @@ class eThing extends stdClass {
         $this->url = $url;
     }
  
+    function _load($file){
+        // Load contents from a file into this object
+    }
+    
     function _postload() {
-        // Called after the content has been loaded
+        // Called after ALL the content has been loaded
     }
     
 }
