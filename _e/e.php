@@ -116,6 +116,7 @@ class e {
                     
                     case 'markdown': case 'md':
                     case 'txt': case 'text':
+                    case 'htm': case 'html':
                         // Load up a recognised text file and mark it down
                         if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
