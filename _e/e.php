@@ -150,7 +150,7 @@ class e {
         return $return;
     }
     
-    private function _dirup($directory){
+    static function _dirup($directory){
         $directory = explode('/',$directory);
         array_pop($directory);
         $directory = implode('/',$directory);
@@ -170,7 +170,7 @@ class e {
         return $return;
     }
     
-    private function _isValidDirectory($directory){
+    static function _isValidDirectory($directory){
         $return = is_dir($directory);
         if (strstr($directory,'/')){
             $directory = explode('/',$directory);
@@ -186,7 +186,7 @@ class e {
         return $return;
     }
     
-    private function _isValidFile($file,$directory){
+    static function _isValidFile($file,$directory){
         $return = TRUE;
         if (is_dir($directory . '/' . $file)) { $return = FALSE; }
         if ($file == '.') { $return = FALSE; }
@@ -218,6 +218,8 @@ class e {
     }
     
     private function _loadplugin($plugin){
+        // TODO: If we are running e in a subdirectory, we need to somehow tell it
+        // so that it can still find plugins.
         require_once("_e/plugins/$plugin/$plugin.php");
         $pluginvar = '_' . $plugin;
         $this->$pluginvar = new $plugin();
