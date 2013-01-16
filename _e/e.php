@@ -150,7 +150,7 @@ class e {
         return $return;
     }
     
-    private function _dirup($directory){
+    static function _dirup($directory){
         $directory = explode('/',$directory);
         array_pop($directory);
         $directory = implode('/',$directory);
