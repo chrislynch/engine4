@@ -45,13 +45,13 @@ function admin_index(){
     foreach($directories as $subdirectory){
         if (e::_isValidDirectory("$parent/$subdirectory")){    
             print "<tr><td>&gt;&gt;</td><td><a href='admin?directory=$parent/$subdirectory'>$subdirectory</a></td>
-            <td><a href='admin?directory={$_GET['directory']}&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+            <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
         }
     }
     foreach($directories as $subdirectory){
         if (e::_isValidFile($subdirectory,$parent)){    
             print "<tr><td></td><td><a href='admin/edit?file=$parent/$subdirectory'>$subdirectory</a></td>
-            <td><a href='admin?directory={$_GET['directory']}&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+            <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
         }    
     }
     
@@ -60,12 +60,12 @@ function admin_index(){
     if (TRUE){ //TODO: Check writability of directory
         ?>
         <hr>
-        <form action="admin?directory=<?=$_GET['directory']?>" method="POST">
+        <form action="admin?directory=<?=$directory?>" method="POST">
             <label>New Path:</label><input name="mkdir" type="text" size="255" style="width:120px">
             <input type="submit" value="Create new path">
         </form>
         <hr>
-        <form action="admin?directory=<?=$_GET['directory']?>" method="POST">
+        <form action="admin?directory=<?=$directory?>" method="POST">
             <label>New File:</label><input name="mkfile" type="text" size="255" style="width:120px">
             <input type="submit" value="Create new file">
         </form>
