@@ -12,7 +12,7 @@ try {
         if (isset($e->content->html)){
             print $e->content->html;
         } else {
-            // Print some default "Welcome to engine 4 guff"
+            header('Location:' . e::_basehref() . '_e/docs/',301);
         }
     } else {
         print $output;
@@ -109,6 +109,14 @@ class e {
                 
                 // Apply special loading routines depending on what content we find
                 switch(strtolower($filearray[1])){
+                    case 'inc':
+                        // Include a file, but buffer the output and put it into $e
+                        ob_start();
+                        include($directory . '/' . $file);
+                        $this->$directoryarray[0]->html = ob_get_contents();
+                        ob_end_clean();
+                        break;
+                        
                     case 'php':
                         // Run the PHP script. Run it here so that $this, in context, is $e
                         include($directory . '/' . $file);
@@ -186,11 +194,11 @@ class e {
         return $return;
     }
     
-    private function _domain() {
+    static function _domain() {
         return $_SERVER['SERVER_NAME'];
     }
     
-    private function _basedir(){
+    static function _basedir(){
         $indexphp = $_SERVER['SCRIPT_FILENAME'];
         $indexphp = explode('/',$indexphp);
         array_pop($indexphp);
@@ -199,14 +207,14 @@ class e {
         return $indexphp;
     }
     
-    private function _basehref(){
+    static function _basehref(){
         $indexphp = $_SERVER['PHP_SELF'];
         $indexphp = explode('/',$indexphp);
         array_pop($indexphp);
         $indexphp = implode('/',$indexphp);
         $indexphp .= '/';
                
-        return 'http://' . $this->_domain() . $indexphp;
+        return 'http://' . e::_domain() . $indexphp;
     }
     
     private function _loadplugin($plugin){
