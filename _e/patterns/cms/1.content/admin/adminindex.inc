@@ -6,6 +6,10 @@
 admin_index();
 
 function admin_index(){
+    if (isset($_GET['directory'])){ $directory = $parent = $_GET['directory']; } else { $directory = '.'; $parent = '.';}
+    if ($directory == '..'){ $directory = '.'; }
+    if ($directory == '.') { $uploaddirectory = '';} else { $uploaddirectory = $directory . '/';}
+    
     // Make a new directory if one has been requested
     if (isset($_POST['mkdir'])){
         $_POST['mkdir'] = $_GET['directory'] . '/' . $_POST['mkdir'];
@@ -28,8 +32,15 @@ function admin_index(){
         rrm($_GET['rrm']);
     }
     
-    if (isset($_GET['directory'])){ $directory = $parent = $_GET['directory']; } else { $directory = '.'; $parent = '.';}
-    if ($directory == '..'){ $directory = '.'; }
+    // Upload a file if required
+    if (isset($_FILES['upload'])){
+        if ($_FILES['upload']['error'] == 0){
+            print "Moving to $uploaddirectory{$_FILES['upload']['name']}";
+            move_uploaded_file($_FILES['upload']['tmp_name'], $uploaddirectory . $_FILES['upload']['name']);
+        } else {
+            // Something went wrong uploading the file
+        }
+    }
 
     print "<p>Exploring <strong>$directory</strong></p>";
     print '<table class="DataTable" style="width:100%">';
@@ -42,16 +53,27 @@ function admin_index(){
     
     $directories = scandir($directory);
 
+    // Output the directories
     foreach($directories as $subdirectory){
         if (e::_isValidDirectory("$parent/$subdirectory")){    
-            print "<tr><td>&gt;&gt;</td><td><a href='admin?directory=$parent/$subdirectory'>$subdirectory</a></td>
-            <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+            if ($subdirectory[0] !== '_' AND $subdirectory[0] !== '.'){
+                print "<tr><td>&gt;&gt;</td><td><a href='admin?directory=$parent/$subdirectory'>$subdirectory</a></td>
+                <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+            }
         }
     }
+    // Output the files
     foreach($directories as $subdirectory){
-        if (e::_isValidFile($subdirectory,$parent)){    
-            print "<tr><td></td><td><a href='admin/edit?file=$parent/$subdirectory'>$subdirectory</a></td>
-            <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+        if (e::_isValidFile($subdirectory,$parent)){
+            if ($subdirectory[0] !== '_' AND $subdirectory[0] !== '.'){
+                if(e::_isBinaryFile("$parent/$subdirectory")){
+                    print "<tr><td></td><td><a href='$parent/$subdirectory' target='_blank'>$subdirectory</a></td>
+                    <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+                } else {
+                    print "<tr><td></td><td><a href='admin/edit?file=$parent/$subdirectory'>$subdirectory</a></td>
+                    <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+                }
+            }
         }    
     }
     
@@ -61,12 +83,17 @@ function admin_index(){
         ?>
         <hr>
         <form action="admin?directory=<?=$directory?>" method="POST">
-            <label>New Path:</label><input name="mkdir" type="text" size="255" style="width:120px">
+            <label>New Path/Directory:</label><input name="mkdir" type="text" size="255" style="width:120px">
             <input type="submit" value="Create new path">
         </form>
         <hr>
         <form action="admin?directory=<?=$directory?>" method="POST">
-            <label>New File:</label><input name="mkfile" type="text" size="255" style="width:120px">
+            <label>New Text File:</label><input name="mkfile" type="text" size="255" style="width:120px">
+            <input type="submit" value="Create new file">
+        </form>
+        <hr>
+        <form action="admin?directory=<?=$directory?>" method="POST" enctype="multipart/form-data">
+            <label>Upload File:</label><input name="upload" type="file" size="255" style="width:120px">
             <input type="submit" value="Create new file">
         </form>
         <?php
