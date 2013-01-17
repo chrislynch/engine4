@@ -133,12 +133,12 @@ class e {
                         
                     default:
                         // Check to see if the file is binary or text
-                        $finfo = finfo_open(FILEINFO_MIME);
-                        $finfofiletype = substr(finfo_file($finfo, $directory . '/' . $file), 0, 4);
-                        if ($finfofiletype == 'text'){
-                            $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
+                        if ($this->_isBinaryFile($directory . '/' . $file)){
+                            if(!isset($this->$directoryarray[0]->_files)){ $this->$directoryarray[0]->_files = array(); }
+                            // $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
+                            $this->$directoryarray[0]->_files[$file] = $directory . '/' . $file;
                         } else {
-                            $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
+                            $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
                         }
                 }
             }
@@ -192,6 +192,16 @@ class e {
         if ($file == '.') { $return = FALSE; }
         if ($file == '..') { $return = FALSE; }
         return $return;
+    }
+    
+    static function _isBinaryFile($file){
+        $finfo = finfo_open(FILEINFO_MIME);
+        $finfofiletype = substr(finfo_file($finfo,$file), 0, 4);
+        if ($finfofiletype == 'text'){
+            return FALSE;
+        } else {
+            return TRUE;
+        }
     }
     
     static function _domain() {
@@ -250,6 +260,12 @@ class eThing extends stdClass {
     
     function _postload() {
         // Called after ALL the content has been loaded
+        if (isset($this->html) && isset($this->_files)){
+            foreach($this->_files as $filename => $filepath){
+                str_ireplace("'$filename'", "'$filepath'", $this->html);
+                str_ireplace("\"$filename\"", "\"$filepath\"", $this->html);
+            }
+        }
     }
     
 }
