@@ -9,6 +9,14 @@ function admin_index(){
     if (isset($_GET['directory'])){ $directory = $parent = $_GET['directory']; } else { $directory = '.'; $parent = '.';}
     if ($directory == '..'){ $directory = '.'; }
     if ($directory == '.') { $uploaddirectory = '';} else { $uploaddirectory = $directory . '/';}
+    if ($directory == '.'){
+        $viewpath = '';
+    } else {
+        $viewpath = explode('/',$directory);
+        array_shift($viewpath);
+        array_shift($viewpath);
+        $viewpath = implode('/',$viewpath);
+    }
     
     // Make a new directory if one has been requested
     if (isset($_POST['mkdir'])){
@@ -42,7 +50,9 @@ function admin_index(){
         }
     }
 
-    print "<p>Exploring <strong>$directory</strong></p>";
+    print "<p>Exploring <strong>$directory</strong>
+            <a href='$viewpath'>(View)</a>
+            </p>";
     print '<table class="DataTable" style="width:100%">';
     print '<tr><th>&nbsp;</th><th>File/Directory</th><th>Operations</th></tr>';
     
@@ -93,7 +103,7 @@ function admin_index(){
         </form>
         <hr>
         <form action="admin?directory=<?=$directory?>" method="POST" enctype="multipart/form-data">
-            <label>Upload File:</label><input name="upload" type="file" size="255" style="width:120px">
+            <label>Upload File:</label><input name="upload" type="file">
             <input type="submit" value="Create new file">
         </form>
         <?php
