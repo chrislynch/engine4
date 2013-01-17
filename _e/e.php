@@ -1,5 +1,7 @@
 <?php
 
+if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
+
 $e = new e();
 try {
     ob_start();                 // Start buffering output
@@ -126,9 +128,9 @@ class e {
                     case 'txt': case 'text':
                     case 'htm': case 'html':
                         // Load up a recognised text file and mark it down
-                        if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
-                        $this->$directoryarray[0]->html = Markdown($this->$directoryarray[0]->$filearray[1]);
+                        $this->$directoryarray[0]->$filearray[1] = Markdown($this->$directoryarray[0]->$filearray[1]);
+                        if (!isset($this->$directoryarray[0]->html)){ $this->$directoryarray[0]->html = $this->$directoryarray[0]->$filearray[1]; }
                         break;
                         
                     default:
@@ -157,11 +159,11 @@ class e {
         return $directory;
     }
     
-    protected function _search($path, $parameters = array()){
+    static function _search($path, $parameters = array()){
         $return = array();
         $results = scandir($path);
         foreach($results as $result){
-            if ($this->_isValidDirectory($path . '/' . $result,TRUE)){
+            if (e::_isValidDirectory($path . '/' . $result,TRUE)){
                 $returnItem = new e();
                 $returnItem->_open($path . '/' . $result);
                 $return[] = $returnItem;
@@ -259,13 +261,52 @@ class eThing extends stdClass {
     }
     
     function _postload() {
-        // Called after ALL the content has been loaded
+        // Look for variables in the html
+        if (isset($this->html)){
+            $this->extractVariables();
+        }
+        
+        // Make image and file links work
         if (isset($this->html) && isset($this->_files)){
             foreach($this->_files as $filename => $filepath){
                 $this->html = str_ireplace("'$filename'", "'$filepath'", $this->html);
                 $this->html = str_ireplace("\"$filename\"", "\"$filepath\"", $this->html);
+
             }
         }
+    }
+    
+    private function extractVariables(){
+        $variableStart = FALSE;
+        $variableEnd = FALSE;
+        $loop = TRUE;
+        
+        while($loop == TRUE){
+            $loop = FALSE;
+            $variableStart = stripos($this->html,'{@');
+            if (!($variableStart === FALSE)){
+                $variableEnd = stripos($this->html,'@}');
+                if (!($variableEnd === FALSE)){
+                    // Grab the variable
+                    $variable = substr($this->html, $variableStart, ($variableEnd - $variableStart) + 2);
+                    // Expunge the variable from the html
+                    $this->html = str_ireplace($variable, '', $this->html);
+                    // Remove the delimiters from the variable
+                    $variable = str_ireplace('{@', '', $variable);
+                    $variable = str_ireplace('@}', '', $variable);
+                    // Split the variable to name & value
+                    $variable = explode('=',$variable);
+                    $variablename = trim(array_shift($variable));
+                    $variablevalue = trim(implode('=',$variable));
+                    // Apply the value to the object
+                    $this->variablename = $variablevalue;
+                    // If we have found one, there may be more. Go and look for them.
+                    $loop = TRUE;
+                }
+
+            }
+        }
+        
     }
     
 }

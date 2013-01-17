@@ -12,7 +12,6 @@ function admin_edit(){
     // Save the file if we need to
     if (isset($_GET['save'])){
         // Save the contents of the file
-
         if (!(file_put_contents($_GET['file'], $_POST['filecontents']) === FALSE)){
             unset($_POST['filecontents']);
         } else {

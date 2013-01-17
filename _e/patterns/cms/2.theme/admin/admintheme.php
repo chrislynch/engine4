@@ -113,9 +113,9 @@
             </div>
             <div class="span-8 last">
                 <div class="Section">
-                    <div class="SectionHeading"></div>
+                    <div class="SectionHeading">Help &amp; Info</div>
                     <div class="SectionContent">
-                        
+                        <?= @$this->sidebar->html ?>
                     </div>
                 </div>
             </div>
