@@ -262,8 +262,8 @@ class eThing extends stdClass {
         // Called after ALL the content has been loaded
         if (isset($this->html) && isset($this->_files)){
             foreach($this->_files as $filename => $filepath){
-                str_ireplace("'$filename'", "'$filepath'", $this->html);
-                str_ireplace("\"$filename\"", "\"$filepath\"", $this->html);
+                $this->html = str_ireplace("'$filename'", "'$filepath'", $this->html);
+                $this->html = str_ireplace("\"$filename\"", "\"$filepath\"", $this->html);
             }
         }
     }
