@@ -260,8 +260,8 @@ class eThing extends stdClass {
     
     function _postload() {
         // Called after ALL the content has been loaded
-        if (isset($this->html)){
-            foreach($this->files as $filename => $filepath){
+        if (isset($this->html) && isset($this->_files)){
+            foreach($this->_files as $filename => $filepath){
                 str_ireplace("'$filename'", "'$filepath'", $this->html);
                 str_ireplace("\"$filename\"", "\"$filepath\"", $this->html);
             }
