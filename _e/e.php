@@ -134,7 +134,9 @@ class e {
                     default:
                         // Check to see if the file is binary or text
                         if ($this->_isBinaryFile($directory . '/' . $file)){
-                            $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
+                            if(!isset($this->$directoryarray[0]->_files)){ $this->$directoryarray[0]->_files = array(); }
+                            // $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
+                            $this->$directoryarray[0]->_files[$file] = $directory . '/' . $file;
                         } else {
                             $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
                         }
@@ -258,6 +260,12 @@ class eThing extends stdClass {
     
     function _postload() {
         // Called after ALL the content has been loaded
+        if (isset($this->html)){
+            foreach($this->files as $filename => $filepath){
+                str_ireplace("'$filename'", "'$filepath'", $this->html);
+                str_ireplace("\"$filename\"", "\"$filepath\"", $this->html);
+            }
+        }
     }
     
 }
