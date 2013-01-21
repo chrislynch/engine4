@@ -271,6 +271,7 @@ class eThing extends stdClass {
             foreach($this->_files as $filename => $filepath){
                 $this->html = str_ireplace("'$filename'", "'$filepath'", $this->html);
                 $this->html = str_ireplace("\"$filename\"", "\"$filepath\"", $this->html);
+
             }
         }
     }
@@ -302,6 +303,7 @@ class eThing extends stdClass {
                     // If we have found one, there may be more. Go and look for them.
                     $loop = TRUE;
                 }
+
             }
         }
         

@@ -68,6 +68,7 @@
             engine4 Content Management System
             <div id="HeaderUserMenu">
                 Connected to <?= $this->_basehref() ?><br>
+                <?php if(isset($_COOKIE['user'])) { print "Logged in as {$_COOKIE['user']}"; } ?>
             </div>
         </div>
     </div>
