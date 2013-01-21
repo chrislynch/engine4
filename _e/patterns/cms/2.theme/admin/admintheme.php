@@ -18,11 +18,12 @@
 		   } else {
 			$("#MenuContentContainer").html(menuContent);
 			if(currentMenuItem != contentId){
-				currentMenuItem = contentId;
-				$("#MenuContentContainer").slideDown();
+                            currentMenuItem = contentId;
+                            $("#MenuContentContainer").slideDown();
 			} else {
-				$("#MenuContentContainer").slideUp();
-			} 
+                            currentMenuItem = "";
+                            $("#MenuContentContainer").slideUp();
+			}
 		   }
           });
     });
@@ -77,6 +78,8 @@
         <div id="MainMenu">
             <ul id="MainMenuList">
                 <li><a href="admin" class="MenuTab" id="HomeMenuItem">Home</a></li>
+                <li><a class="MenuTab" id="ContentMenuItem">Content Management</a></li>
+                <li><a href="admin/filesystem" class="MenuTab" id="FileSystemMenuItem">File System</a></li>
 		<!-- <li><a href="#" class="MenuTab" id="OrdersMenuItem">Reports</a></li> -->
             </ul>
         </div>
@@ -89,20 +92,31 @@
 	</div>
     </div>
 				
-    <div id="OrderItemsContainer">
+    <div id="ContentItemsContainer">
         <!-- 
             Create one XYZMenuContent for each XYZMenuItem in the MainMenuList. The plumbing for the menu relies on the XYZ 
             part being the same for both.
         -->	
-        <div id="OrdersMenuContent" class="MenuContent">
-            <ul>
-                <li><a href="heatmap">Customer Heat Map</a></li>
-            </ul>
-            <p>
-                Please select the report that you would like to view.
-            </p>
+        <div id="ContentMenuContent" class="MenuContent">
+                <div class="span-6">
+                    <ul>
+                        <li><a href="admin/content/add/post">Add Post</a></li>
+                        <li><a href="admin/content/add/page">Add Page</a></li>
+                    </ul>
+                    <br>
+                    <br>
+                </div>
+                <div class="span-6">
+                    <ul>
+                        <li><a href="admin/content/edit/posts">Edit Posts</a></li>
+                        <li><a href="admin/content/edit/pages">Edit Pages</a></li>
+                    </ul>
+                    <br>
+                    <br>
+                </div>
+                <p>A "Post" is a small piece of content; a tweet, a picture, a video, or short piece of text.</p>
+                <p>A "Page" is a more significant piece of content that can be independently formatted.</p>
         </div>
-    
     </div>
     
     <div class="span-24 last" id="MainContentContainer">

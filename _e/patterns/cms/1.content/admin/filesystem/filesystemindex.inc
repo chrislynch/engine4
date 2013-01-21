@@ -1,5 +1,5 @@
 
-<h1>Content Explorer</h1>
+<h1>File System Explorer</h1>
 
 <?php
 
@@ -67,7 +67,7 @@ function admin_index(){
     foreach($directories as $subdirectory){
         if (e::_isValidDirectory("$parent/$subdirectory")){    
             if ($subdirectory[0] !== '_' AND $subdirectory[0] !== '.'){
-                print "<tr><td>&gt;&gt;</td><td><a href='admin?directory=$parent/$subdirectory'>$subdirectory</a></td>
+                print "<tr><td>&gt;&gt;</td><td><a href='admin/filesystem?directory=$parent/$subdirectory'>$subdirectory</a></td>
                 <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
             }
         }
@@ -78,10 +78,10 @@ function admin_index(){
             if ($subdirectory[0] !== '_' AND $subdirectory[0] !== '.'){
                 if(e::_isBinaryFile("$parent/$subdirectory")){
                     print "<tr><td></td><td><a href='$parent/$subdirectory' target='_blank'>$subdirectory</a></td>
-                    <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+                    <td><a href='admin/filesystem?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
                 } else {
                     print "<tr><td></td><td><a href='admin/edit?file=$parent/$subdirectory'>$subdirectory</a></td>
-                    <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+                    <td><a href='admin/filesystem?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
                 }
             }
         }    
@@ -92,17 +92,17 @@ function admin_index(){
     if (TRUE){ //TODO: Check writability of directory
         ?>
         <hr>
-        <form action="admin?directory=<?=$directory?>" method="POST">
+        <form action="admin/filesystem?directory=<?=$directory?>" method="POST">
             <label>New Path/Directory:</label><input name="mkdir" type="text" size="255" style="width:120px">
             <input type="submit" value="Create new path">
         </form>
         <hr>
-        <form action="admin?directory=<?=$directory?>" method="POST">
+        <form action="admin/filesystem?directory=<?=$directory?>" method="POST">
             <label>New Text File:</label><input name="mkfile" type="text" size="255" style="width:120px">
             <input type="submit" value="Create new file">
         </form>
         <hr>
-        <form action="admin?directory=<?=$directory?>" method="POST" enctype="multipart/form-data">
+        <form action="admin/filesystem?directory=<?=$directory?>" method="POST" enctype="multipart/form-data">
             <label>Upload File:</label><input name="upload" type="file">
             <input type="submit" value="Create new file">
         </form>
