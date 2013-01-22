@@ -5,11 +5,16 @@
 
 <?php
 
-admin_edit();
+if ($_GET['file']){
+    admin_file_edit();
+} else {
+    
+}
 
-function admin_edit(){
+function admin_file_edit(){
 
     // Save the file if we need to
+    
     if (isset($_GET['save'])){
         // Save the contents of the file
         if (!(file_put_contents($_GET['file'], $_POST['filecontents']) === FALSE)){
@@ -38,6 +43,26 @@ function admin_edit(){
     } else {
         print '<pre>' . htmlentities($filecontents) . '</pre>';
     }
+    
+}
+
+function admin_template_edit(){
+
+    // Save the file if we need to
+    
+    if (isset($_GET['save'])){
+        $save = array();
+        foreach($_POST as $key => $value){
+            
+        }
+        
+        foreach($save as $filetype => $data){
+            
+        }
+    }
+
+    // Show the editor/viewer
+
     
 }
 
