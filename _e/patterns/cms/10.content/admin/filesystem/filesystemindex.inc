@@ -20,6 +20,7 @@ function admin_index(){
     
     // Make a new directory if one has been requested
     if (isset($_POST['mkdir'])){
+        if (isset($_POST['dateprefix_mkdir'])){ $_POST['mkdir'] = date('YmdHi') . '.' . $_POST['mkdir']; }
         $_POST['mkdir'] = $_GET['directory'] . '/' . $_POST['mkdir'];
         print "Making {$_POST['mkdir']}";
         mkdir($_POST['mkdir'], 0777, TRUE);
@@ -30,7 +31,7 @@ function admin_index(){
     // Make a new file if one has been requested
     if (isset($_POST['mkfile'])){
         file_put_contents($_GET['directory'] . '/' . $_POST['mkfile'],'');
-        header('Location: admin/edit?file=' . $_GET['directory'] . '/' . $_POST['mkfile']);
+        header('Location: ' . e::_basehref() . 'admin/edit?file=' . $_GET['directory'] . '/' . $_POST['mkfile']);
         die();
     }
     
@@ -58,7 +59,7 @@ function admin_index(){
     
     if ($directory !== '.'){
         $up = e::_dirup($directory);
-        print "<tr><td>^</td><td><a href='admin?directory=$up'>Up ($up)</a></td></tr>";
+        print "<tr><td>^</td><td><a href='admin/filesystem?directory=$up'>Up ($up)</a></td></tr>";
     }
     
     $directories = scandir($directory);
@@ -68,7 +69,7 @@ function admin_index(){
         if (e::_isValidDirectory("$parent/$subdirectory")){    
             if ($subdirectory[0] !== '_' AND $subdirectory[0] !== '.'){
                 print "<tr><td>&gt;&gt;</td><td><a href='admin/filesystem?directory=$parent/$subdirectory'>$subdirectory</a></td>
-                <td><a href='admin?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
+                <td><a href='admin/filesystem?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
             }
         }
     }
@@ -93,7 +94,10 @@ function admin_index(){
         ?>
         <hr>
         <form action="admin/filesystem?directory=<?=$directory?>" method="POST">
-            <label>New Path/Directory:</label><input name="mkdir" type="text" size="255" style="width:120px">
+            <label>New Path/Directory:</label>
+            <input name="mkdir" type="text" size="255" style="width:120px">
+            <label>Date Stamp:</label>
+            <input name="dateprefix_mkdir" type="checkbox">
             <input type="submit" value="Create new path">
         </form>
         <hr>

@@ -202,12 +202,16 @@ class e {
     }
     
     static function _isBinaryFile($file){
-        $finfo = finfo_open(FILEINFO_MIME);
-        $finfofiletype = substr(finfo_file($finfo,$file), 0, 4);
-        if ($finfofiletype == 'text'){
-            return FALSE;
+        if (function_exists('finfo_open')){
+            $finfo = finfo_open(FILEINFO_MIME);
+            $finfofiletype = substr(finfo_file($finfo,$file), 0, 4);
+            if ($finfofiletype == 'text'){
+                return FALSE;
+            } else {
+                return TRUE;
+            }
         } else {
-            return TRUE;
+            return FALSE;
         }
     }
     

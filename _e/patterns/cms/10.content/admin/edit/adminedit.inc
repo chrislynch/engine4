@@ -1,7 +1,7 @@
 
 <h1>File Editor</h1>
 
-<p>Editing <strong><?=$_GET['file']?></strong> (<a href="admin?directory=<?= e::_dirup($_GET['file']) ?>">Back)</a></p>
+<p>Editing <strong><?=$_GET['file']?></strong> (<a href="admin/filesystem?directory=<?= e::_dirup($_GET['file']) ?>">Back)</a></p>
 
 <?php
 
@@ -19,8 +19,9 @@ function admin_file_edit(){
         // Save the contents of the file
         if (!(file_put_contents($_GET['file'], $_POST['filecontents']) === FALSE)){
             unset($_POST['filecontents']);
+            print "<p><strong>Success: Saved the file</strong></p>";
         } else {
-            print "<p><strong>Warning: Could not update file</p>";
+            print "<p><strong>Warning: Could not update file</strong></p>";
         }
     }
 
@@ -35,7 +36,7 @@ function admin_file_edit(){
 
     if (is_writable($_GET['file'])){
     ?>
-        <form action="admin/edit?save&file=<?=$_GET['file']?>" method="POST">
+        <form action="admin/edit?save=save&file=<?=$_GET['file']?>" method="POST">
             <textarea name="filecontents" rows='30' style='width:100%'><?=htmlentities($filecontents)?></textarea><br>
             <input type="submit" value="Save Changes">
         </form>
