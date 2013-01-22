@@ -20,6 +20,7 @@ function admin_index(){
     
     // Make a new directory if one has been requested
     if (isset($_POST['mkdir'])){
+        if (isset($_POST['dateprefix_mkdir'])){ $_POST['mkdir'] = date('YmdHi') . '.' . $_POST['mkdir']; }
         $_POST['mkdir'] = $_GET['directory'] . '/' . $_POST['mkdir'];
         print "Making {$_POST['mkdir']}";
         mkdir($_POST['mkdir'], 0777, TRUE);
@@ -92,8 +93,12 @@ function admin_index(){
     if (TRUE){ //TODO: Check writability of directory
         ?>
         <hr>
+        <h2>File Operations</h2>
         <form action="admin?directory=<?=$directory?>" method="POST">
-            <label>New Path/Directory:</label><input name="mkdir" type="text" size="255" style="width:120px">
+            <label>New Path/Directory:</label>
+            <input name="mkdir" type="text" size="255" style="width:120px">
+            <label>Date Stamp:</label>
+            <input name="dateprefix_mkdir" type="checkbox">
             <input type="submit" value="Create new path">
         </form>
         <hr>
