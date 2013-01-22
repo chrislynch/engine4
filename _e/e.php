@@ -110,7 +110,10 @@ class e {
                 $filearray = explode('.',$file);
                 
                 // Apply special loading routines depending on what content we find
-                switch(strtolower($filearray[1])){
+                switch(strtolower(@$filearray[1])){
+                    case '':
+                        // Someone created a file without an extension.
+                        // Ignore this silly file
                     case 'inc':
                         // Include a file, but buffer the output and put it into $e
                         ob_start();
@@ -166,9 +169,11 @@ class e {
             if (e::_isValidDirectory($path . '/' . $result,TRUE)){
                 $returnItem = new e();
                 $returnItem->_open($path . '/' . $result);
-                $return[] = $returnItem;
+                $return[$result] = $returnItem;
             }
         }
+        ksort($return);
+        $return = array_reverse($return, TRUE);
         return $return;
     }
     
