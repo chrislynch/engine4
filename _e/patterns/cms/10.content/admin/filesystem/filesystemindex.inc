@@ -31,7 +31,7 @@ function admin_index(){
     // Make a new file if one has been requested
     if (isset($_POST['mkfile'])){
         file_put_contents($_GET['directory'] . '/' . $_POST['mkfile'],'');
-        header('Location: ' . e::_basehref() . 'admin/edit?file=' . $_GET['directory'] . '/' . $_POST['mkfile']);
+        header('Location: ' . e::_basehref() . 'admin/filesystem/edit?file=' . $_GET['directory'] . '/' . $_POST['mkfile']);
         die();
     }
     
@@ -81,7 +81,7 @@ function admin_index(){
                     print "<tr><td></td><td><a href='$parent/$subdirectory' target='_blank'>$subdirectory</a></td>
                     <td><a href='admin/filesystem?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
                 } else {
-                    print "<tr><td></td><td><a href='admin/edit?file=$parent/$subdirectory'>$subdirectory</a></td>
+                    print "<tr><td></td><td><a href='admin/filesystem/edit?file=$parent/$subdirectory'>$subdirectory</a></td>
                     <td><a href='admin/filesystem?directory=$directory&rrm=$parent/$subdirectory'>Delete</a></td></tr>";
                 }
             }

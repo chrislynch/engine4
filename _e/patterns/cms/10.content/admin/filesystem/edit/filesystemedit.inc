@@ -36,7 +36,7 @@ function admin_file_edit(){
 
     if (is_writable($_GET['file'])){
     ?>
-        <form action="admin/edit?save=save&file=<?=$_GET['file']?>" method="POST">
+        <form action="admin/filesystem/edit?save=save&file=<?=$_GET['file']?>" method="POST">
             <textarea name="filecontents" rows='30' style='width:100%'><?=htmlentities($filecontents)?></textarea><br>
             <input type="submit" value="Save Changes">
         </form>
