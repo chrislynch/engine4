@@ -254,8 +254,11 @@ class e {
         // so that it can still find plugins.
         require_once("_e/plugins/$plugin/$plugin.php");
         $pluginvar = '_' . $plugin;
-        $this->$pluginvar = new $plugin();
+        if (!isset($this->$pluginvar)){
+            $this->$pluginvar = new $plugin();
+        }
     }
+    
 }
 
 class eThing extends stdClass {
