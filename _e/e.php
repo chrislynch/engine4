@@ -202,7 +202,16 @@ class e {
     }
     
     static function _isBinaryFile($file){
-        if (function_exists('finfo_open')){
+        $binary_files = array('png','jpg','jpeg','gif','pdf');
+        $file = explode('.',$file);
+        $filetype = strtolower(array_pop($file));
+        if(in_array($filetype, $binary_files)){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+        /*
+        if (function_exists('finfo_open') && file_exists($file)){
             $finfo = finfo_open(FILEINFO_MIME);
             $finfofiletype = substr(finfo_file($finfo,$file), 0, 4);
             if ($finfofiletype == 'text'){
@@ -213,6 +222,8 @@ class e {
         } else {
             return FALSE;
         }
+         * 
+         */
     }
     
     static function _domain() {
