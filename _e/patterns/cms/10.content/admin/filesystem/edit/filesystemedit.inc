@@ -42,13 +42,8 @@ function admin_file_edit(){
 
     if (is_writable($_GET['file'])){
     ?>
-<<<<<<< HEAD:_e/patterns/cms/10.content/admin/edit/adminedit.inc
         <form action="admin/edit?save=save&file=<?=$_GET['file']?>" method="POST">
             <textarea name="filecontents" rows='30' style='width:100%'><?= htmlspecialchars($filecontents)?></textarea><br>
-=======
-        <form action="admin/filesystem/edit?save=save&file=<?=$_GET['file']?>" method="POST">
-            <textarea name="filecontents" rows='30' style='width:100%'><?=htmlentities($filecontents)?></textarea><br>
->>>>>>> 41030168210f3e9e69af1dcf5ef36575117431ed:_e/patterns/cms/10.content/admin/filesystem/edit/filesystemedit.inc
             <input type="submit" value="Save Changes">
         </form>
     <?php
