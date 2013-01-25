@@ -14,7 +14,7 @@ try {
         if (isset($e->content->html)){
             print $e->content->html;
         } else {
-            header('Location:' . e::_basehref() . '_e/docs/',301);
+            print "<html><head><title>engine4</title></head><body><h1>engine4</h1><p>You are running engine4</p></body></html>";
         }
     } else {
         print $output;
