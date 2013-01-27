@@ -143,7 +143,19 @@ class e {
                             // $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
                             $this->$directoryarray[0]->_files[$file] = $directory . '/' . $file;
                         } else {
-                            $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
+                            // Load the ascii content
+                            $asciicontent = file_get_contents($directory . '/' . $file);
+                            // Check for XML
+                            libxml_use_internal_errors(true);                   // Tell XML to keep its errors to itself
+                            $xmlcontent = simplexml_load_string($asciicontent); // Try to create an XML object from the string.
+                            libxml_clear_errors();                              // Throw away any XML errors.
+                            if (!($xmlcontent) === FALSE){
+                                // This is XML content, turned into an XML object
+                                $this->$directoryarray[0]->$filearray[1] = $xmlcontent;
+                            } else {
+                                // Add the content, no
+                                $this->$directoryarray[0]->$filearray[1] = $asciicontent;
+                            }
                         }
                 }
             }
@@ -171,6 +183,12 @@ class e {
                 $returnItem->_open($path . '/' . $result);
                 $return[$result] = $returnItem;
             }
+        }
+        if (sizeof($return) == 0){
+            // Try opening the item instead
+            $returnItem = new e();  
+            $returnItem->_open($path);
+            $return[$result] = $returnItem;
         }
         ksort($return);
         $return = array_reverse($return, TRUE);
@@ -254,8 +272,9 @@ class e {
         // so that it can still find plugins.
         require_once("_e/plugins/$plugin/$plugin.php");
         $pluginvar = '_' . $plugin;
+        $pluginclass = '_' . $plugin;
         if (!isset($this->$pluginvar)){
-            $this->$pluginvar = new $plugin();
+            $this->$pluginvar = new $pluginclass($this);
         }
     }
     
@@ -297,6 +316,7 @@ class eThing extends stdClass {
 
             }
         }
+        
     }
     
     private function extractVariables(){

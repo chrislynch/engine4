@@ -1,6 +1,6 @@
 <?php
 
-class config {
+class _config {
     /* Configuration helper class */
     
     var $config;
