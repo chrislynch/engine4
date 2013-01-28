@@ -11,7 +11,7 @@ class _cart {
     private $e;
     
     public function __construct(&$e){
-        $this->e &= $e;
+        $this->e =& $e;
         $this->totals = new stdClass();
         $this->totals->items = 0;
         $this->totals->value = '0.00';
@@ -22,7 +22,7 @@ class _cart {
     }
     
     private function _go(){
-        $this->loadCart();
+        // $this->loadCart();
     }
     
     
