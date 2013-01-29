@@ -246,6 +246,7 @@ class e {
         if ($file == '.') { $return = FALSE; }
         if ($file == '..') { $return = FALSE; }
         if (e::_fileextension($file) == 'idx') { $return = FALSE; }
+        if (strstr(e::_fileextension($file),'~')) { $return = FALSE; }
         return $return;
     }
     
