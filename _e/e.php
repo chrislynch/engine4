@@ -27,6 +27,9 @@ if (isset($_REQUEST['debug'])){ print '<pre>' . print_r($e,TRUE) . '</pre>'; }
 
 class e {
     
+    var $q;
+    var $p;
+    
     function _go() {
         
         // Get initial list of directories
@@ -44,25 +47,31 @@ class e {
         $found = FALSE;
         
         if (isset($_REQUEST['q'])){
-            $q = $_REQUEST['q'];
+            $this->q = $_REQUEST['q'];
+            $this->p = '';
         } else {
-            $q = '';
+            $this->q = '';
+            $this->p = '';
         }
         
-        while(strlen($q) > 0 && !$found){
-            if (file_exists($inDirectory . '/' . $q)){
-                if ($this->_isValidDirectory($inDirectory . '/' . $q)){
-                    if ($this->_open($inDirectory . '/' . $q)) {
+        while(strlen($this->q) > 0 && !$found){
+            if (file_exists($inDirectory . '/' . $this->q)){
+                if ($this->_isValidDirectory($inDirectory . '/' . $this->q)){
+                    if ($this->_open($inDirectory . '/' . $this->q)) {
                         $found = TRUE;
                     } else {
-                        $q = $this->_dirup($q);
+                        $this->p = e::_popget('/', $this->q) . '/' . $this->p;
+                        $this->q = $this->_dirup($this->q);
                     }
                 }
             } else {
-                $q = $this->_dirup($q);
+                $this->p = e::_popget('/', $this->q) . '/' . $this->p;
+                $this->q = $this->_dirup($this->q);
             }
         }
         
+        // If we have not found anything in a subdirectory, 
+        // open the "section" directory at root level (e.g. open 10.content)
         if (!$found){
             $this->_open($inDirectory);
         }
@@ -195,6 +204,26 @@ class e {
         return $return;
     }
     
+    static function _searchindex($path, $parameters = array()){
+        $return = array();
+        $results = scandir($path);
+        foreach($results as $result){
+            if (e::_fileextension($result) == 'idx') {
+                $idxpath = file_get_contents($path . '/' . $result);
+                $idxpaths = explode("\n",$idxpath);
+                foreach($idxpaths as $idxpath){
+                    $openpath = e::_shiftget('/', $path);
+                    $returnItem = new e();
+                    $returnItem->_open($openpath . '/' . $idxpath);
+                    $return[$idxpath] = $returnItem;
+                }
+            }
+        }
+        ksort($return);
+        $return = array_reverse($return,TRUE);
+        return $return;
+    }
+    
     static function _isValidDirectory($directory){
         $return = is_dir($directory);
         if (strstr($directory,'/')){
@@ -216,13 +245,13 @@ class e {
         if (is_dir($directory . '/' . $file)) { $return = FALSE; }
         if ($file == '.') { $return = FALSE; }
         if ($file == '..') { $return = FALSE; }
+        if (e::_fileextension($file) == 'idx') { $return = FALSE; }
         return $return;
     }
     
     static function _isBinaryFile($file){
         $binary_files = array('png','jpg','jpeg','gif','pdf');
-        $file = explode('.',$file);
-        $filetype = strtolower(array_pop($file));
+        $filetype = e::_fileextension($file);
         if(in_array($filetype, $binary_files)){
             return TRUE;
         } else {
@@ -265,6 +294,25 @@ class e {
         $indexphp .= '/';
                
         return 'http://' . e::_domain() . $indexphp;
+    }
+    
+    static function _fileextension($filename){
+        $filename = explode('.',$filename);
+        $fileextension = array_pop($filename);
+        $fileextension = strtolower($fileextension);
+        return $fileextension;
+    }
+    
+    static function _popget($separator,$string){
+        $stringarray = explode($separator,$string);
+        $return = array_pop($stringarray);
+        return $return;
+    }
+    
+    static function _shiftget($separator,$string){
+        $stringarray = explode($separator,$string);
+        $return = array_shift($stringarray);
+        return $return;
     }
     
     private function _loadplugin($plugin){
