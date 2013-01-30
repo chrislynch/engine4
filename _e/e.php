@@ -315,7 +315,7 @@ class e {
         return $return;
     }
     
-    private function _loadplugin($plugin){
+    public function _loadplugin($plugin){
         // TODO: If we are running e in a subdirectory, we need to somehow tell it
         // so that it can still find plugins.
         require_once("_e/plugins/$plugin/$plugin.php");

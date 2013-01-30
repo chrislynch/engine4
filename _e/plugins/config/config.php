@@ -23,7 +23,11 @@ class _config {
     
     public function load(){
         $this->config = array();
-        $this->config['Site.Name'] = 'An engine4 powered website';
+        $this->config['site.name'] = 'An engine4 powered website';
+        $this->config['mysql.server'] = '127.0.0.1';
+        $this->config['mysql.user'] = 'root';
+        $this->config['mysql.password'] = '';
+        $this->config['mysql.database'] = 'androidcentric';
     }
     
     public function save(){

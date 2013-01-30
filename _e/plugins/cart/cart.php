@@ -22,7 +22,7 @@ class _cart {
     }
     
     private function _go(){
-        // $this->loadCart();
+        $this->loadCart();
     }
     
     
@@ -100,19 +100,20 @@ class _cart {
     
     private function loadCart(){
         // Clear the current items array
-        $this->things = array();
+        $this->items = array();
         
         $cartSQL = 'SELECT ID,QTY,Data FROM trn_cart WHERE session_id = "' . session_id() . '"';
-        $cartData = $this->k->__db->select($cartSQL);
+        $cartData = $this->e->_db->select($cartSQL);
         
+        /*
         while($cartRow = mysql_fetch_assoc($cartData)){
             if ($cartRow['ID'] > 0) {
                 $this->things[$cartRow['ID']] = new cartThing($cartRow['ID'],$cartRow['QTY'],$this->k); 
             }
         }
-        
+        */
         $serviceSQL = 'SELECT * FROM trn_cart_services WHERE session_id = "' . session_id() . '"';
-        $servicesData = $this->k->__db->select($serviceSQL);
+        $servicesData = $this->e->_db->select($serviceSQL);
         
         while($serviceRow = mysql_fetch_assoc($servicesData)){
             $service = new cartService();
