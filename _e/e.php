@@ -209,13 +209,12 @@ class e {
         $results = scandir($path);
         foreach($results as $result){
             if (e::_fileextension($result) == 'idx') {
-                $idxpath = file_get_contents($path . '/' . $result);
-                $idxpaths = explode("\n",$idxpath);
-                foreach($idxpaths as $idxpath){
+                $idxfile = fopen($path . '/' . $result,'r');
+                while ($idxpath = fgetcsv($idxfile)) {
                     $openpath = e::_shiftget('/', $path);
                     $returnItem = new e();
-                    $returnItem->_open($openpath . '/' . $idxpath);
-                    $return[$idxpath] = $returnItem;
+                    $returnItem->_open($openpath . '/' . $idxpath[0]);
+                    $return[$idxpath[0]] = $returnItem;
                 }
             }
         }
