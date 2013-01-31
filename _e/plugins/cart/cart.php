@@ -168,21 +168,21 @@ class _cart {
         if (isset($_REQUEST['updateCartQty'])){ $updateCartQty = $_REQUEST['updateCartQty']; }
         
         if ($updateCartItem > 0) {
-            if (!isset($this->things[$updateCartItem])){
-                $cartThing = new cartThing($updateCartItem,0,$this->k);
+            if (!isset($this->items[$updateCartItem])){
+                $cartThing = new cartItem($updateCartItem,0,$this->k);
             } else {
-                $cartThing = $this->things[$updateCartItem];
+                $cartThing = $this->items[$updateCartItem];
             }
             if ($updateCartQty == 0){
-                if (isset($this->things[$updateCartItem])){
-                    $cartThing = $this->things[$updateCartItem];
-                    $this->k->__messaging->addMessage("{$cartThing->thing->xml->title} has been removed from your cart.");
-                    unset($this->things[$updateCartItem]);
+                if (isset($this->items[$updateCartItem])){
+                    $cartThing = $this->items[$updateCartItem];
+                    $this->e->_messaging->addMessage("{$cartThing->item->content->xml->title} has been removed from your cart.");
+                    unset($this->items[$updateCartItem]);
                 }
             } else {
                 $cartThing->QTY = $updateCartQty;
-                $this->things[$updateCartItem] = $cartThing;
-                $this->k->__messaging->addMessage("{$cartThing->thing->xml->title} has been updated in your cart.");
+                $this->items[$updateCartItem] = $cartThing;
+                $this->e->_messaging->addMessage("{$cartThing->thing->xml->title} has been updated in your cart.");
             }
         }
     }
@@ -411,7 +411,7 @@ class _cart {
     }
     
     public function emptyCart(){
-        $this->things = array();
+        $this->items = array();
         $this->clearServices();
         $this->saveCart();
         $this->totalCart();
