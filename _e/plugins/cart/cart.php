@@ -23,6 +23,8 @@ class _cart {
     
     private function _go(){
         $this->loadCart();
+        print "Adding to cart";
+        $this->addToCart();
     }
     
     
@@ -105,13 +107,13 @@ class _cart {
         $cartSQL = 'SELECT ID,QTY,Data FROM trn_cart WHERE session_id = "' . session_id() . '"';
         $cartData = $this->e->_db->select($cartSQL);
         
-        /*
+        
         while($cartRow = mysql_fetch_assoc($cartData)){
-            if ($cartRow['ID'] > 0) {
-                $this->things[$cartRow['ID']] = new cartThing($cartRow['ID'],$cartRow['QTY'],$this->k); 
+            if (strlen($cartRow['ID']) > 0) {
+                $this->items[$cartRow['ID']] = new cartItem($cartRow['ID'],$cartRow['QTY'],$this->e); 
             }
         }
-        */
+        
         $serviceSQL = 'SELECT * FROM trn_cart_services WHERE session_id = "' . session_id() . '"';
         $servicesData = $this->e->_db->select($serviceSQL);
         
@@ -140,18 +142,18 @@ class _cart {
         $addToCartQty = 1;
         
         if (isset($_REQUEST['addToCartItem'])){ $addToCartItem = $_REQUEST['addToCartItem']; }
-        if (isset($_REQUEST['addToCartQty'])){ $addToCartQty = $_REQUEST['addToCartQty']; }
+        if (isset($_REQUEST['addToCartQty'])){ $addToCartQty = $_REQUEST['addToCartQty']; } else { $addToCartQty = 1; }
         
         if ($addToCartItem > 0 && $addToCartQty > 0) {
             if (!isset($this->things[$addToCartItem])){
-                $cartThing = new cartThing($addToCartItem,0,$this->k);
+                $cartThing = new cartThing($addToCartItem,0,e);
             } else {
-                $cartThing = $this->things[$addToCartItem];
+                $cartThing = $this->items[$addToCartItem];
             }
             $cartThing->QTY += $addToCartQty;
             
-            $this->things[$addToCartItem] = $cartThing;
-            $this->k->__messaging->addMessage("{$cartThing->thing->xml->title} has been added to your cart.");
+            $this->items[$addToCartItem] = $cartThing;
+            $this->e->_messaging->addMessage("{$cartThing->item->xml->title} has been added to your cart.");
         }
         
     }
@@ -535,29 +537,29 @@ class _cart {
     }
 }
 
-class cartThing {
+class cartItem {
     
     public $ID;
     public $QTY;
     public $Price;
     public $thing;
     
-    function __construct($thingID,$QTY,$k){
-        $thing = new thing();
-        if ($thingID > 0){
-            $thing->loadFromID($thingID, $k);
+    function __construct($itemPath,$QTY,$e){
+        $item = e::_search($itemPath);
         
-            $this->thing = $thing;
-            $this->ID = $thing->ID;
+        if (is_object($item)){
+            $this->item = $item;
             $this->QTY = $QTY;
-
-            $this->grossunitprice = number_format(strval($this->thing->product->price->_default->sell->value),2);
+            $this->grossunitprice = number_format(strval($this->item->product->price->_default->sell->value),2);
             $this->netunitprice = number_format(strval($this->grossunitprice) / 1.2,2);      
             $this->unittax = number_format(strval($this->grossunitprice) - strval($this->netunitprice),2);
             $this->netlineprice = number_format(strval($this->netunitprice) * $this->QTY,2);
             $this->linetax = number_format(strval($this->unittax) * $this->QTY,2);
 
-            $this->Price = number_format(strval($this->thing->product->price->_default->sell->value) * $this->QTY,2);
+            $this->Price = number_format(strval($this->item->product->price->_default->sell->value) * $this->QTY,2);
+        } else {
+            // Problem loading the item
+            $e->_messaging->addMessage('One or more of the items in your basket could not be loaded.',-1);
         }
         
     }
