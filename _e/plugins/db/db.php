@@ -48,7 +48,6 @@ class _db {
     }
     
     function insert($SQL){
-        print $SQL;
         if ($this->connect()){
             mysql_query($SQL,$this->db);
             $return = mysql_insert_id($this->db);

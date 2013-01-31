@@ -24,11 +24,10 @@ class _cart {
     private function _go(){
         $this->loadCart();
         $this->addToCart();
-        print_r($this->e->_messaging->messages);
         $this->saveCart();
         $this->totalCart();
-    }
-    
+        print_r($this->e->_messaging->messages);
+    } 
     
     public function go(&$k){
         // Keep a track on K, we are going to need it in all our subroutines
@@ -109,7 +108,6 @@ class _cart {
         $cartSQL = 'SELECT ID,QTY,Data FROM trn_cart WHERE session_id = "' . session_id() . '"';
         $cartData = $this->e->_db->select($cartSQL);
         
-        
         while($cartRow = mysql_fetch_assoc($cartData)){
             if (strlen($cartRow['ID']) > 0) {
                 $this->items[$cartRow['ID']] = new cartItem($cartRow['ID'],$cartRow['QTY'],$this->e); 
@@ -147,15 +145,17 @@ class _cart {
         if (isset($_REQUEST['addToCartQty'])){ $addToCartQty = $_REQUEST['addToCartQty']; } else { $addToCartQty = 1; }
         
         if ($addToCartItem && $addToCartQty > 0) {
-            if (!isset($this->things[$addToCartItem])){
+            if (!isset($this->items[$addToCartItem])){
                 $cartThing = new cartItem($addToCartItem,0,$this->e);
             } else {
                 $cartThing = $this->items[$addToCartItem];
             }
+            print "{$cartThing->QTY} + $addToCartQty = ";
             $cartThing->QTY += $addToCartQty;
+            print $cartThing->QTY;
             
             $this->items[$addToCartItem] = $cartThing;
-            $this->e->_messaging->addMessage("{$cartThing->item->content->xml->title} has been added to your cart.");
+            $this->e->_messaging->addMessage("{$cartThing->QTY} {$cartThing->item->content->xml->title} has been added to your cart.");
         }
         
     }
