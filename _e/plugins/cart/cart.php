@@ -3,7 +3,7 @@
 class _cart {
 
     public $totals;
-    public $things;
+    public $items;
     public $services;
     public $order;
     public $tracking;
@@ -23,8 +23,10 @@ class _cart {
     
     private function _go(){
         $this->loadCart();
-        print "Adding to cart";
         $this->addToCart();
+        print_r($this->e->_messaging->messages);
+        $this->saveCart();
+        $this->totalCart();
     }
     
     
@@ -144,16 +146,16 @@ class _cart {
         if (isset($_REQUEST['addToCartItem'])){ $addToCartItem = $_REQUEST['addToCartItem']; }
         if (isset($_REQUEST['addToCartQty'])){ $addToCartQty = $_REQUEST['addToCartQty']; } else { $addToCartQty = 1; }
         
-        if ($addToCartItem > 0 && $addToCartQty > 0) {
+        if ($addToCartItem && $addToCartQty > 0) {
             if (!isset($this->things[$addToCartItem])){
-                $cartThing = new cartThing($addToCartItem,0,e);
+                $cartThing = new cartItem($addToCartItem,0,$this->e);
             } else {
                 $cartThing = $this->items[$addToCartItem];
             }
             $cartThing->QTY += $addToCartQty;
             
             $this->items[$addToCartItem] = $cartThing;
-            $this->e->_messaging->addMessage("{$cartThing->item->xml->title} has been added to your cart.");
+            $this->e->_messaging->addMessage("{$cartThing->item->content->xml->title} has been added to your cart.");
         }
         
     }
@@ -381,7 +383,7 @@ class _cart {
     public function totalCart(){
         $this->totals->items = 0;
         $this->totals->value = 0.00;
-        foreach($this->things as $cartthing){
+        foreach($this->items as $cartthing){
             $this->totals->items += $cartthing->QTY;
             $this->totals->value += $cartthing->Price;
         }
@@ -393,16 +395,16 @@ class _cart {
     }
     
     private function saveCart(){
-        $this->k->__db->delete('DELETE FROM trn_cart WHERE session_id = "' . session_id() . '"');
-        foreach($this->things as $cartThing){
+        $this->e->_db->delete('DELETE FROM trn_cart WHERE session_id = "' . session_id() . '"');
+        foreach($this->items as $cartThing){
             if ($cartThing->QTY > 0){
-                $this->k->__db->insert(sprintf('INSERT INTO trn_cart SET session_id = "%s",ID = %d,QTY = %d',  session_id(),$cartThing->ID,$cartThing->QTY));
+                $this->e->_db->insert(sprintf('INSERT INTO trn_cart SET session_id = "%s",ID = "%s",QTY = %d',  session_id(),$cartThing->ID,$cartThing->QTY));
             }            
         }
-        $this->k->__db->delete('DELETE FROM trn_cart_services WHERE session_id = "' . session_id() . '"');
+        $this->e->_db->delete('DELETE FROM trn_cart_services WHERE session_id = "' . session_id() . '"');
         foreach($this->services as $cartService){
             if ($cartService->QTY > 0){
-                $this->k->__db->insert(sprintf('INSERT INTO trn_cart_services SET session_id = "%s",ID = %d,Type = "%s",Code = "%s",QTY = %d, Price = %f, Title = "%s", Description = "%s", Data = "%s"',  session_id(),$cartService->ID,$cartService->Type,$cartService->Code,$cartService->QTY,$cartService->Price,$cartService->Title,$cartService->Description,$cartService->Data));
+                $this->e->_db->insert(sprintf('INSERT INTO trn_cart_services SET session_id = "%s",ID = %d,Type = "%s",Code = "%s",QTY = %d, Price = %f, Title = "%s", Description = "%s", Data = "%s"',  session_id(),$cartService->ID,$cartService->Type,$cartService->Code,$cartService->QTY,$cartService->Price,$cartService->Title,$cartService->Description,$cartService->Data));
             }            
         }
         return TRUE;
@@ -542,21 +544,22 @@ class cartItem {
     public $ID;
     public $QTY;
     public $Price;
-    public $thing;
+    public $item;
     
     function __construct($itemPath,$QTY,$e){
         $item = e::_search($itemPath);
-        
+        if (sizeof($item) == 1){ $item = array_shift($item);}
         if (is_object($item)){
+            $this->ID = $itemPath;
             $this->item = $item;
             $this->QTY = $QTY;
-            $this->grossunitprice = number_format(strval($this->item->product->price->_default->sell->value),2);
+            $this->grossunitprice = number_format(strval($this->item->content->product->price->_default->sell->value),2);
             $this->netunitprice = number_format(strval($this->grossunitprice) / 1.2,2);      
             $this->unittax = number_format(strval($this->grossunitprice) - strval($this->netunitprice),2);
             $this->netlineprice = number_format(strval($this->netunitprice) * $this->QTY,2);
             $this->linetax = number_format(strval($this->unittax) * $this->QTY,2);
 
-            $this->Price = number_format(strval($this->item->product->price->_default->sell->value) * $this->QTY,2);
+            $this->Price = number_format(strval($this->item->content->product->price->_default->sell->value) * $this->QTY,2);
         } else {
             // Problem loading the item
             $e->_messaging->addMessage('One or more of the items in your basket could not be loaded.',-1);

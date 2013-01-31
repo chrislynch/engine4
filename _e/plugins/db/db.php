@@ -39,12 +39,41 @@ class _db {
     function select($SQL){
         // Run a select statement
         if ($this->connect()){
-            $return = mysql_query($SQL);
+            $return = mysql_query($SQL,$this->db);
             $this->disconnect();
         } else {
             $return = FALSE;
         }
         return $return;
+    }
+    
+    function insert($SQL){
+        print $SQL;
+        if ($this->connect()){
+            mysql_query($SQL,$this->db);
+            $return = mysql_insert_id($this->db);
+            $this->disconnect();
+        } else {
+            $return = FALSE;
+        }
+        return $return;
+    }
+    
+    function update($SQL){
+        // Run the delete command and return how many rows were affected
+        if ($this->connect()){
+            mysql_query($SQL,$this->db);
+            $return = mysql_affected_rows($this->db);
+            $this->disconnect();
+        } else {
+            $return = FALSE;
+        }
+        return $return;
+    }
+    
+    function delete($SQL){
+        // Run the delete command and return how many rows were affected
+        return $this->update($SQL);
     }
     
 }

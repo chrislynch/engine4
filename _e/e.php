@@ -2,6 +2,8 @@
 
 if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
 
+session_start();
+
 $e = new e();
 try {
     ob_start();                 // Start buffering output
