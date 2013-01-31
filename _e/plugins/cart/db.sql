@@ -1,7 +1,7 @@
 -- DROP TABLE `trn_cart`;
 CREATE  TABLE `trn_cart` (
   `session_id` VARCHAR(255) NOT NULL ,
-  `ID` INT NOT NULL ,
+  `ID` VARCHAR(512) NOT NULL ,
   `QTY` INT NOT NULL ,
   `Data` TEXT NULL ,
   PRIMARY KEY (`session_id`, `ID`) );
