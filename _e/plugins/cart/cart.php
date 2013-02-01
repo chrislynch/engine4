@@ -25,9 +25,8 @@ class _cart {
         $this->loadCart();
         $this->addToCart();
         $this->updateCart();
-        $this->saveCart();
+        $this->applyServices();
         $this->totalCart();
-        print_r($this->e->_messaging->messages);
     } 
     
     public function go(&$k){
@@ -159,6 +158,9 @@ class _cart {
             $this->e->_messaging->addMessage("{$cartThing->QTY} {$cartThing->item->content->xml->title} has been added to your cart.");
         }
         
+        $this->saveCart();
+        $this->loadCart();
+        
     }
     
     private function updateCart(){
@@ -186,6 +188,9 @@ class _cart {
                 $this->e->_messaging->addMessage("{$cartThing->thing->xml->title} has been updated in your cart.");
             }
         }
+        
+        $this->saveCart();
+        $this->loadCart();
     }
     
     private function applyServices(){
@@ -420,101 +425,11 @@ class _cart {
     
     public function createOrder(){
         // Order the contents of the cart.
-        $this->order = new cartOrder($this->k);
+        $this->order = new cartOrder($this->e);
         $this->order->ID = uniqid();
         $this->order->saveHeader($_POST);
-        $this->order->saveProducts($this->things);
+        $this->order->saveProducts($this->items);
         $this->order->saveServices($this->services);
-    }
-    
-    public function checkout_amazon(){        
-        // Build the checkout HTML code for an Amazon checkout.
-        $return = new \stdClass();
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/Cart.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/Item.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/MandatoryProperties.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/OptionalProperties.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/Price.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/Promotion.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/ShippingMethod.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/ShippingRate.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Model/Weight.php');
-        include_once('_k/lib/amazonCheckout/src/AmazonPayments/Signature/SignatureCalculator.php');
-        
-        // Construct the cart
-        $AMZcart = new \AmazonPayments\Model\Cart('_k/lib/amazonCheckout/src/AmazonPayments/cba_config.ini');
-        
-        // Build our shipping method
-        if ($this->totals->items == 1 && $this->totals->value <= 100) {
-            $shippingrateSTDCost = 5.00;
-            $shippingrateNDYCost = 8.55;
-        } else {
-            $shippingrateSTDCost = 6.30;
-            $shippingrateNDYCost = 10.75;
-        }
-            
-        $shippingrateSTD = new \AmazonPayments\Model\ShippingRate();
-        $shippingrateSTD->setShipmentBasedRate($shippingrateSTDCost);
-        
-        $shippingMethodSTD = new \AmazonPayments\Model\ShippingMethod(
-                                \AmazonPayments\Model\ShippingMethod::REGION_CUSTOM,
-                                \AmazonPayments\Model\ShippingMethod::SERVICE_STANDARD,
-                                'Royal Mail Recorded Delivery',$shippingrateSTD);
-        $shippingMethodSTD->includeCustomCountry("GB");
-        
-        $shippingrateNDY = new \AmazonPayments\Model\ShippingRate();
-        $shippingrateNDY->setShipmentBasedRate($shippingrateNDYCost);
-        
-        $shippingMethodNDY = new \AmazonPayments\Model\ShippingMethod(
-                                \AmazonPayments\Model\ShippingMethod::REGION_CUSTOM,
-                                \AmazonPayments\Model\ShippingMethod::SERVICE_EXPEDITED,
-                                'Royal Mail Special Delivery',$shippingrateNDY);
-        $shippingMethodNDY->includeCustomCountry("GB");
-        
-        // Add items to the cart
-        foreach($this->things as $cartItem){
-            if ($cartItem->ID > 0 ){
-                $AMZItem = new \AmazonPayments\Model\Item($cartItem->thing->product->sku,
-                                                       $cartItem->thing->xml->title,
-                                                       $cartItem->thing->product->price->_default->sell->value,
-                                                       $cartItem->QTY);
-                $AMZItem->setWeight(0.00);
-                $AMZItem->setDescription((string)$cartItem->thing->xml->content->teaser);
-
-                // Add in the shipping methods
-                $AMZItem->setFulfillmentMethod(\AmazonPayments\Model\Item::FULFILLED_BY_MERCHANT);
-                $AMZItem->addShippingMethod($shippingMethodSTD);
-                $AMZItem->addShippingMethod($shippingMethodNDY);
-                
-                $AMZcart->addItem($AMZItem);
-            } else {
-                // Add in promotion (Note: Only one per item)
-                // $AMZItem->setPromotion(floatval(ABS($cartItem->Product->SellPrice)), $cartItem->Teaser);
-            }
-            
-        }
-        
-        /* Sandbox: <script type="text/javascript" src="https://static-eu.payments-amazon.com/cba/js/gb/sandbox/PaymentWidgets.js"></script> 
-         * <img src="https://payments-sandbox.amazon.co.uk/gp/cba/button?type=cart&cartOwnerId=AJ8F0WGPZE618&color=tan&size=x-large&background=light"/> 
-         * 
-         * REMOVE "sandbox" from these to go live. Clever. Not.
-         */
-        
-        $return = '<script type="text/javascript" src="https://static-eu.payments-amazon.com/cba/js/gb/sandbox/PaymentWidgets.js"></script>
-                            <div id="cbaButton1">      
-                                <img src="https://payments-sandbox.amazon.co.uk/gp/cba/button?type=cart&cartOwnerId=AJ8F0WGPZE618&color=tan&size=x-large&background=light"/> 
-                            </div>
-                            <script type="text/javascript">
-                            new CBA.Widgets.StandardCheckoutWidget({
-                                merchantId:"AJ8F0WGPZE618",
-                                orderInput: { 
-                                    format: "XML",
-                                    value: "' . $AMZcart->createOrderInputValue() . '"},
-                                buttonSettings: { size: "x-large",color:"tan",background:"light"}
-                            }).render("cbaButton1");
-                            </script>';
-        
-        return $return;
     }
 
     public function AddTracking(){
@@ -606,32 +521,32 @@ class cartService {
 
 class cartOrder {
     public $ID;
-    private $k;
+    private $e;
     
-    public function __construct(&$k){
-        $this->k =& $k;
+    public function __construct(&$e){
+        $this->e =& $e;
     }
     
     public function saveHeader($data){
         // Create the header record
-        $this->k->__db->delete("DELETE FROM trn_order_header WHERE ID = '{$this->ID}'");
-        $this->k->__db->insert("INSERT INTO trn_order_header(ID,Status,Created) VALUES('{$this->ID}','checkout',NOW())");
+        $this->e->_db->delete("DELETE FROM trn_order_header WHERE ID = '{$this->ID}'");
+        $this->e->_db->insert("INSERT INTO trn_order_header(ID,Status,Created) VALUES('{$this->ID}','checkout',NOW())");
         $requiredFields = array("CustomerEMail","BillingFirstnames","BillingSurname","BillingAddress1","BillingAddress2","BillingCity","BillingPostCode","BillingCountry",
                                 "DeliveryFirstnames","DeliverySurname","DeliveryAddress1","DeliveryAddress2","DeliveryCity","DeliveryPostCode","DeliveryCountry");
         foreach($requiredFields as $requiredField){
             $value = @$data[$requiredField];
-            $this->k->__db->update("UPDATE trn_order_header SET $requiredField = '$value' WHERE ID = '{$this->ID}'");
+            $this->e->_db->update("UPDATE trn_order_header SET $requiredField = '$value' WHERE ID = '{$this->ID}'");
         }
     }
     
     public function saveProducts($data){
-        $this->k->__db->delete('DELETE FROM trn_order_lines WHERE ID = "' . $this->ID . '"');
+        $this->e->_db->delete('DELETE FROM trn_order_lines WHERE ID = "' . $this->ID . '"');
         foreach($data as $cartThing){
             $insertSQL = 'INSERT INTO trn_order_lines SET ';
             $insertSQL .= "ID = '{$this->ID}'";
-            $insertSQL .= ",ItemID = $cartThing->ID";
-            $insertSQL .= ",Code = '{$cartThing->thing->product->sku}'";
-            $insertSQL .= ",Name = '{$cartThing->thing->xml->title}'";
+            $insertSQL .= ",ItemID = '$cartThing->ID'";
+            $insertSQL .= ",Code = '{$cartThing->item->content->product->sku}'";
+            $insertSQL .= ",Name = '{$cartThing->item->content->xml->title}'";
             $insertSQL .= ",NetUnitPrice = {$cartThing->netunitprice}";
             $insertSQL .= ",UnitTax = {$cartThing->unittax}";
             $insertSQL .= ",GrossUnitPrice = {$cartThing->grossunitprice}";
@@ -640,7 +555,7 @@ class cartOrder {
             $insertSQL .= ",LineTax = {$cartThing->linetax}";
             $insertSQL .= ",GrossLinePrice = {$cartThing->Price}";
             $insertSQL .= ",Data = ''";
-            $this->k->__db->insert($insertSQL);
+            $this->e->_db->insert($insertSQL);
         }
     }
     
@@ -659,27 +574,24 @@ class cartOrder {
             $insertSQL .= ",LineTax = {$cartThing->linetax}";
             $insertSQL .= ",GrossLinePrice = {$cartThing->Price}";
             $insertSQL .= ",Data = ''";
-            $this->k->__db->insert($insertSQL);
+            $this->e->_db->insert($insertSQL);
         }
     }
     
     public function savePayment($paid,$paymentresponse){
         if ($paid){
             // Grab and hold a paid status
-            $this->k->__db->update("UPDATE trn_order_header SET 
-                                    Paid = 1,
-                                    PaymentTimestamp = NOW(), 
-                                    PaymentReference = '{$paymentresponse->TxAuthNo}'
-                                    WHERE ID = '{$this->ID}'");
+            $this->e->_db->update("UPDATE trn_order_header SET 
+                                   Paid = 1,
+                                   PaymentTimestamp = NOW(), 
+                                   PaymentReference = '{$paymentresponse->TxAuthNo}'
+                                   WHERE ID = '{$this->ID}'");
         } else {
             // Accept a failure only if we have not already had a paid status through
             // Stops Sage Pay from "double dipping"
-            $this->k->__db->update("UPDATE trn_order_header SET Paid = -1 WHERE ID = '{$this->ID}' AND Paid = 0");
+            $this->e->_db->update("UPDATE trn_order_header SET Paid = -1 WHERE ID = '{$this->ID}' AND Paid = 0");
         }
     }
 }
-
-
-
 
 ?>

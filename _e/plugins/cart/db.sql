@@ -51,20 +51,21 @@ CREATE  TABLE `trn_order_header` (
   PRIMARY KEY (`ID`) );
 
 /* Do not drop this if it exists - it contains customer order data! */
-CREATE  TABLE `trn_order_lines` (
-  `ID` VARCHAR(255) NOT NULL ,
-  `ItemID` INT NULL ,
-  `Code` VARCHAR(255) NULL ,
-  `Name` VARCHAR(500) NULL ,
-  `NetUnitPrice` DECIMAL(8,2) NULL ,
-  `UnitTax` DECIMAL(8,2) NULL ,
-  `GrossUnitPrice` DECIMAL(8,2) NULL ,
-  `QTY` INT NULL ,
-  `NetLinePrice` DECIMAL(8,2) NULL ,
-  `LineTax` DECIMAL(8,2) NULL ,
-  `GrossLinePrice` DECIMAL(8,2) NULL ,
-  `Data` TEXT NULL ,
-  PRIMARY KEY (`ID`,`ItemID`,`Code`) );
+CREATE TABLE `trn_order_lines` (
+  `ID` varchar(255) NOT NULL,
+  `ItemID` varchar(512) NOT NULL DEFAULT '0',
+  `Code` varchar(255) NOT NULL DEFAULT '',
+  `Name` varchar(500) DEFAULT NULL,
+  `NetUnitPrice` decimal(8,2) DEFAULT NULL,
+  `UnitTax` decimal(8,2) DEFAULT NULL,
+  `GrossUnitPrice` decimal(8,2) DEFAULT NULL,
+  `QTY` int(11) DEFAULT NULL,
+  `NetLinePrice` decimal(8,2) DEFAULT NULL,
+  `LineTax` decimal(8,2) DEFAULT NULL,
+  `GrossLinePrice` decimal(8,2) DEFAULT NULL,
+  `Data` text,
+  PRIMARY KEY (`ID`,`ItemID`,`Code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /* Do not drop this table if it exists - it contains user registration data */
 CREATE TABLE `trn_newsletter_recipients` (

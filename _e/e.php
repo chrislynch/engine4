@@ -317,6 +317,22 @@ class e {
         return $return;
     }
     
+    static function _goto($gotoURL, $gotoCode = 301){
+        // Perform a subdirectory sage goto
+        $lowergotoURL = strtolower($gotoURL);
+        if (strpos($lowergotoURL,'http') === 0){
+            // Fully qualified URL - we can just go there
+        } else {
+            // Partial URL, assume a sub path
+            $gotoURL = e::_basehref() . $gotoURL;
+        }
+        
+        // Clean out the buffer, send a header, and die
+        ob_end_clean;
+        header('Location: ' . $gotoURL,$gotoCode);
+        die();
+    }
+    
     public function _loadplugin($plugin){
         // TODO: If we are running e in a subdirectory, we need to somehow tell it
         // so that it can still find plugins.
