@@ -24,6 +24,7 @@ class _cart {
     private function _go(){
         $this->loadCart();
         $this->addToCart();
+        $this->updateCart();
         $this->saveCart();
         $this->totalCart();
         print_r($this->e->_messaging->messages);
