@@ -463,7 +463,7 @@ class cartItem {
     public $item;
     
     function __construct($itemPath,$QTY,$e){
-        $item = e::_search($itemPath);
+        $item = e::_search('1.content/' . $itemPath);
         if (sizeof($item) == 1){ $item = array_shift($item);}
         if (is_object($item)){
             $this->ID = $itemPath;
