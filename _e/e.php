@@ -1,10 +1,21 @@
 <?php
 
+$starttheclock = microtime(TRUE);
+
 if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
+
+if (isset($_REQUEST['debug'])){
+    error_reporting(-1);
+    ini_set('display_errors', 1);
+} else {
+    error_reporting(0);	
+    ini_set('display_errors', 0);
+}
 
 session_start();
 
 $e = new e();
+
 try {
     ob_start();                 // Start buffering output
     $e->_go();                  // Run e4
@@ -22,10 +33,23 @@ try {
         print $output;
     }
 } catch (Exception $exc) {
-    echo $exc->getTraceAsString();
+    ob_end_clean();
+    print $exc->getTraceAsString();
 }
 
-if (isset($_REQUEST['debug'])){ print '<pre>' . print_r($e,TRUE) . '</pre>'; }
+if (isset($_REQUEST['debug'])){ 
+    $stoptheclock = microtime(TRUE);
+    $time = round($stoptheclock - $starttheclock,3);
+    if (function_exists('memory_get_peak_usage')){
+    	$memory = memory_get_peak_usage() / 1024 / 1024 ; 
+    } else {
+    	$memory = memory_get_usage() / 1024 / 1024 ;
+    }
+    print '<pre>Render time: ' . $time . ' seconds</pre>';
+    print '<pre>Memory Usage: ' . $memory . ' Mb</pre>';
+    print '<pre>' . print_r($e,TRUE) . '</pre>'; 
+    
+}
 
 class e {
     
@@ -52,7 +76,7 @@ class e {
             $this->q = $_REQUEST['q'];
             $this->p = '';
         } else {
-            $this->q = '';
+            $this->q= '';
             $this->p = '';
         }
         

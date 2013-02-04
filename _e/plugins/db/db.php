@@ -18,12 +18,12 @@ class _db {
                                 $this->e->_config->get('mysql.user'),
                                 $this->e->_config->get('mysql.password'));
         if (!$this->db){
-            $this->e->_messaging->addMessage('Unable to connect to database server');
+            $this->e->_messaging->addMessage('Unable to connect to database server',-9);
             $return = FALSE;
         } else {
             $return = mysql_select_db($this->e->_config->get('mysql.database'),$this->db);
             if (!($return)){
-                $this->e->_messaging->addMessage('Unable to select database schema');
+                $this->e->_messaging->addMessage('Unable to select database schema',-9);
             } else {
                 $return = TRUE;
             }
