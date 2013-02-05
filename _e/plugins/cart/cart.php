@@ -12,6 +12,11 @@ class _cart {
     
     public function __construct(&$e){
         $this->e =& $e;
+        
+        $this->e->_loadplugin('config');
+        $this->e->_loadplugin('messaging');
+        $this->e->_loadplugin('db');
+        
         $this->totals = new stdClass();
         $this->totals->items = 0;
         $this->totals->value = '0.00';
@@ -150,9 +155,7 @@ class _cart {
             } else {
                 $cartThing = $this->items[$addToCartItem];
             }
-            print "{$cartThing->QTY} + $addToCartQty = ";
             $cartThing->QTY += $addToCartQty;
-            print $cartThing->QTY;
             
             $this->items[$addToCartItem] = $cartThing;
             $this->e->_messaging->addMessage("{$cartThing->QTY} {$cartThing->item->content->xml->title} has been added to your cart.");
@@ -462,8 +465,8 @@ class cartItem {
     public $Price;
     public $item;
     
-    function __construct($itemPath,$QTY,$e){
-        $item = e::_search('1.content/' . $itemPath);
+    function __construct($itemPath,$QTY,&$e){
+        $item = e::_search($itemPath);
         if (sizeof($item) == 1){ $item = array_shift($item);}
         if (is_object($item)){
             $this->ID = $itemPath;
@@ -478,7 +481,7 @@ class cartItem {
             $this->Price = number_format(strval($this->item->content->product->price->_default->sell->value) * $this->QTY,2);
         } else {
             // Problem loading the item
-            $e->_messaging->addMessage('One or more of the items in your basket could not be loaded.',-1);
+            $e->e->_messaging->addMessage('One or more of the items in your basket could not be loaded.',-1);
         }
         
     }

@@ -303,6 +303,13 @@ class e {
         return $_SERVER['SERVER_NAME'];
     }
     
+    static function _domainisTest(){
+        $domain = e::_domain();
+        $return = FALSE;
+        if (strstr($domain,'localhost')){ $return = TRUE; }
+        return $return;
+    }
+    
     static function _basedir(){
         $indexphp = $_SERVER['SCRIPT_FILENAME'];
         $indexphp = explode('/',$indexphp);
