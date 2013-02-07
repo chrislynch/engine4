@@ -69,6 +69,10 @@ class e {
         }
     }
     
+    function qp(){
+        return $this->q . '/' . $this->p;
+    }
+    
     private function _find($inDirectory){
         $found = FALSE;
         
@@ -210,7 +214,12 @@ class e {
     }
     
     static function _search($path, $parameters = array()){
+        // Merge in passed parameters
+        $parameters = e::_searchparameters($parameters);
+        
+        // Set up the return array
         $return = array();
+        
         $results = scandir($path);
         foreach($results as $result){
             if (e::_isValidDirectory($path . '/' . $result,TRUE)){
@@ -225,8 +234,21 @@ class e {
             $returnItem->_open($path);
             $return[$result] = $returnItem;
         }
+        
+        // Sort results
         ksort($return);
+        if ($parameters['sort'] !== 'desc'){ $return = array_reverse($return); }
+        
         $return = array_reverse($return, TRUE);
+        return $return;
+    }
+    
+    static function _searchparameters($parameters){
+        $return = array();
+        $return['sort'] = 'desc';
+        foreach($parameters as $parameter => $parametervalue){
+            $return[$parameter] = $parametervalue;
+        }
         return $return;
     }
     

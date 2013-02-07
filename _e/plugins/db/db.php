@@ -47,6 +47,10 @@ class _db {
         return $return;
     }
     
+    function query($SQL){
+        return $this->select($SQL);
+    }
+    
     function insert($SQL){
         if ($this->connect()){
             mysql_query($SQL,$this->db);
