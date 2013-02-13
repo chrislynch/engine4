@@ -90,12 +90,12 @@ class e {
                     if ($this->_open($inDirectory . '/' . $this->q)) {
                         $found = TRUE;
                     } else {
-                        $this->p = e::_popget('/', $this->q) . '/' . $this->p;
+                        if ($this->p == ''){ $this->p = e::_popget('/', $this->q); } else {$this->p = e::_popget('/', $this->q) . '/' . $this->p;}
                         $this->q = $this->_dirup($this->q);
                     }
                 }
             } else {
-                $this->p = e::_popget('/', $this->q) . '/' . $this->p;
+                if ($this->p == ''){ $this->p = e::_popget('/', $this->q); } else {$this->p = e::_popget('/', $this->q) . '/' . $this->p;}
                 $this->q = $this->_dirup($this->q);
             }
         }
@@ -166,8 +166,12 @@ class e {
                         include($directory . '/' . $file);
                         break;
                     
-                    case 'markdown': case 'md':
                     case 'txt': case 'text':
+                        $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
+                        if (!isset($this->$directoryarray[0]->html)){ $this->$directoryarray[0]->html = $this->$directoryarray[0]->$filearray[1]; }
+                        break;
+                        
+                    case 'markdown': case 'md':
                     case 'htm': case 'html':
                         // Load up a recognised text file and mark it down
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
@@ -266,8 +270,8 @@ class e {
                 }
             }
         }
-        ksort($return);
-        $return = array_reverse($return,TRUE);
+        // ksort($return);
+        // $return = array_reverse($return,TRUE);
         return $return;
     }
     
