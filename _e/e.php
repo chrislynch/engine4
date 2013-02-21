@@ -127,7 +127,8 @@ class e {
         // Take the date off the front of the directory, if it is there
         if (strstr($title,'.')){
             $title = explode('.',$title);    
-            array_shift($title);
+            $prefix = array_shift($title);
+            if(!is_numeric($prefix)){ array_unshift($title,$prefix); }
             $title = implode('.',$title);
         }
         $title = str_ireplace('-', ' ', $title);
@@ -226,10 +227,16 @@ class e {
         
         $results = scandir($path);
         foreach($results as $result){
-            if (e::_isValidDirectory($path . '/' . $result,TRUE)){
+            if(isset($parameters['search_substring'])){
+                $validpath = strstr($result,$parameters['search_substring']);
+            } else {
+                $validpath = TRUE;
+            }
+            if ($validpath AND e::_isValidDirectory($path . '/' . $result,TRUE)){
                 $returnItem = new e();
-                $returnItem->_open($path . '/' . $result);
-                $return[$result] = $returnItem;
+                if ($returnItem->_open($path . '/' . $result)){
+                    $return[$result] = $returnItem;
+                }
             }
         }
         if (sizeof($return) == 0){
@@ -265,8 +272,9 @@ class e {
                 while ($idxpath = fgetcsv($idxfile)) {
                     $openpath = e::_shiftget('/', $path);
                     $returnItem = new e();
-                    $returnItem->_open($openpath . '/' . $idxpath[0]);
-                    $return[$idxpath[0]] = $returnItem;
+                    if($returnItem->_open($openpath . '/' . $idxpath[0])){
+                        $return[$idxpath[0]] = $returnItem;
+                    }
                 }
             }
         }
