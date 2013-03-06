@@ -83,7 +83,7 @@ class _db {
         $data = $this->select($SQL);
         $array = array();
         while($arrayitem = mysql_fetch_assoc($data)){
-            $array[] = $arraitem;
+            $array[] = $arrayitem;
         }
         return $array;
     }
@@ -92,7 +92,7 @@ class _db {
         $data = $this->select($SQL);
         $array = array();
         while($arrayitem = mysql_fetch_array($data)){
-            $array[] = $arraitem;
+            $array[] = $arrayitem;
         }
         return $array;
     }
