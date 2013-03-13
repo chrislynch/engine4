@@ -79,5 +79,23 @@ class _db {
         return $this->update($SQL);
     }
     
+    function assocarray($SQL){
+        $data = $this->select($SQL);
+        $array = array();
+        while($arrayitem = mysql_fetch_assoc($data)){
+            $array[] = $arrayitem;
+        }
+        return $array;
+    }
+    
+    function nonassocarray($SQL){
+        $data = $this->select($SQL);
+        $array = array();
+        while($arrayitem = mysql_fetch_array($data)){
+            $array[] = $arrayitem;
+        }
+        return $array;
+    }
+    
 }
 ?>
