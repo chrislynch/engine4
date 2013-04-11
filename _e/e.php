@@ -174,8 +174,12 @@ class e {
                         
                     case 'markdown': case 'md':
                     case 'htm': case 'html':
+                        $original = '_' . $filearray[1];
                         // Load up a recognised text file and mark it down
                         $this->$directoryarray[0]->$filearray[1] = file_get_contents($directory . '/' . $file);
+                        $this->$directoryarray[0]->$original  = file_get_contents($directory . '/' . $file);
+                        $this->$directoryarray[0]->_html = file_get_contents($directory . '/' . $file);
+                        
                         $this->$directoryarray[0]->$filearray[1] = Markdown($this->$directoryarray[0]->$filearray[1]);
                         if (!isset($this->$directoryarray[0]->html)){ $this->$directoryarray[0]->html = $this->$directoryarray[0]->$filearray[1]; }
                         break;
