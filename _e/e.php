@@ -34,7 +34,7 @@ try {
     }
 } catch (Exception $exc) {
     ob_end_clean();
-    print $exc->getTraceAsString();
+    print "<pre>" . $exc->getMessage() . "\n\n" . $exc->getTraceAsString() . "</pre>";
 }
 
 if (isset($_REQUEST['debug'])){ 

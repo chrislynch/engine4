@@ -16,115 +16,91 @@ class _cart {
         $this->e->_loadplugin('config');
         $this->e->_loadplugin('messaging');
         $this->e->_loadplugin('db');
+        $this->e->_loadplugin('cryptography');
         
         $this->totals = new stdClass();
         $this->totals->items = 0;
         $this->totals->value = '0.00';
         $this->items = array();
-        $this->services = array();
         $this->tracking = '';
-        $this->_go();
-    }
-    
-    private function _go(){
-        $this->loadCart();
+                
         $this->addToCart();
         $this->updateCart();
-        $this->applyServices();
+        $this->loadCart();
+                
         $this->totalCart();
-    } 
+    }
     
-    public function go(&$k){
-        // Keep a track on K, we are going to need it in all our subroutines
-        $this->k =& $k;
-        // This plug in might load even when we have no database
-        // Check for DB connectivity before we start.
-        if ($k->__db->hasDB()){
-            // Check for shipping flags
-            if (isset($_REQUEST['upgradeshipping'])){
-                $_SESSION['cart-shipping-upgraded'] = TRUE;
-                $this->k->__messaging->addMessage("You have been upgraded to priority shipping");
-            }
-            if (isset($_REQUEST['downgradeshipping'])){
-                unset($_SESSION['cart-shipping-upgraded']);
-                $this->k->__messaging->addMessage("You are now using standard shipping");
-            }
-                        
-            if (isset($_REQUEST['addToCartItem']) 
-                OR isset($_REQUEST['updateCartItem']) 
-                OR isset($_REQUEST['cartDiscountCode'])
-                OR isset($_REQUEST['upgradeshipping'])
-                OR isset($_REQUEST['downgradeshipping'])){
-            
-                // Load the users current cart
-                $this->loadCart();
-                $this->totalCart();
-                
-                // Clear out services, something has changed
-                $this->clearServices();
-                
-                if (isset($_REQUEST['addToCartItem']) OR isset($_REQUEST['updateCartItem'])){
-                    // Add items to the cart
-                    $this->addToCart();
-                    // Update items in the cart
-                    $this->updateCart();
-                
-                    // Save and reload cart to ensure correct pricing is in place.
-                    $this->saveCart();
-                    $this->loadCart();
-                    $this->totalCart();
-                }
-
-                // Apply services (such as automatically selecting shipping)
-                $this->applyServices();
-                // Total up the cart again, after shipping
-                $this->totalCart();
-                
-                // Apply any discount codes to the cart
-                /*
-                if (isset($_REQUEST['addToCartItem']) OR isset($_REQUEST['updateCartItem'])){
-                    // If we change the contents of the basket, we lose our existing discount code
-                    // UNLESS: We have passed in a discount code with our order.
-                    if (isset($_SESSION['cart-discount-code']) && !isset($_REQUEST['cartDiscountCode'])){
-                        $this->k->__messaging->addMessage("As the contents of your order have changed, we had to remove your discount code to make sure you get the right amount of discount.<br>Please enter it again to see how much you can save.");  
-                    }
-                    unset($_SESSION['cart-discount-code']);
-                }
-                 */
-                
-                $this->applyDiscountCodes();
-                
-                // Save the cart
-                $this->saveCart();
-            }
-            
-            // Load & total up the cart again, after discounts, or just after a load
-            $this->loadCart();
-            $this->totalCart();
-            
+    public static function addToCartFormValue($Code,$Price,$QTY = 1,$Title = '',$Image = '',$Other = array()){
+        $data = array();
+        $data['Code'] = $Code;
+        $data['Price'] = $Price;
+        $data['QTY'] = $QTY;
+        if ($Title == ''){ $data['Title'] = $Code; } else { $data['Title'] = $Title; }
+        $data['Image'] = $Image;
+        foreach($Other as $otherKey=>$otherValue){
+            $data[$otherKey] = $otherValue;
         }
+        include_once('_e/plugins/cryptography/cryptography.php');
+        return _cryptography::encrypt(serialize($data));
         
+    }
+    
+    private function addToCart(){
+        if (isset($_REQUEST['e4cartAdd'])){
+            $flexcartData = $_REQUEST['e4cartAdd'];
+            $flexcartDataSerial = $this->e->_cryptography->decrypt($flexcartData);
+            $flexcartDataSerial = stripslashes($flexcartDataSerial);
+            $flexcartDataSerial = str_replace("\n","",$flexcartDataSerial); 
+            $flexcartData = unserialize($flexcartDataSerial);
+            
+            if(isset($flexcartData['Code']) && isset($flexcartData['Price'])){
+                if (!isset($flexcartData['Type'])) { $flexcartData['Type'] = 'product'; }
+                if (!isset($flexcartData['QTY'])) { $flexcartData['QTY'] = 1; }
+                if (!isset($flexcartData['Title'])) { $flexcartData['Title'] = $flexcartData['Code']; }
+                if (!isset($flexcartData['Description'])) { $flexcartData['Description'] = ''; }
+
+                $SQL = "insert into trn_cart
+                                        set session_id = '" . session_id() . "',
+                                            Type = '{$flexcartData['Type']}',
+                                            Code='{$flexcartData['Code']}',
+                                            QTY={$flexcartData['QTY']},
+                                            Price={$flexcartData['Price']},
+                                            Title='{$flexcartData['Title']}',
+                                            Description='{$flexcartData['Description']}',
+                                            Data = '$flexcartDataSerial'
+                                        on duplicate key update QTY= QTY + {$flexcartData['QTY']};";
+            
+                $this->e->_db->insert($SQL);
+
+            }    
+        }
+    }
+
+    private function updateCart(){
+        if (isset($_REQUEST['e4cartUpdate'])){
+            
+            $sessionID = session_id();
+            if(isset($_REQUEST['e4cartUpdate']) && isset($_REQUEST['e4cartUpdateQTY'])){
+                if ($_GET['e4cartUpdateQTY'] == 0){
+                    $SQL = "DELETE FROM trn_flexcart WHERE Code = '{$_REQUEST['e4cartUpdate']}' AND session_id = '$sessionID'";
+                } else {
+                    $SQL = "UPDATE trn_flexcart SET QTY = {$_REQUEST['e4cartUpdateQTY']} WHERE Code = '{$_REQUEST['e4cartUpdate']}' AND session_id = '$sessionID'";
+                }
+                $this->e->_db->update($SQL);
+            }
+        }
     }
     
     private function loadCart(){
         // Clear the current items array
         $this->items = array();
-        
-        $cartSQL = 'SELECT ID,QTY,Data FROM trn_cart WHERE session_id = "' . session_id() . '"';
-        $cartData = $this->e->_db->select($cartSQL);
-        
-        while($cartRow = mysql_fetch_assoc($cartData)){
-            if (strlen($cartRow['ID']) > 0) {
-                $this->items[$cartRow['ID']] = new cartItem($cartRow['ID'],$cartRow['QTY'],$this->e); 
-            }
-        }
-        
-        $serviceSQL = 'SELECT * FROM trn_cart_services WHERE session_id = "' . session_id() . '"';
+               
+        $serviceSQL = 'SELECT * FROM trn_cart WHERE session_id = "' . session_id() . '"';
         $servicesData = $this->e->_db->select($serviceSQL);
         
         while($serviceRow = mysql_fetch_assoc($servicesData)){
-            $service = new cartService();
-            $service->ID = $serviceRow['ID'];
+            $service = new cartItem();
             $service->Type = $serviceRow['Type'];
             $service->Code = $serviceRow['Code'];
             $service->QTY = $serviceRow['QTY'];
@@ -133,297 +109,18 @@ class _cart {
             $service->Description = $serviceRow['Description'];
             $service->Data = $serviceRow['Data'];
             
-            $this->services[$serviceRow['ID']] = $service; 
+            $this->items[$serviceRow['Code']] = $service; 
         }
         
     }
     
-    private function clearServices(){
-        $this->services = array();
-    }
-    
-    private function addToCart(){
-        $addToCartItem = 0;
-        $addToCartQty = 1;
-        
-        if (isset($_REQUEST['addToCartItem'])){ $addToCartItem = $_REQUEST['addToCartItem']; }
-        if (isset($_REQUEST['addToCartQty'])){ $addToCartQty = $_REQUEST['addToCartQty']; } else { $addToCartQty = 1; }
-        
-        if ($addToCartItem && $addToCartQty > 0) {
-            if (!isset($this->items[$addToCartItem])){
-                $cartThing = new cartItem($addToCartItem,0,$this->e);
-            } else {
-                $cartThing = $this->items[$addToCartItem];
-            }
-            $cartThing->QTY += $addToCartQty;
-            
-            $this->items[$addToCartItem] = $cartThing;
-            $this->e->_messaging->addMessage("{$cartThing->QTY} {$cartThing->item->content->xml->title} has been added to your cart.");
-        }
-        
-        $this->saveCart();
-        $this->loadCart();
-        
-    }
-    
-    private function updateCart(){
-        $updateCartItem = 0;
-        $updateCartQty = 1;
-        
-        if (isset($_REQUEST['updateCartItem'])){ $updateCartItem = $_REQUEST['updateCartItem']; }
-        if (isset($_REQUEST['updateCartQty'])){ $updateCartQty = $_REQUEST['updateCartQty']; }
-        
-        if ($updateCartItem > 0) {
-            if (!isset($this->items[$updateCartItem])){
-                $cartThing = new cartItem($updateCartItem,0,$this->k);
-            } else {
-                $cartThing = $this->items[$updateCartItem];
-            }
-            if ($updateCartQty == 0){
-                if (isset($this->items[$updateCartItem])){
-                    $cartThing = $this->items[$updateCartItem];
-                    $this->e->_messaging->addMessage("{$cartThing->item->content->xml->title} has been removed from your cart.");
-                    unset($this->items[$updateCartItem]);
-                }
-            } else {
-                $cartThing->QTY = $updateCartQty;
-                $this->items[$updateCartItem] = $cartThing;
-                $this->e->_messaging->addMessage("{$cartThing->thing->xml->title} has been updated in your cart.");
-            }
-        }
-        
-        $this->saveCart();
-        $this->loadCart();
-    }
-    
-    private function applyServices(){
-        // Apply our default shipping matrix
-        $this->totalCart();
-        if ($this->totals->items >= 1){
-            if ($this->totals->items == 1) {
-                if ($this->totals->value < 100){
-                    if (isset($_SESSION['cart-shipping-upgraded'])){
-                        $shippingCost = 8.55;
-                    } else {
-                        $shippingCost = 5.00;
-                    }
-                } else {
-                    if (isset($_SESSION['cart-shipping-upgraded'])){
-                        $shippingCost = 10.75;
-                    } else {
-                        $shippingCost = 6.30;
-                    }
-                }
-            } else {
-                if (isset($_SESSION['cart-shipping-upgraded'])){
-                    $shippingCost = 10.75;
-                } else {
-                    $shippingCost = 6.30;
-                }
-            }
-                
-            unset($this->services[-1]);
-            $shipping = new cartService();
-            $shipping->ID = -1;
-            $shipping->Type = 'SHIPPING';
-            $shipping->Title = 'Shipping and Handling';
-            $shipping->QTY = 1;
-            $shipping->Price = $shippingCost;
-            
-            if (isset($_SESSION['cart-shipping-upgraded'])){
-                $shipping->Code = 'PRIORITY';
-                $day = date('w');
-                if ($day == 0 || $day == 5 || $day == 6){
-                    $shipping->Description = "Priority Delivery. Tuesday before 1pm
-                        <br><a href='/cart?downgradeshipping'>No rush? Click here to save money with standard delivery</a>";
-                } else {
-                    $hour = date('H');
-                    if($hour <= 11){
-                        $shipping->Description = "Priority Delivery. Tomorrow before 1pm
-                            <br><a href='/cart?downgradeshipping'>No rush? Click here to save money with standard delivery</a>";
-                    } else {
-                        $day = date('l',strtotime('+2 days'));
-                        $shipping->Description = "Priority Delivery. $day before 1pm
-                            <br><a href='/cart?downgradeshipping'>No rush? Click here to save money with standard delivery</a>";
-                    }
-                }
-            } else {
-                $shipping->Code = 'STANDARD';
-                $shipping->Description = "Standard Delivery, 1-2 working days.";
-                // $shipping->Description .= "<br><a href='/cart?upgradeshipping'>In a hurry? Click here to upgrade to priority delivery</a>";
-            }
-                        
-            $this->services[-1] = $shipping;
-        } else {
-            unset($this->services[-1]);
-        }
-    }
-    
-    private function applyDiscountCodes(){
-        if (!isset($_REQUEST['cartDiscountCode']) && isset($_SESSION['cart-discount-code'])){
-            // Remember the code we entered before.
-            $_REQUEST['cartDiscountCode'] = $_SESSION['cart-discount-code'];
-        }
-        
-        if (isset($_REQUEST['cartDiscountCode'])){
-            // We are changing our discount code. Delete any existing discount code.
-            unset($this->services[-2]);
-            // Treat all codes as uppercase
-            $_REQUEST['cartDiscountCode'] = strtoupper($_REQUEST['cartDiscountCode']);
-            $_SESSION['cart-discount-code'] = $_REQUEST['cartDiscountCode'];
-            // Read totals
-            
-            $discountAmount = 0;
-            $discountDescription = '';
-            
-            switch ($_REQUEST['cartDiscountCode']){
-                case 'CENTRIC10':
-                    $discountAmount = 0.1;
-                    $discountDescription = '10% off your order, with thanks from eCommerce Centric!';
-                    break;
-                case 'TECHFF':
-                    $discountAmount = 0.1;
-                    $discountDescription = '10% off your order, with thanks from Technology Centric!';
-                    break;
-                case 'TECHBFF':
-                    $discountAmount = 0.2;
-                    $discountDescription = '20% off your order, with thanks from Technology Centric!';
-                    break;
-                case 'VIRGIN':
-                    $discountAmount = 0.1;
-                    $discountDescription = '10% off your order, with thanks from Virgin &amp; Technology Centric!';
-                    break;
-                case 'WELCOMEBACK':
-                    $discountAmount = 0.1;
-                    $discountDescription = 'Thanks for coming back. Here\'s 10% off your order, with thanks again from Technology Centric!';
-                    break;
-                case 'SORRY':
-                    $discountAmount = 0.05;
-                    $discountDescription = 'Thanks for giving us another chance. Here\'s 5% off your order!';
-                    break;
-                case 'FREESHIP':
-                case 'HAPPYNEWYEAR':
-                case 'ESHOT2':
-                    if (isset($this->services[-1])){
-                        $discountAmount = $this->services[-1]->Price;
-                        $discountDescription = 'Free Shipping, with thanks from Technology Centric';
-                    }
-                    break;
-                case 'ESHOT1':
-                    $discountAmount = 0;
-                    if(isset($this->things[10])){$discountAmount += $this->things[10]->QTY * 30;}
-                    if(isset($this->things[3])){$discountAmount += $this->things[3]->QTY * 20;}
-                    if(isset($this->things[4])){$discountAmount += $this->things[4]->QTY * 10;}
-                    if(isset($this->things[5])){$discountAmount += $this->things[5]->QTY * 20;}
-                    $discountDescription = 'Your exclusive deal as a recipient of our eShot';
-                case '8INCH':
-                    $discountAmount = 0;
-                    if(isset($this->things[27])){
-                        $discountAmount += $this->things[27]->QTY * 16;
-                        if (isset($this->services[-1])){
-                            $discountAmount += $this->services[-1]->Price;
-                        }
-                    }
-                    $discountDescription = '10% off the R83.3 &amp; Free Shipping, with thanks from Technology Centric';
-                    break;
-                case '9INCH':
-                    $discountAmount = 0;
-                    if(isset($this->things[16])){
-                        $discountAmount += $this->things[16]->QTY * 20;
-                    }
-                    $discountDescription = '£20 off the R974, with compliments from Technology Centric';
-                    break;
-                case 'FIVER':
-                    $discountAmount = 5;
-                    $discountDescription = 'Five pound complimentary voucher';
-                    break;
-                case 'TENNER':
-                    $discountAmount = 10;
-                    $discountDescription = 'Ten pound complimentary voucher';
-                    break;
-            }
-            
-            // Check to see if this is a valid code
-            if ($discountAmount > 0){
-                $discount = new cartService();
-                $discount->ID = -2;
-                $discount->Type = 'DISCOUNT';
-                $discount->Code = $_REQUEST['cartDiscountCode'];
-                $discount->QTY = 1;
-                if ($discountAmount < 1){
-                    $discount->Price = round($this->totals->value * $discountAmount,2) * -1;
-                } else {
-                    $discount->Price = number_format($discountAmount * -1,2);
-                }
-                $discount->Title = 'Technology Centric ' . $_REQUEST['cartDiscountCode'] . ' Discount';
-                $discount->Description = $discountDescription;
-                // $discount->Image = '_templates/HTML/eCommerce/images/orange_star_small.png';
-                $discount->QTY = 1;
-            }
-                
-            if (isset($discount)){
-                if($discount->Price <> 0){
-                    $this->k->__messaging->addMessage('Your discount code ' . $discount->Code . ' has been accepted and added to your order for a discount of £' . number_format(ABS($discount->Price),2));
-                } else {
-                    $this->k->__messaging->addMessage('Your discount code ' . $discount->Code . ' has been accepted, please add some products to your cart to see what you can save');
-                }
-                $this->services[-2] = $discount;
-            } else {
-                if ($discountAmount == -1){
-                    if ($_REQUEST['cartDiscountCode'] == 'ESHOT1'){
-                        $this->k->__messaging->addMessage('Thanks for entering our ESHOT1 code. As the items on offer have been further reduced in our sale, this code is no longer valid.');
-                    } else {
-                        $this->k->__messaging->addMessage('Sorry, but that discount code cannot be used on items that are already on sale.');
-                    }
-                } else {
-                    $this->k->__messaging->addMessage('Sorry. You have entered an expired or invalid discount code');
-                    unset($_SESSION['cart-discount-code']);
-                }
-            }
-            
-        } else {
-            if(isset($this->services[-2]) && ($this->totals->items > 0)){
-                $this->k->__messaging->addMessage('The contents of your basket have changed. To make sure you are still eligible for any discounts, please re-enter your discount code.');
-            }
-            unset($this->services[-2]);
-        }
-    }
-    
-    public function totalCart(){
+    private function totalCart(){
         $this->totals->items = 0;
         $this->totals->value = 0.00;
         foreach($this->items as $cartthing){
             $this->totals->items += $cartthing->QTY;
             $this->totals->value += $cartthing->Price;
         }
-        // Before we total the services, sort them out so that they are in order.
-        foreach($this->services as $cartService){
-            $this->services[$cartService->ID]->calculateTax();
-            $this->totals->value += $cartService->Price;
-        }
-    }
-    
-    private function saveCart(){
-        $this->e->_db->delete('DELETE FROM trn_cart WHERE session_id = "' . session_id() . '"');
-        foreach($this->items as $cartThing){
-            if ($cartThing->QTY > 0){
-                $this->e->_db->insert(sprintf('INSERT INTO trn_cart SET session_id = "%s",ID = "%s",QTY = %d',  session_id(),$cartThing->ID,$cartThing->QTY));
-            }            
-        }
-        $this->e->_db->delete('DELETE FROM trn_cart_services WHERE session_id = "' . session_id() . '"');
-        foreach($this->services as $cartService){
-            if ($cartService->QTY > 0){
-                $this->e->_db->insert(sprintf('INSERT INTO trn_cart_services SET session_id = "%s",ID = %d,Type = "%s",Code = "%s",QTY = %d, Price = %f, Title = "%s", Description = "%s", Data = "%s"',  session_id(),$cartService->ID,$cartService->Type,$cartService->Code,$cartService->QTY,$cartService->Price,$cartService->Title,$cartService->Description,$cartService->Data));
-            }            
-        }
-        return TRUE;
-    }
-    
-    public function emptyCart(){
-        $this->items = array();
-        $this->clearServices();
-        $this->saveCart();
-        $this->totalCart();
     }
     
     public function createOrder(){
@@ -459,37 +156,6 @@ class _cart {
 }
 
 class cartItem {
-    
-    public $ID;
-    public $QTY;
-    public $Price;
-    public $item;
-    
-    function __construct($itemPath,$QTY,&$e){
-        $item = e::_search($itemPath);
-        if (sizeof($item) == 1){ $item = array_shift($item);}
-        if (is_object($item)){
-            $this->ID = $itemPath;
-            $this->item = $item;
-            $this->QTY = $QTY;
-            $this->grossunitprice = number_format(strval($this->item->content->product->price->_default->sell->value),2);
-            $this->netunitprice = number_format(strval($this->grossunitprice) / 1.2,2);      
-            $this->unittax = number_format(strval($this->grossunitprice) - strval($this->netunitprice),2);
-            $this->netlineprice = number_format(strval($this->netunitprice) * $this->QTY,2);
-            $this->linetax = number_format(strval($this->unittax) * $this->QTY,2);
-
-            $this->Price = number_format(strval($this->item->content->product->price->_default->sell->value) * $this->QTY,2);
-        } else {
-            // Problem loading the item
-            $e->e->_messaging->addMessage('One or more of the items in your basket could not be loaded.',-1);
-        }
-        
-    }
-    
-}
-
-class cartService {
-    public $ID;
     public $Type;
     public $Code;
     public $QTY;
@@ -497,16 +163,6 @@ class cartService {
     public $Title;
     public $Description;
     public $Data;
-    
-    /*
-    function __construct($ServiceID,$Code,$QTY,$Price,$Description){
-        $this->ID = $ID;
-        $this->Code = $Code;
-        $this->QTY = $QTY;
-        $this->Price = $Price;
-        $this->Description = $Description;
-    }
-    */
     
     function calculateTax(){
         // Force a calculation of tax elements.
