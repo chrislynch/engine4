@@ -108,7 +108,7 @@ class _cart {
             $service->Title = $serviceRow['Title'];
             $service->Description = $serviceRow['Description'];
             $service->Data = $serviceRow['Data'];
-            
+            $service->calculateTax();
             $this->items[$serviceRow['Code']] = $service; 
         }
         
@@ -129,7 +129,6 @@ class _cart {
         $this->order->ID = uniqid();
         $this->order->saveHeader($_POST);
         $this->order->saveProducts($this->items);
-        $this->order->saveServices($this->services);
     }
 
     public function AddTracking(){
@@ -203,9 +202,9 @@ class cartOrder {
         foreach($data as $cartThing){
             $insertSQL = 'INSERT INTO trn_order_lines SET ';
             $insertSQL .= "ID = '{$this->ID}'";
-            $insertSQL .= ",ItemID = '$cartThing->ID'";
-            $insertSQL .= ",Code = '{$cartThing->item->content->product->sku}'";
-            $insertSQL .= ",Name = '{$cartThing->item->content->xml->title}'";
+            // $insertSQL .= ",ItemID = '$cartThing->ID'";
+            $insertSQL .= ",Code = '{$cartThing->Code}'";
+            $insertSQL .= ",Name = '{$cartThing->Title}'";
             $insertSQL .= ",NetUnitPrice = {$cartThing->netunitprice}";
             $insertSQL .= ",UnitTax = {$cartThing->unittax}";
             $insertSQL .= ",GrossUnitPrice = {$cartThing->grossunitprice}";
@@ -213,7 +212,9 @@ class cartOrder {
             $insertSQL .= ",NetLinePrice = {$cartThing->netlineprice}";
             $insertSQL .= ",LineTax = {$cartThing->linetax}";
             $insertSQL .= ",GrossLinePrice = {$cartThing->Price}";
-            $insertSQL .= ",Data = ''";
+            $insertSQL .= ",Data = '{$cartThing->Data}'";
+            print($insertSQL);
+            die();
             $this->e->_db->insert($insertSQL);
         }
     }
