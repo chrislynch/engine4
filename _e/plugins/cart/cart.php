@@ -70,7 +70,7 @@ class _cart {
                                             Description='{$flexcartData['Description']}',
                                             Data = '$flexcartDataSerial'
                                         on duplicate key update QTY= QTY + {$flexcartData['QTY']};";
-            
+                
                 $this->e->_db->insert($SQL);
 
             }    
@@ -213,8 +213,6 @@ class cartOrder {
             $insertSQL .= ",LineTax = {$cartThing->linetax}";
             $insertSQL .= ",GrossLinePrice = {$cartThing->Price}";
             $insertSQL .= ",Data = '{$cartThing->Data}'";
-            print($insertSQL);
-            die();
             $this->e->_db->insert($insertSQL);
         }
     }
