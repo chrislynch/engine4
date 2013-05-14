@@ -34,10 +34,10 @@ class _config {
         $this->config['smtp.port'] = '25';
         $this->config['smtp.user'] = '';
         $this->config['smtp.password'] = '';
-        $this->config['smtp.from.Address'] = '';
-        $this->config['smtp.from.Name'] = '';
-        $this->config['smtp.reply.Address'] = '';
-        $this->config['smtp.reply.Name'] = '';
+        $this->config['smtp.from.Address'] = 'info@ecommercecentric.co.uk';
+        $this->config['smtp.from.Name'] = 'eCommerce Centric';
+        $this->config['smtp.reply.Address'] = 'info@ecommercecentric.co.uk';
+        $this->config['smtp.reply.Name'] = 'eCommerce Centric';
     }
     
     public function save(){
