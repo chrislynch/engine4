@@ -83,13 +83,21 @@ class _cart {
             $sessionID = session_id();
             if(isset($_REQUEST['e4cartUpdate']) && isset($_REQUEST['e4cartUpdateQTY'])){
                 if ($_GET['e4cartUpdateQTY'] == 0){
-                    $SQL = "DELETE FROM trn_flexcart WHERE Code = '{$_REQUEST['e4cartUpdate']}' AND session_id = '$sessionID'";
+                    $SQL = "DELETE FROM trn_cart WHERE Code = '{$_REQUEST['e4cartUpdate']}' AND session_id = '$sessionID'";
                 } else {
-                    $SQL = "UPDATE trn_flexcart SET QTY = {$_REQUEST['e4cartUpdateQTY']} WHERE Code = '{$_REQUEST['e4cartUpdate']}' AND session_id = '$sessionID'";
+                    $SQL = "UPDATE trn_cart SET QTY = {$_REQUEST['e4cartUpdateQTY']} WHERE Code = '{$_REQUEST['e4cartUpdate']}' AND session_id = '$sessionID'";
                 }
                 $this->e->_db->update($SQL);
             }
         }
+    }
+    
+    public function emptyCart(){
+        $sessionID = session_id();
+        $SQL = "DELETE FROM trn_cart WHERE session_id = '$sessionID'";
+        $this->e->_db->update($SQL);
+        $this->loadCart();
+        $this->totalCart();
     }
     
     private function loadCart(){
@@ -216,39 +224,22 @@ class cartOrder {
             $this->e->_db->insert($insertSQL);
         }
     }
-    
-    public function saveServices($data){
-        foreach($data as $cartThing){
-            $insertSQL = 'INSERT INTO trn_order_lines SET ';
-            $insertSQL .= "ID = '{$this->ID}'";
-            $insertSQL .= ",ItemID = $cartThing->ID";
-            $insertSQL .= ",Code = '{$cartThing->Code}'";
-            $insertSQL .= ",Name = '{$cartThing->Title}'";
-            $insertSQL .= ",NetUnitPrice = {$cartThing->netunitprice}";
-            $insertSQL .= ",UnitTax = {$cartThing->unittax}";
-            $insertSQL .= ",GrossUnitPrice = {$cartThing->grossunitprice}";
-            $insertSQL .= ",QTY = {$cartThing->QTY}";
-            $insertSQL .= ",NetLinePrice = {$cartThing->netlineprice}";
-            $insertSQL .= ",LineTax = {$cartThing->linetax}";
-            $insertSQL .= ",GrossLinePrice = {$cartThing->Price}";
-            $insertSQL .= ",Data = ''";
-            $this->e->_db->insert($insertSQL);
-        }
-    }
-    
-    public function savePayment($paid,$paymentresponse){
+       
+    public function savePayment($paid){
         if ($paid){
             // Grab and hold a paid status
-            $this->e->_db->update("UPDATE trn_order_header SET 
+            $SQL = "UPDATE trn_order_header SET 
                                    Paid = 1,
                                    PaymentTimestamp = NOW(), 
-                                   PaymentReference = '{$paymentresponse->TxAuthNo}'
-                                   WHERE ID = '{$this->ID}'");
+                                   PaymentReference = 'SAGEPAY'
+                                   WHERE ID = '{$this->ID}'";
+            
         } else {
             // Accept a failure only if we have not already had a paid status through
             // Stops Sage Pay from "double dipping"
-            $this->e->_db->update("UPDATE trn_order_header SET Paid = -1 WHERE ID = '{$this->ID}' AND Paid = 0");
+            $SQL = "UPDATE trn_order_header SET Paid = -1 WHERE ID = '{$this->ID}' AND Paid = 0";
         }
+        $this->e->_db->update($SQL);
     }
 }
 
