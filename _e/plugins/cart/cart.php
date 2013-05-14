@@ -112,11 +112,12 @@ class _cart {
             $service->Type = $serviceRow['Type'];
             $service->Code = $serviceRow['Code'];
             $service->QTY = $serviceRow['QTY'];
-            $service->Price = $serviceRow['Price'];
+            $service->Price = $serviceRow['Price'] * $service->QTY;
             $service->Title = $serviceRow['Title'];
             $service->Description = $serviceRow['Description'];
             $service->Data = $serviceRow['Data'];
             $service->calculateTax();
+            
             $this->items[$serviceRow['Code']] = $service; 
         }
         
