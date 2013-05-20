@@ -73,6 +73,10 @@ class e {
         return $this->q . '/' . $this->p;
     }
     
+    function parray(){
+        return explode('/',$this->p);
+    }
+    
     private function _find($inDirectory){
         $found = FALSE;
         
@@ -411,6 +415,25 @@ class e {
         if (!isset($this->$pluginvar)){
             $this->$pluginvar = new $pluginclass($this);
         }
+    }
+    
+    public static function _textToPath($text){
+        // Convert some text to a safe path
+        $allowed = 'abcdefghijklmnopqrstuvwxyz1234567890.-_';
+        
+        $text = str_ireplace(' ', '-', $text);
+        $text = strtolower($text);
+        
+        $text = str_split($text);
+        $return = '';
+        
+        foreach($text as $key=>$char){
+            if(strstr($allowed,$char)){
+                $return .= $char;
+            }
+        }
+        
+        return $return;
     }
     
 }
