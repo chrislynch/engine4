@@ -1,55 +1,61 @@
 <?php
 
-$starttheclock = microtime(TRUE);
-
 if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
 
-if (isset($_REQUEST['debug'])){
-    error_reporting(-1);
-    ini_set('display_errors', 1);
-} else {
-    error_reporting(0);	
-    ini_set('display_errors', 0);
-}
-
-session_start();
-
-$e = new e();
-
-try {
-    ob_start();                 // Start buffering output
-    $e->_go();                  // Run e4
-    $output = ob_get_contents();
-    if (!$output){ print 'There was no output!'; }
-    ob_end_clean();
-    if (!$output){
-        // There was no output. Print the default
-        if (isset($e->content->html)){
-            print $e->content->html;
-        } else {
-            print "<html><head><title>engine4</title></head><body><h1>engine4</h1><p>You are running engine4</p></body></html>";
-        }
-    } else {
-        print $output;
-    }
-} catch (Exception $exc) {
-    ob_end_clean();
-    print "<pre>" . $exc->getMessage() . "\n\n" . $exc->getTraceAsString() . "</pre>";
-}
-
-if (isset($_REQUEST['debug'])){ 
-    $stoptheclock = microtime(TRUE);
-    $time = round($stoptheclock - $starttheclock,3);
-    if (function_exists('memory_get_peak_usage')){
-    	$memory = memory_get_peak_usage() / 1024 / 1024 ; 
-    } else {
-    	$memory = memory_get_usage() / 1024 / 1024 ;
-    }
-    print '<pre>Render time: ' . $time . ' seconds</pre>';
-    print '<pre>Memory Usage: ' . $memory . ' Mb</pre>';
-    print '<pre>' . print_r($e,TRUE) . '</pre>'; 
+function _e_go(){
+    global $e;
     
+    $starttheclock = microtime(TRUE);   
+
+    if (isset($_REQUEST['debug'])){
+        error_reporting(-1);
+        ini_set('display_errors', 1);
+    } else {
+        error_reporting(0);	
+        ini_set('display_errors', 0);
+    }
+
+    session_start();
+
+    $e = new e();
+
+    try {
+        ob_start();                 // Start buffering output
+        $e->_go();                  // Run e4
+        $output = ob_get_contents();
+        if (!$output){ print 'There was no output!'; }
+        ob_end_clean();
+        if (!$output){
+            // There was no output. Print the default
+            if (isset($e->content->html)){
+                print $e->content->html;
+            } else {
+                print "<html><head><title>engine4</title></head><body><h1>engine4</h1><p>You are running engine4</p></body></html>";
+            }
+        } else {
+            print $output;
+        }
+    } catch (Exception $exc) {
+        ob_end_clean();
+        print "<pre>" . $exc->getMessage() . "\n\n" . $exc->getTraceAsString() . "</pre>";
+    }
+
+    if (isset($_REQUEST['debug'])){ 
+        $stoptheclock = microtime(TRUE);
+        $time = round($stoptheclock - $starttheclock,3);
+        if (function_exists('memory_get_peak_usage')){
+            $memory = memory_get_peak_usage() / 1024 / 1024 ; 
+        } else {
+            $memory = memory_get_usage() / 1024 / 1024 ;
+        }
+        print '<pre>Render time: ' . $time . ' seconds</pre>';
+        print '<pre>Memory Usage: ' . $memory . ' Mb</pre>';
+        print '<pre>' . print_r($e,TRUE) . '</pre>'; 
+
+    }
 }
+
+
 
 class e {
     
@@ -111,7 +117,7 @@ class e {
         }
     }
     
-    private function _open($directory){
+    public function _open($directory){
         $return = FALSE;
         
         $directoryarray = explode('/',$directory);
@@ -127,7 +133,8 @@ class e {
         $this->$directoryarray[0] = new eThing($directory);
         
         // Set the title of the item that we have found
-        $title = $directoryarray[sizeof($directoryarray) - 1];
+        $title = @$directoryarray[sizeof($directoryarray) - 1];
+        if ($title == ''){ $title = @$directoryarray[sizeof($directoryarray) - 2];}
         // Take the date off the front of the directory, if it is there
         if (strstr($title,'.')){
             $title = explode('.',$title);    
@@ -342,14 +349,22 @@ class e {
     }
     
     static function _domain() {
-        return $_SERVER['SERVER_NAME'];
+        if(isset($_SERVER['SERVER_NAME'])){ 
+            return $_SERVER['SERVER_NAME'];
+        } else {
+            return FALSE;
+        }
     }
     
     static function _domainisTest(){
         $domain = e::_domain();
-        $return = FALSE;
-        if (strstr($domain,'localhost')){ $return = TRUE; }
-        return $return;
+        if ($domain === FALSE){
+            return TRUE;
+        } else {
+            $return = FALSE;
+            if (strstr($domain,'localhost')){ $return = TRUE; }
+            return $return;    
+        }
     }
     
     static function _basedir(){
@@ -434,6 +449,10 @@ class e {
         }
         
         return $return;
+    }
+    
+    public function trace($message){
+        print $message . "\n";
     }
     
 }
