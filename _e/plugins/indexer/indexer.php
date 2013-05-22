@@ -17,7 +17,7 @@ class _indexer{
             // $k->__db->update('ALTER TABLE idx_index AUTO_INCREMENT = 1');
             $this->e->_db->delete('TRUNCATE idx_index');
             $this->e->_db->delete('TRUNCATE idx_search');
-            $this->e->_db->delete('TRUNCATE idx_data');
+            $this->e->_db->delete('TRUNCATE idx_XML');
         }
         
         $this->e->trace("Scanning directory $targetdir");
