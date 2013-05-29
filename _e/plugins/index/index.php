@@ -1,6 +1,6 @@
 <?php
 
-class _indexer{
+class _index{
     
     private $e;
     
