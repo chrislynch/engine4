@@ -455,6 +455,12 @@ class e {
         print $message . "\n";
     }
     
+    public function dump($data){
+        ob_end_clean();
+        print "<pre>" . print_r($data,TRUE) . "</pre>";
+        die();
+    }
+    
 }
 
 class eThing extends stdClass {
@@ -528,6 +534,7 @@ class eThing extends stdClass {
         }
         
     }
+    
     
 }
 
