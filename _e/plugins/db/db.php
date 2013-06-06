@@ -97,6 +97,11 @@ class _db {
         return $array;
     }
     
+    function result($SQL,$row = 0,$field = 0){
+        $data = $this->select($SQL);
+        return mysql_result($data, $row, $field);
+    }
+    
     function escape($string){
         return mysql_real_escape_string($string);
     }

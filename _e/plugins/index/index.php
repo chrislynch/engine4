@@ -5,7 +5,9 @@ class _index{
     private $e;
     
     public function __construct(&$e){
+        $e->_loadPlugin('db');
         $this->e =& $e;
+        
     }
     
     public function indexfs($targetdir = ''){
@@ -106,6 +108,23 @@ class _index{
             // $this->trace($xpath . ' has children');
             $this->indexXMLelement($ID, $child, $xpath);
         }
+    }
+    
+    public function saveToIndex($path,$data,&$e){
+        // See if there's an ID for this path.
+        $thingID = $e->_db->result("SELECT ID FROM idx_index WHERE path = '$path'");
+        // Create the ID if it does not already exist
+        if (!(is_numeric($ID))){$thingID = $e->_db->insert("INSERT INTO idx_index(ID,path) values(0,'$path')");}
+        
+        // Dispose of any old data
+        $e->_db->delete("DELETE FROM idx_XML WHERE ID = $thingID");
+        
+        // Save the new data
+        foreach($data as $key=>$value){
+            $e->_db->insert("INSERT INTO idx_XML(ID,XPath,Name,Value) VALUES($thingID,'$key','$key', '$value')");
+        }
+        
+        return $thingID;
     }
 }
 
