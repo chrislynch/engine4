@@ -8,6 +8,7 @@ class _messaging {
         
     public function __construct(&$e){
         $this->e =& $e;
+        if(!isset($this->e->_config)){ $this->e->_loadPlugin('config'); }
     }
     
     function addMessage($message,$type = 0){
