@@ -6,7 +6,7 @@ Options +FollowSymLinks
 
   # Rewrite URLs of the form 'x' to the form 'index.php?e4_url=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
-  # RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
