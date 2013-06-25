@@ -8,7 +8,37 @@ class _forms {
     public function __construct(&$e){
         $this->e =& $e;
         // DB requires messaging and config - load these plugins
+    }
+    
+    public function formToDB($tablename){
+        // Create the tables if they do not exist
+        $this->e->_loadPlugin('db');
+        $this->e->_db->query("CREATE  TABLE IF NOT EXISTS `$tablename` (
+                                `ID` INT NOT NULL AUTO_INCREMENT ,
+                                `Timestamp` TIMESTAMP NULL ,
+                                PRIMARY KEY (`ID`) );");
         
+        $this->e->_db->query("CREATE  TABLE IF NOT EXISTS `{$tablename}_data` (
+                                `ID` INT NOT NULL AUTO_INCREMENT ,
+                                `method` VARCHAR(45) NULL ,
+                                `name` VARCHAR(255) NULL ,
+                                `value` TEXT NULL ,
+                                PRIMARY KEY (`ID`,`method`,`name`) );");
+                
+        // Create the header for the current item
+        $ID = $this->e->_db->insert("INSERT INTO `$tablename` SET ID = 0");
+        
+        // Create the detail requests
+        $this->globaltoDB($_POST, 'POST', $tablename, $ID);
+        $this->globaltoDB($_GET, 'GET', $tablename, $ID);
+        $this->globaltoDB($_REQUEST, 'REQUEST', $tablename, $ID);
+        $this->globaltoDB($_SERVER, 'SERVER', $tablename, $ID);
+    }
+    
+    private function globaltoDB($global,$globalname,$tablename,$ID){
+        foreach($global as $key => $value){
+            $this->e->_db->insert("INSERT INTO `{$tablename}_data` SET ID=$ID, method='$globalname', name = '$key', value = '" . mysql_real_escape_string($value) . "';" );
+        }
     }
     
     public function formToEmail($to,$subject){

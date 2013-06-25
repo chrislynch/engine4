@@ -5,39 +5,48 @@ if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdo
 function _e_go(){
     global $e;
     
-    $starttheclock = microtime(TRUE);   
+    switch($_GET['q']){
+        case 'sitemap.xml':
+            print 'Sitemap';
+            break;
+        case 'robots.txt':
+            
+            break;
+        default:
+            $starttheclock = microtime(TRUE);   
 
-    if (isset($_REQUEST['debug'])){
-        error_reporting(-1);
-        ini_set('display_errors', 1);
-    } else {
-        error_reporting(0);	
-        ini_set('display_errors', 0);
-    }
-
-    session_start();
-
-    $e = new e();
-
-    try {
-        ob_start();                 // Start buffering output
-        $e->_go();                  // Run e4
-        $output = ob_get_contents();
-        if (!$output){ print 'There was no output!'; }
-        ob_end_clean();
-        if (!$output){
-            // There was no output. Print the default
-            if (isset($e->content->html)){
-                print $e->content->html;
+            if (isset($_REQUEST['debug'])){
+                error_reporting(-1);
+                ini_set('display_errors', 1);
             } else {
-                print "<html><head><title>engine4</title></head><body><h1>engine4</h1><p>You are running engine4</p></body></html>";
+                error_reporting(0);	
+                ini_set('display_errors', 0);
             }
-        } else {
-            print $output;
-        }
-    } catch (Exception $exc) {
-        ob_end_clean();
-        print "<pre>" . $exc->getMessage() . "\n\n" . $exc->getTraceAsString() . "</pre>";
+
+            session_start();
+
+            $e = new e();
+
+            try {
+                ob_start();                 // Start buffering output
+                $e->_go();                  // Run e4
+                $output = ob_get_contents();
+                if (!$output){ print 'There was no output!'; }
+                ob_end_clean();
+                if (!$output){
+                    // There was no output. Print the default
+                    if (isset($e->content->html)){
+                        print $e->content->html;
+                    } else {
+                        print "<html><head><title>engine4</title></head><body><h1>engine4</h1><p>You are running engine4</p></body></html>";
+                    }
+                } else {
+                    print $output;
+                }
+            } catch (Exception $exc) {
+                ob_end_clean();
+                print "<pre>" . $exc->getMessage() . "\n\n" . $exc->getTraceAsString() . "</pre>";
+            }
     }
 
     if (isset($_REQUEST['debug'])){ 
@@ -449,6 +458,12 @@ class e {
         }
         
         return $return;
+    }
+    
+    public static function _pathToText($path){
+        $path = str_ireplace('-', ' ', $path);
+        $path = ucwords($path);
+        return $path;
     }
     
     public function trace($message){
