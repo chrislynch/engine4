@@ -4,8 +4,8 @@ if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdo
 
 function _e_go(){
     global $e;
-    
-    switch($_GET['q']){
+
+    switch(@$_GET['q']){
         case 'sitemap.xml':
             print 'Sitemap';
             break;
