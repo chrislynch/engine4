@@ -7,7 +7,7 @@ function _e_go(){
 
     switch(@$_GET['q']){
         case 'sitemap.xml':
-            print 'Sitemap';
+            print 'Sitemap';par
             break;
         case 'robots.txt':
             
@@ -88,8 +88,13 @@ class e {
         return $this->q . '/' . $this->p;
     }
     
-    function parray(){
-        return explode('/',$this->p);
+    function parray($item = -1){
+	if ($item == -1){
+	        return explode('/',$this->p);
+	} else {
+		$return = explode('/',$this->p);
+		return @$return[$item];
+	}
     }
     
     private function _find($inDirectory){
