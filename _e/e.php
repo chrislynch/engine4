@@ -7,7 +7,7 @@ function _e_go(){
 
     switch(@$_GET['q']){
         case 'sitemap.xml':
-            print 'Sitemap';par
+            print 'Sitemap';
             break;
         case 'robots.txt':
             
