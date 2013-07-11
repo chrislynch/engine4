@@ -1,18 +1,19 @@
 <?php
 
-if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
-
 function _e_go(){
     global $e;
 
     switch(@$_GET['q']){
         case 'sitemap.xml':
-            print 'Sitemap';par
+            $e = new eSiteMap();
+            print $e->xml();
             break;
         case 'robots.txt':
             
             break;
         default:
+        	if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
+        	
             $starttheclock = microtime(TRUE);   
 
             if (isset($_REQUEST['debug'])){
@@ -471,14 +472,22 @@ class e {
         return $path;
     }
     
-    public function trace($message){
+    static public function trace($message){
         print $message . "\n";
     }
     
-    public function dump($data){
+    static public function _trace($message){
+    	e::trace($message);
+    }
+    
+    static public function dump($data){
         ob_end_clean();
         print "<pre>" . print_r($data,TRUE) . "</pre>";
         die();
+    }
+    
+    static public function _dump($data){
+    	e::dump($data);
     }
     
 }
@@ -558,4 +567,54 @@ class eThing extends stdClass {
     
 }
 
+
+class eSiteMap {
+	
+	private $map;
+	
+	public function xml(){
+		// Get the master set of directories.
+		$directories = scandir('.');
+		$this->map = array();
+		// Work your way through the directories, mapping out the content
+		foreach($directories as $directory){
+			// Work through directories, processing each in order.
+			if (e::_isValidDirectory($directory)){
+				$this->mapSubDirectory($directory);
+			}
+		}
+		
+		$return = '<?xml version="1.0" encoding="utf-8"?>
+					<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+		foreach($this->map as $mappoint){
+			$return .= "
+						<url>
+							<loc>" . e::_basehref() . urlencode($mappoint) . "</loc>
+      						<lastmod>" . date('c',time()) . "</lastmod>
+      						<changefreq>daily</changefreq>
+      						<priority>0.8</priority>
+   					</url>";
+		}
+		$return .= '</urlset>';
+		return $return;
+	} 
+	
+	private function mapSubDirectory($directory){
+		$directories = scandir($directory);
+		foreach($directories as $subdirectory){
+			if(e::_isValidDirectory($directory . '/' . $subdirectory)){
+				
+				$mapdirectory = explode('/',$directory);
+				unset($mapdirectory[0]);
+				$mapdirectory[] = $subdirectory;
+				$mapdirectory = implode('/',$mapdirectory);
+								
+				$this->map[$mapdirectory] = $mapdirectory;
+				
+				$this->mapSubDirectory($directory . '/' . $subdirectory);
+			}
+		}
+	}  
+	
+}
 ?>
