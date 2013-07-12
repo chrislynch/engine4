@@ -587,9 +587,10 @@ class eSiteMap {
 		$return = '<?xml version="1.0" encoding="utf-8"?>
 					<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 		foreach($this->map as $mappoint){
+			$mappoint = str_ireplace('&', '&amp;', $mappoint);
 			$return .= "
 						<url>
-							<loc>" . e::_basehref() . urlencode($mappoint) . "</loc>
+							<loc>" . e::_basehref() . $mappoint . "</loc>
       						<lastmod>" . date('c',time()) . "</lastmod>
       						<changefreq>daily</changefreq>
       						<priority>0.8</priority>
