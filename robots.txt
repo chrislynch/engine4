@@ -1,4 +1,5 @@
 User-Agent: *
 Disallow: 
+Allow: /
 
-Sitemap: /xml/sitemap
+Sitemap: http://www.cruisecentric.co.uk/sitemap.xml
