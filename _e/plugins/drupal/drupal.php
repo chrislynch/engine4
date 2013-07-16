@@ -24,14 +24,35 @@ class _drupal{
 			while($field = mysql_fetch_object($fields)){
 				if($field->module == 'text'){
 					$select .= ",f$i.{$field->field_name}_value";
-					$from .= " join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
+					$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
+				}
+				if($field->module == 'file'){
+					$select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
+					$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid 
+							   LEFT OUTER join file_managed fm$i ON fm$i.fid = f$i.{$field->field_name}_fid";
 				}
 				$i++;
 				
 			}
-			
+			print "$select $from WHERE n.nid = $nid";
 			$node = $this->e->_db->query("$select $from WHERE n.nid = $nid");
 			$node = mysql_fetch_assoc($node);
+			
+			// Prepare body to match files
+			if(isset($node['body_value'])){
+				foreach($node as $key => $value){
+					$keypart = explode('_',$key);
+					$keypart = array_pop($keypart);
+					if ($keypart == 'filename') {
+						$files = explode('|',$value);
+						foreach($files as $file){
+							if (strlen(trim($file)) > 0){
+								$node['body_value'] = str_ireplace($file,'_admin/sites/default/files/' . $file,$node['body_value']);
+							}
+						}
+					}
+				}
+			}
 			
 			return $node;
 		
@@ -39,18 +60,32 @@ class _drupal{
 		
 	}
 	
-	private function drupal_find($where){
+	private function drupal_find($where, $join = '',$orderby = 'n.created DESC',$limit = '10'){
 		$select = "SELECT n.*, u.alias as url ";
 		$from = " from url_alias u
 				  left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) ";
 		
-		$nodes = $this->e->_db->query("$select $from WHERE $where");
+		$nodes = $this->e->_db->query("$select $from $join WHERE $where ORDER BY $orderby LIMIT $limit");
 		
 		$return = array();
 		while($node = mysql_fetch_array($nodes)){
 			$return[] = $node['nid'];
 		}
 		return $return;
+	}
+	
+	public function drupal_load_nodes($where,$join = '',$orderby = 'n.created DESC',$limit = '10'){
+		$nids = $this->drupal_find($where,$join,$orderby,$limit);
+		if(is_array($nids)){
+			$return = array();
+			foreach($nids as $nid){
+				$node = $this->drupal_load_node($nid);
+				$return[$node['nid']] = $node;
+			}
+			return $return;
+		} else {
+			return FALSE;
+		}
 	}
 	
 	public function drupal_load_node_byURL($url){
