@@ -4,7 +4,12 @@ class _drupal{
 
 	public function __construct(&$e){
 		$this->e =& $e;
+                include '_admin/sites/default/settings.php';
 		$e->_loadPlugin('db');
+                $e->_config->set('mysql.server',$databases['default']['default']['host']);
+                $e->_config->set('mysql.user',$databases['default']['default']['username']);
+                $e->_config->set('mysql.password',$databases['default']['default']['password']);
+                $e->_config->set('mysql.database',$databases['default']['default']['database']);
 	}
 
 	public function drupal_load_node($nid){
