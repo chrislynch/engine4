@@ -34,7 +34,7 @@ class _drupal{
 				$i++;
 				
 			}
-			print "$select $from WHERE n.nid = $nid";
+			
 			$node = $this->e->_db->query("$select $from WHERE n.nid = $nid");
 			$node = mysql_fetch_assoc($node);
 			
