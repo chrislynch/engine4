@@ -65,12 +65,26 @@ class _drupal{
 		
 	}
 	
-	private function drupal_find($where, $join = '',$orderby = 'n.created DESC',$limit = '10'){
+	private function drupal_find($where = '', $params = array()){
 		$select = "SELECT n.*, u.alias as url ";
 		$from = " from url_alias u
-				  left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) ";
-		
-		$nodes = $this->e->_db->query("$select $from $join WHERE $where ORDER BY $orderby LIMIT $limit");
+                          left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) ";
+		                        
+                if(!isset($params['join'])) { $params['join'] = '';}
+                if(!isset($params['orderby'])) { $params['orderby'] = 'n.sticky DESC, n.created DESC';}
+                if(!isset($params['limit'])) { $params['limit'] = 10;}
+                
+                if($where == ''){ $where = 'TRUE'; }
+                
+                $SQL = "$select $from {$params['join']} 
+                                                WHERE n.status =1 AND ($where)
+                                                ORDER BY {$params['orderby']} 
+                                                LIMIT {$params['limit']}";
+                
+                $nodes = $this->e->_db->query("$select $from {$params['join']} 
+                                                WHERE $where 
+                                                ORDER BY {$params['orderby']} 
+                                                LIMIT {$params['limit']}");
 		
 		$return = array();
 		while($node = mysql_fetch_array($nodes)){
@@ -79,8 +93,8 @@ class _drupal{
 		return $return;
 	}
 	
-	public function drupal_load_nodes($where,$join = '',$orderby = 'n.created DESC',$limit = '10'){
-		$nids = $this->drupal_find($where,$join,$orderby,$limit);
+	public function drupal_load_nodes($where,$params = array()){
+		$nids = $this->drupal_find($where,$params);
 		if(is_array($nids)){
 			$return = array();
 			foreach($nids as $nid){
