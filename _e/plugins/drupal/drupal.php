@@ -28,7 +28,7 @@ class _drupal{
 			
 			while($field = mysql_fetch_object($fields)){
 				if($field->module == 'text'){
-					$select .= ",f$i.{$field->field_name}_value";
+					$select .= ",f$i.{$field->field_name}_value, f$i.{$field->field_name}_summary";
 					$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
 				}
 				if($field->module == 'file'){
