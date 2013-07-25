@@ -68,7 +68,7 @@ class _drupal{
 	private function drupal_find($where = '', $params = array()){
 		$select = "SELECT n.*, u.alias as url ";
 		$from = " from url_alias u
-                          left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) ";
+				  left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) ";
 		                        
                 if(!isset($params['join'])) { $params['join'] = '';}
                 if(!isset($params['orderby'])) { $params['orderby'] = 'n.sticky DESC, n.created DESC';}
@@ -77,14 +77,11 @@ class _drupal{
                 if($where == ''){ $where = 'TRUE'; }
                 
                 $SQL = "$select $from {$params['join']} 
-                                                WHERE n.status =1 AND ($where)
+                                                WHERE n.status = 1 AND ($where)
                                                 ORDER BY {$params['orderby']} 
                                                 LIMIT {$params['limit']}";
                 
-                $nodes = $this->e->_db->query("$select $from {$params['join']} 
-                                                WHERE $where 
-                                                ORDER BY {$params['orderby']} 
-                                                LIMIT {$params['limit']}");
+                $nodes = $this->e->_db->query($SQL);
 		
 		$return = array();
 		while($node = mysql_fetch_array($nodes)){
