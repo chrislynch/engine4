@@ -15,7 +15,8 @@ class _drupal{
 	public function drupal_load_node($nid){
 		$select = "SELECT n.*, u.alias as url ";
 		$from = " from url_alias u
-				  left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) ";
+				  left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) 
+											AND substring_index( u.source, '/', 1 ) = 'node'";
 		$i = 1;
 				
 		$node = $this->e->_db->query("SELECT * FROM node WHERE nid = $nid");
@@ -68,7 +69,8 @@ class _drupal{
 	private function drupal_find($where = '', $params = array()){
 		$select = "SELECT n.*, u.alias as url ";
 		$from = " from url_alias u
-				  left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) ";
+				  left outer join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) 
+										 AND substring_index( u.source, '/', 1 ) = 'node'";
 		                        
                 if(!isset($params['join'])) { $params['join'] = '';}
                 if(!isset($params['orderby'])) { $params['orderby'] = 'n.sticky DESC, n.created DESC';}
