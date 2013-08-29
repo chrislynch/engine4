@@ -39,6 +39,7 @@ class _db {
     function select($SQL){
         // Run a select statement
         if ($this->connect()){
+        	if(isset($_GET['debug'])){ print $SQL . "<br>"; }
             $return = mysql_query($SQL,$this->db);
             $this->disconnect();
         } else {
@@ -79,11 +80,15 @@ class _db {
         return $this->update($SQL);
     }
     
-    function assocarray($SQL){
+    function assocarray($SQL,$PK = ''){
         $data = $this->select($SQL);
         $array = array();
         while($arrayitem = mysql_fetch_assoc($data)){
-            $array[] = $arrayitem;
+        	if (strlen($PK) > 0){
+        		$array[$arrayitem[$PK]] = $arrayitem;
+        	} else {
+				$array[] = $arrayitem;
+        	}
         }
         return $array;
     }

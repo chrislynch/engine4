@@ -45,12 +45,14 @@ class _messaging {
             if (strlen($replyName) == 0){ $replyName = $this->e->_config->get('smtp.reply.Name'); }
             
             $mail->SetFrom($fromAddress, $fromName);
-            $mail->AddReplyTo($replyAddress, $replyName);
+        	if(strlen($replyAddress) > 0 AND strlen($replyName) > 0){
+            	$mail->AddReplyTo($replyAddress, $replyName);
+            }
             
             // Subject and Message
             $mail->Subject = $subject;
-            // $mail->AltBody = 'To view the message, please use an HTML compatible email viewer!'; // optional - MsgHTML will create an alternate automatically
             $mail->MsgHTML($message);
+            // $mail->AltBody = 'To view the message, please use an HTML compatible email viewer!'; // optional - MsgHTML will create an alternate automatically
             
             // Attachments
             /*
