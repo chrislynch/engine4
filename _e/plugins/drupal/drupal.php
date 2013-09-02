@@ -3,13 +3,13 @@
 class _drupal{
 
 	public function __construct(&$e){
-		$this->e =& $e;
-		include '_admin/sites/default/settings.php';
-		$e->_loadPlugin('db');
-        $e->_config->set('mysql.server',$databases['default']['default']['host']);
-        $e->_config->set('mysql.user',$databases['default']['default']['username']);
-        $e->_config->set('mysql.password',$databases['default']['default']['password']);
-        $e->_config->set('mysql.database',$databases['default']['default']['database']);
+            $this->e =& $e;
+            include '_admin/sites/default/settings.php';
+            $e->_loadPlugin('db');
+            $e->_config->set('mysql.server',$databases['default']['default']['host']);
+            $e->_config->set('mysql.user',$databases['default']['default']['username']);
+            $e->_config->set('mysql.password',$databases['default']['default']['password']);
+            $e->_config->set('mysql.database',$databases['default']['default']['database']);
 	}
 
 	public function drupal_load_node($nid){
@@ -107,6 +107,21 @@ class _drupal{
 		}
 		return $return;
 	}
+        
+        public function drupal_search($keywords){
+            $SQL = 'SELECT entity_id as nid,MATCH(body_value,body_summary) AGAINST ("' . $keywords . '") as Relevance
+                    FROM field_data_body
+                    HAVING Relevance > 0
+                    ORDER BY Relevance DESC;';
+            $nodes = $nodes = $this->e->_db->query($SQL);
+            
+            $return = array();
+            while($node = mysql_fetch_assoc($nodes)){
+                    $return[] = $node['nid'];
+            }
+                        
+            return $this->drupal_load_nodearray($return);
+        }
 	
 	public function drupal_load_nodes($where,$params = array()){
 		$nids = $this->drupal_find($where,$params);
@@ -118,7 +133,7 @@ class _drupal{
 	}
 	
 	public function drupal_load_node_byURL($url){
-		$url = mysql_real_escape_string($url);
+		// $url = mysql_real_escape_string($url);
 		$nid = $this->drupal_find("u.alias = '$url'");
 		if(is_array($nid)){
 			return $this->drupal_load_node($nid[0]);
@@ -128,7 +143,7 @@ class _drupal{
 	}
 	
 	public function drupal_load_nodes_byURL($url){
-		$url = mysql_real_escape_string($url);
+		// $url = mysql_real_escape_string($url);
 		$nids = $this->drupal_find("u.alias LIKE '$url%'");
 		if(is_array($nids)){
 			return $this->drupal_load_nodearray($nids);
