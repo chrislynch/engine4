@@ -58,7 +58,7 @@ class _drupal{
 						break;
 					case 'file':
 						// $select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
-                                                $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://',''),'|') as {$field->field_name}_filename";
+                                                $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://','') SEPARATOR '|') as {$field->field_name}_filename";
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid
 								   LEFT OUTER join file_managed fm$i ON fm$i.fid = f$i.{$field->field_name}_fid";
 						break;
