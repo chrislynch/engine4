@@ -158,6 +158,22 @@ class _drupal{
             return $this->drupal_load_nodearray($return);
         }
 	
+        public function drupal_redirect($url = '',$auto = TRUE){
+            if ($url == '') { $url = substr($this->e->qp(),1); }
+            $redirectSQL = "SELECT IFNULL(u.alias,r.redirect) as redirect
+                            FROM   redirect r 
+                            LEFT OUTER JOIN url_alias u ON u.source = r.redirect
+                            WHERE  r.source = '$url';";
+            $redirect = $this->e->_db->result($redirectSQL);
+            if (strlen($redirect) > 0){
+                if ($auto){
+                    $this->e->_goto($redirect,301);
+                } else {
+                    return $redirect;
+                }
+            }
+        }
+        
 	public function drupal_load_nodes($where,$params = array()){
 		$nids = $this->drupal_find($where,$params);
 		if(is_array($nids)){
