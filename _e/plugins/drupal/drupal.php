@@ -2,6 +2,23 @@
 
 class _drupal{
 
+        public $pages;
+        public $pageLength = 10;
+    
+        private function calcPageLimit(){
+            // Work out which page we are on.
+            if (isset($_GET['page'])){
+                if(is_numeric($_GET['page'])){
+                    $page = strval($_GET['page']);
+                    $limit = (($page -1) * $this->pageLength) . ',' . (($page) * $this->pageLength);
+                }
+            } else {
+                $limit = $this->pageLength;
+            }
+            
+            return $limit;
+        }
+        
 	public function __construct(&$e){
             $this->e =& $e;
             include '_admin/sites/default/settings.php';
@@ -31,6 +48,7 @@ class _drupal{
 			while($field = mysql_fetch_object($fields)){
 				switch($field->type){
 					case 'text':
+                                        case 'list_text':
 						$select .= ",f$i.{$field->field_name}_value ";
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
 						break;
@@ -39,7 +57,8 @@ class _drupal{
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
 						break;
 					case 'file':
-						$select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
+						// $select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
+                                                $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://',''),'|') as {$field->field_name}_filename";
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid
 								   LEFT OUTER join file_managed fm$i ON fm$i.fid = f$i.{$field->field_name}_fid";
 						break;
@@ -82,7 +101,8 @@ class _drupal{
 	}
 	
 	private function drupal_find($where = '', $params = array()){
-		$select = "SELECT n.*, u.alias as url ";
+		
+                $select = "SELECT n.*, u.alias as url ";
 		$from = " from url_alias u
 				  join node n on n.nid = reverse(substring_index(reverse(u.source),'/',1)) 
 										 AND substring_index( u.source, '/', 1 ) = 'node'
@@ -90,14 +110,19 @@ class _drupal{
 		                        
                 if(!isset($params['join'])) { $params['join'] = '';}
                 if(!isset($params['orderby'])) { $params['orderby'] = 'n.sticky DESC, ww.weight ASC, n.created DESC';}
-                if(!isset($params['limit'])) { $params['limit'] = 10;}
+                if(!isset($params['limit'])) { $params['limit'] = $this->calcPageLimit();}
                 
                 if($where == ''){ $where = 'TRUE'; }
                 
+                $countSQL = "SELECT COUNT(n.nid) $from {$params['join']} 
+                             WHERE n.status = 1 AND ($where)";
+                
+                $this->pages = ($this->e->_db->result($countSQL) / $this->pageLength) + 1;
+                
                 $SQL = "$select $from {$params['join']} 
-                                                WHERE n.status = 1 AND ($where)
-                                                ORDER BY {$params['orderby']} 
-                                                LIMIT {$params['limit']}";
+                        WHERE n.status = 1 AND ($where)
+                        ORDER BY {$params['orderby']}
+                        LIMIT {$params['limit']}";
                 
                 $nodes = $this->e->_db->query($SQL);
 		
@@ -109,10 +134,20 @@ class _drupal{
 	}
         
         public function drupal_search($keywords){
+            $countSQL = 'SELECT entity_id as nid,MATCH(body_value,body_summary) AGAINST ("' . $keywords . '") as Relevance
+                        FROM field_data_body
+                        HAVING Relevance > 0
+                        ORDER BY Relevance DESC;';
+            
+            $nodecount = $this->e->_db->query($countSQL);
+            $this->pages = (mysql_num_rows($nodecount) / $this->pageLength) + 1;
+            
             $SQL = 'SELECT entity_id as nid,MATCH(body_value,body_summary) AGAINST ("' . $keywords . '") as Relevance
                     FROM field_data_body
                     HAVING Relevance > 0
-                    ORDER BY Relevance DESC;';
+                    ORDER BY Relevance DESC
+                    LIMIT ' . $this->calcPageLimit();
+
             $nodes = $nodes = $this->e->_db->query($SQL);
             
             $return = array();
@@ -174,11 +209,11 @@ class _drupal{
 	
 	public function drupal_book_childpages($nid){
 		$childpagedata = $this->e->_db->query("select b.nid,nr.title,u.alias as url
-											from book b 
-											join node n on n.nid = b.nid 
-											join node_revision nr on nr.nid = n.nid and nr.vid = n.vid
-											left outer join url_alias u on u.source = concat('node/',n.nid)
-											where b.bid = $nid and b.nid <> $nid;");
+                                                        from book b 
+                                                        join node n on n.nid = b.nid 
+                                                        join node_revision nr on nr.nid = n.nid and nr.vid = n.vid
+                                                        left outer join url_alias u on u.source = concat('node/',n.nid)
+                                                        where b.bid = $nid and b.nid <> $nid;");
 		$return = array();
 		while($returnpage = mysql_fetch_assoc($childpagedata)){
 			$return[$returnpage['nid']] = $returnpage;
@@ -187,13 +222,26 @@ class _drupal{
 		return $return;
 	}
 
-	public function drupal_menu_load($menuname){
-		$menu = $this->e->_db->assocarray("select link_title as title, IFNULL(u.alias,m.link_path) as url, m.*
-											from menu_links m
-											left outer join url_alias u on u.source = m.link_path							
-											where menu_name = '$menuname' and plid  = 0
-											and hidden = 0 order by weight ASC;");
-		return $menu;
+	public function drupal_menu_load($menuname,$parent = 0, $p1 = 'p1'){
+                $SQL = "select link_title as title, IFNULL(u.alias,m.link_path) as url, m.*
+                                                    from menu_links m
+                                                    left outer join url_alias u on u.source = m.link_path							
+                                                    where menu_name = '$menuname' and hidden = 0";
+                if ($parent > 0) { 
+                    $SQL .= " AND $p1 = $parent AND mlid != $parent "; 
+                } else {
+                    $SQL .= " and plid = 0 ";
+                }
+                $SQL .= " order by weight ASC";
+                
+		$menu = $this->e->_db->assocarray($SQL);
+                
+                $return = array();
+                foreach ($menu as $mlid=>$menuitem){
+                    $menuitem['options'] = unserialize($menuitem['options']);
+                    $return[$mlid] = $menuitem;
+                }
+		return $return;
 	}
 	
 }
