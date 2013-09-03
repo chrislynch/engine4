@@ -25,6 +25,18 @@ class _db {
             if (!($return)){
                 $this->e->_messaging->addMessage('Unable to select database schema',-9);
             } else {
+                /*
+                $this->query("SET NAMES 'utf8';");
+                 */
+                /*
+                $this->query("SET character_set_results = 'utf8', 
+                              character_set_client = 'utf8', 
+                              character_set_connection = 'utf8', 
+                              character_set_database = 'utf8', 
+                              character_set_server = 'utf8'");
+                 
+                 */
+                mysql_set_charset('utf8',$this->db); 
                 $return = TRUE;
             }
         }
@@ -108,7 +120,7 @@ class _db {
     }
     
     function escape($string){
-        return mysql_real_escape_string($string);
+        return mysql_real_escape_string($string,$db);
     }
     
 }
