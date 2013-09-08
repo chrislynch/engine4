@@ -10,7 +10,9 @@ class _drupal{
             if (isset($_GET['page'])){
                 if(is_numeric($_GET['page'])){
                     $page = strval($_GET['page']);
-                    $limit = (($page -1) * $this->pageLength) . ',' . (($page) * $this->pageLength);
+                    $limit = (($page -1) * $this->pageLength);
+		    if(strval($limit) > 0) { $limit += 1; }
+		    $limit .= ',' . $this->pageLength;
                 }
             } else {
                 $limit = $this->pageLength;
