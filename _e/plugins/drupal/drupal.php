@@ -70,6 +70,7 @@ class _drupal{
 			$node = mysql_fetch_assoc($node);
 			
 			// Prepare body to match files
+/*
 			if(isset($node['body_value'])){
 				foreach($node as $key => $value){
 					$keypart = explode('_',$key);
@@ -78,13 +79,14 @@ class _drupal{
 						$files = explode('|',$value);
 						foreach($files as $file){
 							if (strlen(trim($file)) > 0){
-								$node['body_value'] = str_ireplace($file,'_admin/sites/default/files/' . $file,$node['body_value']);
+								$node['body_value'] = str_ireplace($file,'_admin/sites/default/files/' . $file,"'" . $node['body_value'] . "'");
+								$node['body_value'] = str_ireplace($file,'_admin/sites/default/files/' . $file,'"' . $node['body_value'] . '"');
 							}
 						}
 					}
 				}
 			}
-			
+*/			
 			return $node;
 		
 		}
