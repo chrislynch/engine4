@@ -57,9 +57,8 @@ class _drupal{
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
 						break;
 					case 'file':
-					case 'image':
 						// $select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
-                        $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://','') SEPARATOR '|') as {$field->field_name}_filename";
+                                                $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://','') SEPARATOR '|') as {$field->field_name}_filename";
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid
 								   LEFT OUTER join file_managed fm$i ON fm$i.fid = f$i.{$field->field_name}_fid";
 						break;
@@ -69,7 +68,7 @@ class _drupal{
 			
 			$node = $this->e->_db->query("$select $from WHERE n.nid = $nid");
 			$node = mysql_fetch_assoc($node);
-			/*
+			
 			// Prepare body to match files
 			if(isset($node['body_value'])){
 				foreach($node as $key => $value){
@@ -79,13 +78,14 @@ class _drupal{
 						$files = explode('|',$value);
 						foreach($files as $file){
 							if (strlen(trim($file)) > 0){
-								$node['body_value'] = str_ireplace($file,'_admin/sites/default/files/' . $file,$node['body_value']);
+								$node['body_value'] = str_ireplace($file,'_admin/sites/default/files/' . $file,"'" . $node['body_value'] . "'");
+								$node['body_value'] = str_ireplace($file,'_admin/sites/default/files/' . $file,'"' . $node['body_value'] . '"');
 							}
 						}
 					}
 				}
 			}
-			*/
+			
 			return $node;
 		
 		}
