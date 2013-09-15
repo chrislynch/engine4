@@ -38,7 +38,7 @@ class _cookies {
                                                 This website uses cookies to remember your preferences and improve your browsing experience.
                                                 By continuing to use this website, you are consenting to accept all of our cookies. <br>
                                                 <a href="?cookies=YES">Click here to let us remember your preference and hide this message.</a>
-                                                </div></html>'; 
+                                                </div>'; 
         
         if (isset($_GET['cookies'])){
             setcookie('eu_cookie_consent',$_GET['cookies'],(time()+60*60*24*30*6),'/');
