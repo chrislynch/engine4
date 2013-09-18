@@ -420,14 +420,16 @@ class e {
         return $return;
     }
     
-    static function _goto($gotoURL, $gotoCode = 301){
+    static function _goto($gotoURL, $gotoCode = 301, $rebase = TRUE){
         // Perform a subdirectory sage goto
         $lowergotoURL = strtolower($gotoURL);
         if (strpos($lowergotoURL,'http') === 0){
             // Fully qualified URL - we can just go there
         } else {
             // Partial URL, assume a sub path
-            $gotoURL = e::_basehref() . $gotoURL;
+            if ($rebase){
+            	$gotoURL = e::_basehref() . $gotoURL;
+            }
         }
         
         // Clean out the buffer, send a header, and die
@@ -480,14 +482,23 @@ class e {
     	e::trace($message);
     }
     
-    static public function dump($data){
-        ob_end_clean();
+    static public function dump($data,$debuffer = TRUE,$staylive = FALSE){
+        if($debuffer) { ob_end_clean(); }
         print "<pre>" . print_r($data,TRUE) . "</pre>";
-        die();
+        if(!$staylive){ die(); }
     }
     
     static public function _dump($data){
     	e::dump($data);
+    }
+    
+    static public function debug($on = TRUE, $level = -1){
+    	if ($on){
+    		error_reporting($level);
+    		ini_set('display_errors', 1);
+    	} else {
+    		ini_set('display_errors', 0);
+    	}
     }
     
 }

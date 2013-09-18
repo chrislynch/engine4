@@ -9,6 +9,7 @@ class _messaging {
     public function __construct(&$e){
         $this->e =& $e;
         if(!isset($this->e->_config)){ $this->e->_loadPlugin('config'); }
+        if(isset($_SESSION['e4_messages'])) { $this->messages = $_SESSION['e4_messages']; }
     }
     
     function addMessage($message,$type = 0){
@@ -16,7 +17,13 @@ class _messaging {
             die($message);
         } else {
             $this->messages[$message] = array('message'=>$message,'type'=>$type);
+            $_SESSION['e4_messages'] = $this->messages;
         }
+    }
+    
+    function clearMessages(){
+    	$this->messages = array();
+    	unset($_SESSION['e4_messages']);
     }
     
     function sendMessage($toAddress,$toName,$subject,$message,$fromAddress = '', $fromName = '', $replyAddress = '', $replyName = '', $private = FALSE){
@@ -69,6 +76,5 @@ class _messaging {
             return FALSE;
         }
     }
-    
 }
-?>
+

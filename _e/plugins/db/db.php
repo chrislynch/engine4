@@ -36,7 +36,10 @@ class _db {
                               character_set_server = 'utf8'");
                  
                  */
-                mysql_set_charset('utf8',$this->db); 
+            	if (function_exists('mysql_set_charset') == TRUE){
+            		mysql_set_charset('utf8',$this->db);
+            	}
+                
                 $return = TRUE;
             }
         }
