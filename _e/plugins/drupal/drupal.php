@@ -59,7 +59,7 @@ class _drupal{
 					case 'file':
 					case 'image':
 						// $select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
-                        $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://','') SEPARATOR '|') as {$field->field_name}_filename";
+                        $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://','_admin/sites/default/files/') SEPARATOR '|') as {$field->field_name}_filename";
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid
 								   LEFT OUTER join file_managed fm$i ON fm$i.fid = f$i.{$field->field_name}_fid";
 						break;
@@ -110,7 +110,7 @@ class _drupal{
 				  left outer join weight_weights ww ON ww.entity_id = n.nid ";
 		                        
                 if(!isset($params['join'])) { $params['join'] = '';}
-                if(!isset($params['orderby'])) { $params['orderby'] = 'n.sticky DESC, ww.weight ASC, n.created DESC';}
+                if(!isset($params['orderby'])) { $params['orderby'] = 'n.sticky DESC, ww.weight ASC, n.changed DESC, n.created DESC';}
                 if(!isset($params['limit'])) { $params['limit'] = $this->calcPageLimit();}
                 
                 if($where == ''){ $where = 'TRUE'; }
@@ -258,6 +258,27 @@ class _drupal{
                     $menuitem['options'] = unserialize($menuitem['options']);
                     $return[$mlid] = $menuitem;
                 }
+		return $return;
+	}
+	
+	public function drupal_menu_book_load($nid){
+		$SQL = "SELECT mlid FROM book WHERE nid = $nid";
+		$mlid = $this->e->_db->result($SQL);
+		if ($mlid > 0){
+			$SQL = "select link_title as title, IFNULL(u.alias,m.link_path) as url, m.*
+					from menu_links m
+                    left outer join url_alias u on u.source = m.link_path							
+                    where plid = $mlid and hidden = 0
+					order by weight ASC,link_title ASC";
+		}
+		
+		$menu = $this->e->_db->assocarray($SQL);
+		
+		$return = array();
+		foreach ($menu as $mlid=>$menuitem){
+			$menuitem['options'] = unserialize($menuitem['options']);
+			$return[$mlid] = $menuitem;
+		}
 		return $return;
 	}
 	
