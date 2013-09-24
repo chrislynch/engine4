@@ -78,6 +78,38 @@ class _db {
         return $return;
     }
     
+    function insertinto($table,$args,$PK){
+    	$SQL = "INSERT INTO $table SET $PK = {$args[$PK]}";
+    	foreach($args as $field => $value){
+    		if($field !== $PK){
+    			$SQL .= ", $field = ";
+    			if(is_numeric($value)){
+    				$SQL .= $value;
+    			} else {
+    				$SQL .= "'" . $this->escape($value) . "'";
+    			}
+    		}
+    	}
+
+    	return $this->insert($SQL);
+    }
+    
+    function replaceinto($table,$args,$PK){
+    	$SQL = "REPLACE INTO $table SET $PK = {$args[$PK]}";
+    	foreach($args as $field => $value){
+    		if($field !== $PK){
+    			$SQL .= ", $field = ";
+    			if(is_numeric($value)){
+    				$SQL .= $value;
+    			} else {
+    				$SQL .= "'" . $this->escape($value) . "'";
+    			}
+    		}
+    	}
+
+    	return $this->update($SQL);
+    }
+    
     function update($SQL){
         // Run the delete command and return how many rows were affected
         if ($this->connect()){
@@ -117,13 +149,27 @@ class _db {
         return $array;
     }
     
-    function result($SQL,$row = 0,$field = 0){
+    function result($SQL,$row = 0,$field = 0,$default = FALSE){
         $data = $this->select($SQL);
-        return mysql_result($data, $row, $field);
+        if(mysql_num_rows($data) == 0){
+        	return $default;
+        } else {
+        	return mysql_result($data, $row, $field);
+        }
     }
     
     function escape($string){
-        return mysql_real_escape_string($string,$db);
+    	$original = $string;
+    	if($this->connect()){
+    		if(! $string = mysql_real_escape_string($string,$this->db)){
+    			$return = addslashes($original);
+    		} else {
+    			$return = $string;
+    		}	
+    	} else {
+    		$return = addslashes($original);
+    	}
+    	return $return;
     }
     
 }
