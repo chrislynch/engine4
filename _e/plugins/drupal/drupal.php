@@ -43,7 +43,7 @@ class _drupal{
 			$fields = $this->e->_db->query("select fci.field_name,fc.module,fc.type
 					from field_config_instance fci
 					join field_config fc on fc.id = fci.field_id
-					where bundle = '{$node['type']}'");
+					where bundle = '{$node['type']}' and fci.deleted = 0");
 			
 			while($field = mysql_fetch_object($fields)){
 				switch($field->type){
@@ -205,13 +205,24 @@ class _drupal{
 	}
 	
 	public function drupal_load_nodes_byURL($url){
-		// $url = mysql_real_escape_string($url);
-		$nids = $this->drupal_find("u.alias LIKE '$url%'");
-		if(is_array($nids)){
-			return $this->drupal_load_nodearray($nids);
-		} else {
-			return FALSE;
-		}
+            $url = mysql_real_escape_string($url);
+            $nids = $this->drupal_find("u.alias LIKE '$url%'");
+            if(count($nids) > 0){
+                return $this->drupal_load_nodearray($nids);
+            } else {
+                // If there are no nodes that follow this URL path, the URL path might belong to a term
+                $nids = $this->e->_db->keyarray("
+                            select n.nid
+                            from url_alias u
+                            join taxonomy_index ti on ti.tid = substring_index(u.source,'/',-1)
+                            join node n on n.nid = ti.nid
+                            where u.alias = '$url' and source like 'taxonomy/term/%';",'nid');
+                if(count($nids) > 0){
+                    return $this->drupal_load_nodearray($nids);
+                } else {
+                    return FALSE;
+                }        
+            }
 	}
 	
 	public function drupal_load_nodes_homepage($limit = 10){
@@ -291,7 +302,22 @@ class _drupal{
 		}
 		return $return;
 	}
-	
+
+        public function drupal_taxonomy_description($url){
+            $description = $this->e->_db->result("select td.description
+                                                    from url_alias u
+                                                    join taxonomy_term_data td on td.tid = substring_index(u.source,'/',-1)
+                                                    where u.alias = '$url' and source like 'taxonomy/term/%';");
+            return $description;
+        }
+  
+        public function drupal_taxonomy_path($name){
+            $path = $this->e->_db->result("select u.alias
+                                            from url_alias u
+                                            join taxonomy_term_data td on td.tid = substring_index(u.source,'/',-1)
+                                            where td.name = '$name' and source like 'taxonomy/term/%';");
+            return $path;
+        }
 }
 
 ?>
