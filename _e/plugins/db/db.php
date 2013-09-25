@@ -140,6 +140,19 @@ class _db {
         return $array;
     }
     
+    function keyarray($SQL,$PK){
+        $data = $this->select($SQL);
+        $array = array();
+        while($arrayitem = mysql_fetch_assoc($data)){
+            if (strlen($PK) > 0){
+                $array[] = $arrayitem[$PK];
+            } else {
+                $array[] = array_shift($arrayitem);
+            }
+        }
+        return $array;
+    }
+    
     function nonassocarray($SQL){
         $data = $this->select($SQL);
         $array = array();
