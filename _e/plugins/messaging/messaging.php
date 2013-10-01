@@ -21,6 +21,16 @@ class _messaging {
         }
     }
     
+    function HTMLMessages($clear = TRUE){
+    	$HTML = "<div id='messages'>";
+    	foreach($this->messages as $message){
+    		$HTML .= "<div class='message {$message['type']}'>{$message['message']}</div>";
+    	}
+    	$HTML .= "</div>";
+    	$this->clearMessages();
+    	return $HTML;
+    }
+    
     function clearMessages(){
     	$this->messages = array();
     	unset($_SESSION['e4_messages']);

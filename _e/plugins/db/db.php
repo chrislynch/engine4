@@ -90,7 +90,6 @@ class _db {
     			}
     		}
     	}
-
     	return $this->insert($SQL);
     }
     
@@ -102,11 +101,16 @@ class _db {
     			if(is_numeric($value)){
     				$SQL .= $value;
     			} else {
-    				$SQL .= "'" . $this->escape($value) . "'";
+    				if (strtoupper($value) == $value && substr($value,-2) == '()'){
+    					// Looks like a function call
+    					$SQL .= $value;
+    				} else {
+    					$SQL .= "'" . $this->escape($value) . "'";
+    				}
+    				
     			}
     		}
     	}
-
     	return $this->update($SQL);
     }
     
