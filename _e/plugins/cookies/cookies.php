@@ -44,7 +44,7 @@ class _cookies {
             setcookie('eu_cookie_consent',$_GET['cookies'],(time()+60*60*24*30*6),'/');
             $cookie_warning_text = '';
         }
-        if($_COOKIES['eu_cookie_consent'] == 'YES'){
+        if($_COOKIE['eu_cookie_consent'] == 'YES'){
             $cookie_warning_text = '';
         }
         
