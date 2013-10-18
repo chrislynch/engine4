@@ -204,9 +204,9 @@ class _drupal{
 		}
 	}
 	
-	public function drupal_load_nodes_byURL($url){
+	public function drupal_load_nodes_byURL($url,$params = array()){
             $url = mysql_real_escape_string($url);
-            $nids = $this->drupal_find("u.alias LIKE '$url%'");
+            $nids = $this->drupal_find("u.alias LIKE '$url%'",$params);
             if(count($nids) > 0){
                 return $this->drupal_load_nodearray($nids);
             } else {
