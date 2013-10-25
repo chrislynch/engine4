@@ -194,8 +194,9 @@ class _drupal{
 		}
 	}
 	
-	public function drupal_load_node_byURL($url){
-		// $url = mysql_real_escape_string($url);
+	public function drupal_load_node_byURL($url){ 
+		global $e;
+		$url = $e->_db->escape($url);
 		$nid = $this->drupal_find("u.alias = '$url'");
 		if(is_array($nid)){
 			return $this->drupal_load_node($nid[0]);
@@ -205,7 +206,8 @@ class _drupal{
 	}
 	
 	public function drupal_load_nodes_byURL($url,$params = array()){
-            $url = mysql_real_escape_string($url);
+            global $e;
+			$url = $e->_db->escape($url);
             $nids = $this->drupal_find("u.alias LIKE '$url%'",$params);
             if(count($nids) > 0){
                 return $this->drupal_load_nodearray($nids);
