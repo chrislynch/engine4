@@ -54,7 +54,7 @@ class _db {
     function select($SQL){
         // Run a select statement
         if ($this->connect()){
-        	if(isset($_GET['debug'])){ print $SQL . "<br>"; }
+            if(isset($_GET['debug'])){ print $SQL . "<br>"; }
             $return = mysql_query($SQL,$this->db);
             $this->disconnect();
         } else {
