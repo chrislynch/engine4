@@ -3,7 +3,7 @@
 function _e_go(){
     global $e;
 
-    switch(@$_GET['q']){
+    switch(@$_REQUEST['q1']){
         case 'sitemap.xml':
             $e = new eSiteMap();
             print $e->xml();
@@ -101,8 +101,8 @@ class e {
     private function _find($inDirectory){
         $found = FALSE;
         
-        if (isset($_REQUEST['q'])){
-            $this->q = $_REQUEST['q'];
+        if (isset($_REQUEST['q1'])){
+            $this->q = $_REQUEST['q1'];
             $this->p = '';
         } else {
             $this->q= '';
