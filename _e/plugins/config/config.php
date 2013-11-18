@@ -30,7 +30,7 @@ class _config {
         $this->config['mysql.password'] = '';
         $this->config['mysql.database'] = 'localhost';
         
-        $this->config['smtp.host'] = '127.0.0.1';
+        $this->config['smtp.host'] = '';
         $this->config['smtp.port'] = '25';
         $this->config['smtp.user'] = '';
         $this->config['smtp.password'] = '';
