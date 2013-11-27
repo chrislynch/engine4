@@ -11,32 +11,52 @@ try {
 	// Check to see if the file already exists at the target height and width
 	
 	// First, pull the filename component out.
+	$resizedFilepath = explode('/',$imagefile);
+	$resizedFilename = array_pop($resizedFilepath);
+	$resizedFilename = explode('.',$resizedFilename);
+	$resizedFilename = array_shift($resizedFilename);
+	$resizedFilepath = implode('/',$resizedFilepath);
+	
+	// Now build our resized filename
+	if (isset($_GET['resizetoHeight'])){ $resizedFilename .= '_H_' . $_GET['resizetoHeight']; } 
+	if (isset($_GET['resizetoWidth'])){ $resizedFilename .= '_W_' . $_GET['resizetoWidth']; }
+	$resizedFilename .= '.png';	// All engine4 resizes result in a PNG file
+	$resizedFilename = $resizedFilepath . '/' . $resizedFilename;
+	
+	if (file_exists($resizedFilename) && filectime($resizedFilename) > filectime($imagefile)){
+		// The file exists, and is more recent than the originating file.
+		// Just load up the file and return it. (Or can we give a 302 redirect to this?)
+		$image = new WarpImage();
+		$image->load($resizedFilename);
+		if (!isset($_GET['debug'])) { header('Content-Type: image/png'); }
+		$image->output();
+	} else {
+		// Expand memory limit, only for this script, to deal with large pictures
+		ini_set('memory_limit','1024M');
+		
+		// Create image class and 
+		$image = new WarpImage();
+		$image->load($imagefile);
+		
+		// Process any resize commands
+		if (isset($_GET['resizetoHeight'])){
+			if ($image->getHeight() > $_GET['resizetoHeight']){
+				$image->resizeToHeight($_GET['resizetoHeight']);	
+			}
+		}
+	
+		if (isset($_GET['resizetoWidth'])){
+			if ($image->getWidth() > $_GET['resizetoWidth']){
+				$image->resizetoWidth($_GET['resizetoWidth']);	
+			}
+		} 
 
-        // Expand memory limit, only for this script, to deal with large pictures
-        ini_set('memory_limit','256M');       
-        
-        // Create image class and 
-        $image = new WarpImage();
-        $image->load($imagefile);
-
-        // Process any resize commands
-        if (isset($_GET['resizetoHeight'])){
-                if ($image->getHeight() > $_GET['resizetoHeight']){
-                        $image->resizeToHeight($_GET['resizetoHeight']);	
-                }
-        }
-
-        if (isset($_GET['resizetoWidth'])){
-                if ($image->getWidth() > $_GET['resizetoWidth']){
-                        $image->resizetoWidth($_GET['resizetoWidth']);	
-                }
-        } 
-
-        // Now save the image file, so that we don't have to do this again
-        // $image->save($resizedFilename);
-
-        header('Content-Type: image/jpeg');
-        $image->output();
+		// Now save the image file, so that we don't have to do this again
+		$image->save($resizedFilename);
+		
+		if (!isset($_GET['debug'])) { header('Content-Type: image/png'); }
+		$image->output();
+	}
 	
 } catch (Exception $e) {
 	print $e->getMessage();
@@ -56,29 +76,30 @@ class WarpImage {
          $this->image = imagecreatefromgif($filename);
       } elseif( $this->image_type == IMAGETYPE_PNG ) {
          $this->image = imagecreatefrompng($filename);
+         imagealphablending($this->image, false);
+         imagesavealpha($this->image, true);
       }
    }
    
-   function save($filename, $image_type=IMAGETYPE_JPEG, $compression=100, $permissions=null) {
+   function save($filename, $image_type=IMAGETYPE_PNG) {
       if( $image_type == IMAGETYPE_JPEG ) {
-         imagejpeg($this->image,$filename,$compression);
+         imagejpeg($this->image,$filename,100);
       } elseif( $image_type == IMAGETYPE_GIF ) {
          imagegif($this->image,$filename);         
       } elseif( $image_type == IMAGETYPE_PNG ) {
-         imagepng($this->image,$filename);
+      	 imagealphablending($this->image, false);
+      	 imagesavealpha($this->image, true);
+         imagepng($this->image,$filename,9);
       }   
-      if( $permissions != null) {
-         chmod($filename,$permissions);
-      }
    }
    
-   function output($image_type=IMAGETYPE_JPEG) {
+   function output($image_type=IMAGETYPE_PNG) {
       if( $image_type == IMAGETYPE_JPEG ) {
-         imagejpeg($this->image,'',100);
+         imagejpeg($this->image,NULL,100);
       } elseif( $image_type == IMAGETYPE_GIF ) {
          imagegif($this->image);         
       } elseif( $image_type == IMAGETYPE_PNG ) {
-         imagepng($this->image,'',100);
+         imagepng($this->image,NULL,9);
       }   
    }
    
@@ -110,6 +131,12 @@ class WarpImage {
    
    function resize($width,$height) {
       $new_image = imagecreatetruecolor($width, $height);
+      
+	  // These parameters are required for handling PNG files.
+	  imagecolortransparent($new_image, imagecolorallocatealpha($new_image, 0, 0, 0, 127));
+      imagealphablending($new_image, false);
+      imagesavealpha($new_image, true);
+      
       imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
       $this->image = $new_image;   
    }
