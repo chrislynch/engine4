@@ -10,34 +10,36 @@ CREATE TABLE `trn_cart` (
   PRIMARY KEY (`session_id`,`Type`, `Code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE  TABLE `trn_order_header` (
-  `ID` VARCHAR(25) NOT NULL ,
-  `Status` VARCHAR(20) NOT NULL ,
-  `CustomerEMail` VARCHAR(500) NULL ,
-  `BillingFirstnames` VARCHAR(255) NULL ,
-  `BillingSurname` VARCHAR(255) NULL ,
-  `BillingAddress1` VARCHAR(255) NULL ,
-  `BillingAddress2` VARCHAR(255) NULL ,
-  `BillingCity` VARCHAR(255) NULL ,
-  `BillingPostCode` VARCHAR(255) NULL ,
-  `BillingCountry` VARCHAR(255) NULL ,
-  `DeliveryFirstnames` VARCHAR(255) NULL ,
-  `DeliverySurname` VARCHAR(255) NULL ,
-  `DeliveryAddress1` VARCHAR(255) NULL ,
-  `DeliveryAddress2` VARCHAR(255) NULL ,
-  `DeliveryCity` VARCHAR(255) NULL ,
-  `DeliveryPostCode` VARCHAR(255) NULL ,
-  `DeliveryCountry` VARCHAR(255) NULL ,
-  `Created` timestamp NULL,
+CREATE TABLE `trn_order_header` (
+  `NO` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ID` varchar(25) NOT NULL,
+  `Status` varchar(20) NOT NULL,
+  `CustomerEMail` varchar(500) DEFAULT NULL,
+  `BillingFirstnames` varchar(255) DEFAULT NULL,
+  `BillingSurname` varchar(255) DEFAULT NULL,
+  `BillingAddress1` varchar(255) DEFAULT NULL,
+  `BillingAddress2` varchar(255) DEFAULT NULL,
+  `BillingCity` varchar(255) DEFAULT NULL,
+  `BillingPostCode` varchar(255) DEFAULT NULL,
+  `BillingCountry` varchar(255) DEFAULT NULL,
+  `DeliveryFirstnames` varchar(255) DEFAULT NULL,
+  `DeliverySurname` varchar(255) DEFAULT NULL,
+  `DeliveryAddress1` varchar(255) DEFAULT NULL,
+  `DeliveryAddress2` varchar(255) DEFAULT NULL,
+  `DeliveryCity` varchar(255) DEFAULT NULL,
+  `DeliveryPostCode` varchar(255) DEFAULT NULL,
+  `DeliveryCountry` varchar(255) DEFAULT NULL,
+  `Created` timestamp NULL DEFAULT NULL,
   `Updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `Paid` INTEGER NULL DEFAULT 0,
-  `PaymentTimestamp` TIMESTAMP NULL,
-  `PaymentReference` VARCHAR(255),
+  `Paid` int(11) DEFAULT '0',
+  `PaymentTimestamp` timestamp NULL DEFAULT NULL,
+  `PaymentReference` varchar(255) DEFAULT NULL,
   `Despatched` int(11) NOT NULL DEFAULT '0',
   `DespatchTracking` varchar(45) DEFAULT NULL,
   `DespatchDate` timestamp NULL DEFAULT NULL,
-  `Data` TEXT NULL ,
-  PRIMARY KEY (`ID`) );
+  `Data` text,
+  PRIMARY KEY (`NO`,`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 /* Do not drop this if it exists - it contains customer order data! */
 CREATE TABLE `trn_order_lines` (

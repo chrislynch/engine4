@@ -226,13 +226,13 @@ class cartOrder {
         }
     }
        
-    public function savePayment($paid){
+    public function savePayment($paid,$method){
         if ($paid){
             // Grab and hold a paid status
             $SQL = "UPDATE trn_order_header SET 
                                    Paid = 1,
                                    PaymentTimestamp = NOW(), 
-                                   PaymentReference = 'SAGEPAY'
+                                   PaymentReference = '$method'
                                    WHERE ID = '{$this->ID}'";
             
         } else {
