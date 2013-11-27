@@ -43,7 +43,7 @@ class _messaging {
     	if (strlen($replyAddress) == 0){ $replyAddress = $this->e->_config->get('smtp.reply.Address'); }
     	if (strlen($replyName) == 0){ $replyName = $this->e->_config->get('smtp.reply.Name'); }
     	
-    	if (strlen($this->e->_config->get('smtp.host') > 0)){
+    	if (strlen($this->e->_config->get('smtp.host')) > 0 ){
     		require_once('_e/lib/PHPMailer/class.phpmailer.php');
     		//include("class.smtp.php"); // optional, gets called from within class.phpmailer.php if not already loaded
     		
@@ -83,18 +83,18 @@ class _messaging {
     			if (!$private){$this->addMessage("email sent to $toAddress");}
     			return TRUE;
     		
-    		} catch (phpmailerException $e) {
-    				if (!$private){$this->addMessage("Unable to send email to $toAddress. eMail system said " . $e->errorMessage(),'error');}
-    				return FALSE;
-			}	
+    		} catch (phpmailerException $ex) {
+                    if (!$private){$this->addMessage("Unable to send email to $toAddress. eMail system said " . $ex->errorMessage(),'error');}
+                        return FALSE;
+                }	
     	} else {
     		// SMTP not configured. Use PHP's mail() instead.
     		$to      = $toAddress;
     		$subject = $subject;
     		$message = $message;
     		$headers = 'From: ' . $fromAddress . "\r\n" .
-    				   'Reply-To: ' . $replyAddress . "\r\n" .
-    				   'X-Mailer: PHP/' . phpversion();
+                            'Reply-To: ' . $replyAddress . "\r\n" .
+                            'X-Mailer: PHP/' . phpversion();
     		
     		return mail($to, $subject, $message, $headers);
     	}
