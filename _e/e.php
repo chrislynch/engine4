@@ -2,7 +2,20 @@
 
 function _e_go(){
     global $e;
-
+    global $argv;
+    
+    if(isset($argv[1])){
+    	// We are being run from the command line. Parse out the arguments
+    	$commandline_q = parse_url($argv[1]);
+    	$_REQUEST['q1'] = $commandline_q['path'];
+    	parse_str($commandline_q['query'],$commandline_p);
+    	foreach($commandline_p as $key => $value){
+    		$_REQUEST[$key] = $value;
+    		$_GET[$key] = $value;
+    		$_POST[$key] = $value;
+    	}
+    }
+    
     switch(@$_REQUEST['q1']){
         case 'sitemap.xml':
             $e = new eSiteMap();
@@ -29,21 +42,26 @@ function _e_go(){
             $e = new e();
 
             try {
-                ob_start();                 // Start buffering output
-                $e->_go();                  // Run e4
-                $output = ob_get_contents();
-                if (!$output){ print 'There was no output!'; }
-                ob_end_clean();
-                if (!$output){
-                    // There was no output. Print the default
-                    if (isset($e->content->html)){
-                        print $e->content->html;
-                    } else {
-                        print "<html><head><title>engine4</title></head><body><h1>engine4</h1><p>You are running engine4</p></body></html>";
-                    }
-                } else {
-                    print $output;
-                }
+            	if(isset($argv[1])){
+            		$e->_go();					// Command line processes are not buffered
+            	} else {
+            		ob_start();                 // Start buffering output
+            		$e->_go();                  // Run e4
+            		$output = ob_get_contents();
+            		if (!$output){ print 'There was no output!'; }
+            		ob_end_clean();
+            		if (!$output){
+            			// There was no output. Print the default
+            			if (isset($e->content->html)){
+            				print $e->content->html;
+            			} else {
+            				print "<html><head><title>engine4</title></head><body><h1>engine4</h1><p>You are running engine4</p></body></html>";
+            			}
+            		} else {
+            			print $output;
+            		}	
+            	}
+                
             } catch (Exception $exc) {
                 ob_end_clean();
                 print "<pre>" . $exc->getMessage() . "\n\n" . $exc->getTraceAsString() . "</pre>";
