@@ -12,6 +12,14 @@ class _pager {
     public function pager($pages = 1,$param = 'page',$ulclass='pager',$liclass='page',$liselectedclass='selectedpage'){
         // Decide what page we are on
         $page = 1;
+        
+        $gets = '';
+        foreach($_GET as $key => $value){
+        	if ($key !== 'q1' && $key !== 'page'){
+        		$gets .= "$key=$value&";
+        	}
+        }
+        
         if (isset($_GET['page'])){
             if(is_numeric($_GET['page'])){
                 $page = strval($_GET['page']);
@@ -32,7 +40,7 @@ class _pager {
                 if ($liclass !== ''){ $return .= ' class="' . $liclass . '">'; } else { $return .= '>'; }
             }
             if($index !== $page){
-                $return .= '<a href="' . $this->e->qp() . '?page=' . $index;
+                $return .= '<a href="' . $this->e->qp() . "?{$gets}page=" . $index;
                 if (isset($_GET['keywords'])){ $return .= '&keywords=' . $_GET['keywords']; }
                 $return .= '">';
             }
