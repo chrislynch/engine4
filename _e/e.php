@@ -224,22 +224,22 @@ class e {
                         $this->$directoryarray[0]->$original  = file_get_contents($directory . '/' . $file);
                         $this->$directoryarray[0]->_html = file_get_contents($directory . '/' . $file);
                         
-			$MultiMarkdown = '';
-			$this->$directoryarray[0]->$filearray[1] = explode("\n",$this->$directoryarray[0]->$filearray[1]);
-			foreach($this->$directoryarray[0]->$filearray[1] as $line){
-				if (substr($line,0,1) == '@') {
-					$line = explode(':',$line);
-					$key = array_shift($line);
-					$key = substr($key,1);
-					$key = strtolower($key);
-					$value = implode(':',$line);
-					$value = trim($value);
-					$this->$directoryarray[0]->$key = $value;
-
-				} else {
-					$MultiMarkdown .= $line . "\n";
-				}
-			}
+						$MultiMarkdown = '';
+						$this->$directoryarray[0]->$filearray[1] = explode("\n",$this->$directoryarray[0]->$filearray[1]);
+						foreach($this->$directoryarray[0]->$filearray[1] as $line){
+							if (substr($line,0,1) == '@') {
+								$line = explode(':',$line);
+								$key = array_shift($line);
+								$key = substr($key,1);
+								$key = strtolower($key);
+								$value = implode(':',$line);
+								$value = trim($value);
+								$this->$directoryarray[0]->$key = $value;
+			
+							} else {
+								$MultiMarkdown .= $line . "\n";
+							}
+						}
 
                         $this->$directoryarray[0]->$filearray[1] = Markdown($MultiMarkdown);
                         if (!isset($this->$directoryarray[0]->html)){ $this->$directoryarray[0]->html = $this->$directoryarray[0]->$filearray[1]; }
