@@ -88,5 +88,52 @@ class _csv{
             return $return;
         }
     }
+    
+    public function import($file,$table){
+    	global $e;
+    	$return = 0;
+    	// This only works if a database exists and that we have configuration for it
+    	// Don't try to load the plugin here, just check that we can connect
+    	if ($e->_db->OK()){
+    		// Get the new table set up
+    		$e->_db->query("DROP TABLE $table");
+    		$e->_db->query("CREATE TABLE `$table` (
+                			`Imported_ID` int(11) NOT NULL AUTO_INCREMENT,
+                			PRIMARY KEY (`Imported_ID`)
+                			) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+    		// Open the CSV file
+    		$csv = fopen($file,'r');
+    		
+    		// Pick up the fields from the header
+    		$fields = fgetcsv($csv);
+    		$dbfields = array();
+    		
+    		// Add the fields to the table
+    		foreach($fields as $field){
+    			if(!isset($dbfields[$field])){
+    				$e->_db->query("ALTER TABLE `$table` ADD COLUMN `$field` VARCHAR(1024) NULL;");
+    				$dbfields[$field] = $field;
+    			}
+    		}
+    		    		
+    		// Add each row to the table
+    		while($row = fgetcsv($csv)){
+    			$SQL = "INSERT INTO $table SET ";
+    			$SQLFields = array();
+    			for ($index = 0; $index < count($fields); $index++) {
+    				if(!isset($SQLFields[$fields[$index]])){
+    					$SQL .= '`' . $fields[$index] . '` = "' . $e->_db->escape($row[$index]) . '",' . "\n";
+    					$SQLFields[$fields[$index]] = $fields[$index];
+    				}
+    			}
+    			$SQL .= 'Imported_ID = 0;';
+    			$e->_db->insert($SQL);
+				$return ++;
+    		}	
+    	}
+    	
+    	return $return; // Return the number of rows that we were able to insert.
+	}
+    
 }
 ?>
