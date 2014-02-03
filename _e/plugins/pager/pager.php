@@ -51,9 +51,11 @@ class _pager {
             $return .= '</li>';
         }
         // Show All Link
-        $return .= '<a href="' . $this->e->qp() . "?{$gets}page=all";
-        if (isset($_GET['keywords'])){ $return .= '&keywords=' . $_GET['keywords']; }
-        $return .= '">Show All</a></li>';
+        if ($pages > 0){
+        	$return .= '<a href="' . $this->e->qp() . "?{$gets}page=all";
+        	if (isset($_GET['keywords'])){ $return .= '&keywords=' . $_GET['keywords']; }
+        	$return .= '">Show All</a></li>';
+        }
         
         // End of pager
         $return .= '</ul>';
