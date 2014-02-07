@@ -111,8 +111,10 @@ class _csv{
     		// Add the fields to the table
     		foreach($fields as $field){
     			if(!isset($dbfields[$field])){
-    				$e->_db->query("ALTER TABLE `$table` ADD COLUMN `$field` VARCHAR(1024) NULL;");
-    				$dbfields[$field] = $field;
+    				if(strlen($field) > 0){
+    					$e->_db->query("ALTER TABLE `$table` ADD COLUMN `$field` VARCHAR(1024) NULL;");
+    					$dbfields[$field] = $field;
+    				}
     			}
     		}
     		    		
@@ -122,12 +124,15 @@ class _csv{
     			$SQLFields = array();
     			for ($index = 0; $index < count($fields); $index++) {
     				if(!isset($SQLFields[$fields[$index]])){
-    					$SQL .= '`' . $fields[$index] . '` = "' . $e->_db->escape($row[$index]) . '",' . "\n";
-    					$SQLFields[$fields[$index]] = $fields[$index];
+    					if (strlen($fields[$index]) > 0){
+    						$SQL .= '`' . $fields[$index] . '` = "' . $e->_db->escape($row[$index]) . '",' . "\n";
+    						$SQLFields[$fields[$index]] = $fields[$index];
+    					}
     				}
     			}
     			$SQL .= 'Imported_ID = 0;';
     			$e->_db->insert($SQL);
+    			print "<li>$SQL</li>";
 				$return ++;
     		}	
     	}

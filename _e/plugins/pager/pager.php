@@ -24,41 +24,50 @@ class _pager {
             if(is_numeric($_GET['page'])){
                 $page = strval($_GET['page']);
             } else {
-                $page = 1;
+            	if ($_GET['page'] == 'all'){
+            		$page = 1;
+            		$pages = 0;	
+            	} else {
+            		$page = 1;
+            	}
             }
         }
         
         // Output a list/pager control
-        $return = '<ul';
-        if ($ulclass !== ''){ $return .= ' class="' . $ulclass . '">'; } else { $return .= '>'; }
- 
-        for ($index = 1; $index <= $pages; $index++) {
-            $return .= '<li';
-            if($index == $page){
-                if ($liselectedclass !== ''){ $return .= ' class="' . $liselectedclass . '">'; } else { $return .= '>'; }
-            } else {
-                if ($liclass !== ''){ $return .= ' class="' . $liclass . '">'; } else { $return .= '>'; }
-            }
-            if($index !== $page){
-                $return .= '<a href="' . $this->e->qp() . "?{$gets}page=" . $index;
-                if (isset($_GET['keywords'])){ $return .= '&keywords=' . $_GET['keywords']; }
-                $return .= '">';
-            }
-            $return .= $index;
-            if($index !== $page){
-                $return .= '</a>';
-            }
-            $return .= '</li>';
+        if ($pages > 1){
+        	$return = '<ul';
+        	if ($ulclass !== ''){ $return .= ' class="' . $ulclass . '">'; } else { $return .= '>'; }
+        	
+        	for ($index = 1; $index <= $pages; $index++) {
+        		$return .= '<li';
+        		if($index == $page){
+        			if ($liselectedclass !== ''){ $return .= ' class="' . $liselectedclass . '">'; } else { $return .= '>'; }
+        		} else {
+        			if ($liclass !== ''){ $return .= ' class="' . $liclass . '">'; } else { $return .= '>'; }
+        		}
+        		if($index !== $page){
+        			$return .= '<a href="' . $this->e->qp() . "?{$gets}page=" . $index;
+        			if (isset($_GET['keywords'])){ $return .= '&keywords=' . $_GET['keywords']; }
+        			$return .= '">';
+        		}
+        		$return .= $index;
+        		if($index !== $page){
+        			$return .= '</a>';
+        		}
+        		$return .= '</li>';
+        	}
+        	// Show All Link
+        	if ($pages > 0){
+        		$return .= '<a href="' . $this->e->qp() . "?{$gets}page=all";
+        		if (isset($_GET['keywords'])){ $return .= '&keywords=' . $_GET['keywords']; }
+        		$return .= '">Show All</a></li>';
+        	}
+        	
+        	// End of pager
+        	$return .= '</ul>';
+        } else {
+        	$return = '';
         }
-        // Show All Link
-        if ($pages > 0){
-        	$return .= '<a href="' . $this->e->qp() . "?{$gets}page=all";
-        	if (isset($_GET['keywords'])){ $return .= '&keywords=' . $_GET['keywords']; }
-        	$return .= '">Show All</a></li>';
-        }
-        
-        // End of pager
-        $return .= '</ul>';
         
         return $return;
     }
