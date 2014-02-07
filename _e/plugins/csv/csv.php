@@ -44,10 +44,23 @@ class _csv{
                 for ($index = 0; $index < count($record); $index++) {
                     $newrecord[$fields[$index]] = $record[$index];
                 }
-                foreach($fields as $field){
-                    $return[$field][$newrecord[$field]][] = $newrecord;
+                
+                // Check for the Status field and use it to exclude records if necessary
+                $OK = TRUE;
+                if(isset($newrecord['Status'])){
+                    if($newrecord['Status'] == '0'){
+                        $OK = FALSE;
+                    }
                 }
-                $return['_records'][] = $newrecord;
+                
+                if ($OK){
+                    foreach($fields as $field){
+                        $return[$field][$newrecord[$field]][] = $newrecord;
+                    }
+
+                    $return['_records'][] = $newrecord;    
+                }
+                
             }
             
             foreach($fields as $field){
