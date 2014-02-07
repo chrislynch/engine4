@@ -51,6 +51,18 @@ class _db {
         mysql_close($this->db);
     }
     
+    function OK(){
+    	// Check that we have a database by connecting and disconnecting
+    	$return = FALSE;
+    	if($this->connect()){
+    		$this->disconnect();
+    		$return = TRUE;
+    	} else {
+    		$return = FALSE;
+    	}
+    	return $return;
+    }
+    
     function select($SQL){
         // Run a select statement
         if ($this->connect()){
@@ -78,18 +90,32 @@ class _db {
         return $return;
     }
     
-    function insertinto($table,$args,$PK){
-    	$SQL = "INSERT INTO $table SET $PK = {$args[$PK]}";
+    function insertinto($table,$args,$PK,$debug=FALSE){
+    	$functions = array('UNIX_TIMESTAMP()');
+    	
+    	// First field, normally the PK
+    	if(is_numeric($args[$PK])){
+    		$SQL = "INSERT INTO $table SET $PK = {$args[$PK]}";
+    	} else {
+    		$SQL = "INSERT INTO $table SET $PK = '". $this->escape($args[$PK]) . "'";
+    	}
+    	// Other fields.
     	foreach($args as $field => $value){
     		if($field !== $PK){
     			$SQL .= ", $field = ";
     			if(is_numeric($value)){
     				$SQL .= $value;
     			} else {
-    				$SQL .= "'" . $this->escape($value) . "'";
+    				// Check if the field is a function
+    				if(in_array($value, $functions)){
+    					$SQL .= $value;
+    				} else {
+    					$SQL .= "'" . $this->escape($value) . "'";
+    				}
     			}
     		}
     	}
+    	if($debug){ print "$SQL<br>"; }
     	return $this->insert($SQL);
     }
     
@@ -189,5 +215,34 @@ class _db {
     	return $return;
     }
     
+    /* Full text indexing and searching functions */
+    function fulltext_search($index,$keywords,$phrasemode = 0){
+    
+    	$SQL = 'SELECT 	ID, search_text,';
+    	$SQL .= ' MATCH(s.search_text) AGAINST ("' . $keywords .'") as Relevance,';
+    	$SQL .= ' MATCH(s.search_text) AGAINST ("' . $keywords .'" WITH QUERY EXPANSION) as Expanded_Relevance,';
+    	$SQL .= ' MATCH(search_text) AGAINST ("""' . $keywords . '""" IN BOOLEAN MODE) as PhraseMatch ';
+    	$SQL .= ' FROM ' . $index . ' s ';
+    	// Can remove or alter these clauses for broader searches
+    	if($phrasemode == 1) { $SQL .= ' HAVING PhraseMatch = 1'; }
+    	// Don't change these unless you want irrelevant results first!
+    	$SQL .= ' ORDER BY PhraseMatch DESC,Relevance DESC,Expanded_Relevance DESC';
+    
+    	$results = $this->query($SQL);
+    
+    	return $results;
+    }
+    
+    function fulltext_index_purge($index){
+    	
+    }
+    
+    function fulltext_index_populate($array){
+    	
+    }
+    
+    function fulltext_index_additem($item){
+    	
+    }
 }
 ?>
