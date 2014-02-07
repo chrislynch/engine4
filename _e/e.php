@@ -17,13 +17,17 @@ function _e_go(){
     }
     
     switch(@$_REQUEST['q1']){
+        /*
         case 'sitemap.xml':
             $e = new eSiteMap();
             print $e->xml();
             break;
+        */
+        /*
         case 'robots.txt':
             
             break;
+        */
         default:
         	if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
         	
