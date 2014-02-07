@@ -221,12 +221,16 @@ class _db {
     	$SQL = 'SELECT 	ID, search_text,';
     	$SQL .= ' MATCH(s.search_text) AGAINST ("' . $keywords .'") as Relevance,';
     	$SQL .= ' MATCH(s.search_text) AGAINST ("' . $keywords .'" WITH QUERY EXPANSION) as Expanded_Relevance,';
-    	$SQL .= ' MATCH(search_text) AGAINST ("""' . $keywords . '""" IN BOOLEAN MODE) as PhraseMatch ';
+    	$SQL .= ' MATCH(search_text) AGAINST ("""' . $keywords . '""" IN BOOLEAN MODE) as PhraseMatch, ';
+        $SQL .= ' MATCH(search_text) AGAINST ("' . $keywords . '" IN BOOLEAN MODE) as BooleanORMatch, ';
+        $keywords = explode(' ',$keywords);
+        $keywords = '+' . implode(' +',$keywords);
+        $SQL .= ' MATCH(search_text) AGAINST ("' . $keywords . '" IN BOOLEAN MODE) as BooleanANDMatch ';
     	$SQL .= ' FROM ' . $index . ' s ';
     	// Can remove or alter these clauses for broader searches
-    	if($phrasemode == 1) { $SQL .= ' HAVING PhraseMatch = 1'; }
+    	if($phrasemode == 1) { $SQL .= ' HAVING PhraseMatch = 1'; } else { $SQL .= ' HAVING BooleanORMatch > 0 '; }
     	// Don't change these unless you want irrelevant results first!
-    	$SQL .= ' ORDER BY PhraseMatch DESC,Relevance DESC,Expanded_Relevance DESC';
+    	$SQL .= ' ORDER BY PhraseMatch DESC,BooleanANDMatch DESC,BooleanORMatch DESC,Relevance DESC,Expanded_Relevance DESC';
     
     	$results = $this->query($SQL);
     
