@@ -23,7 +23,7 @@ class _db {
         } else {
             $return = mysql_select_db($this->e->_config->get('mysql.database'),$this->db);
             if (!($return)){
-                $this->e->_messaging->addMessage('Unable to select database schema',-9);
+                $this->e->_messaging->addMessage('Unable to select database schema ' . $this->e->_config->get('mysql.database'),-9);
             } else {
                 /*
                 $this->query("SET NAMES 'utf8';");
@@ -95,14 +95,14 @@ class _db {
     	
     	// First field, normally the PK
     	if(is_numeric($args[$PK])){
-    		$SQL = "INSERT INTO $table SET $PK = {$args[$PK]}";
+    		$SQL = "INSERT INTO $table SET `$PK` = {$args[$PK]}";
     	} else {
-    		$SQL = "INSERT INTO $table SET $PK = '". $this->escape($args[$PK]) . "'";
+    		$SQL = "INSERT INTO $table SET `$PK` = '". $this->escape($args[$PK]) . "'";
     	}
     	// Other fields.
     	foreach($args as $field => $value){
     		if($field !== $PK){
-    			$SQL .= ", $field = ";
+    			$SQL .= ", `$field` = ";
     			if(is_numeric($value)){
     				$SQL .= $value;
     			} else {
