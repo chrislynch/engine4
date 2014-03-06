@@ -361,6 +361,9 @@ class e {
         if ($return){
             if ($directory == '.') { $return = FALSE; }
             if ($directory == '..') { $return = FALSE; }
+            if ($directory == 'wp-admin') { $return = FALSE; }
+            if ($directory == 'wp-content') { $return = FALSE; }
+            if ($directory == 'wp-includes') { $return = FALSE; }
             if (substr($directory,0,1) == '.') { $return = FALSE; }
             if (substr($directory,0,1) == '_') { $return = FALSE; }
             if ($directory == 'nbproject') { $return = FALSE; }
@@ -436,8 +439,14 @@ class e {
         array_pop($indexphp);
         $indexphp = implode('/',$indexphp);
         $indexphp .= '/';
-               
-        return 'http://' . e::_domain() . $indexphp;
+        
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+        	$http = 'https://';
+        } else {
+        	$http = 'http://';
+        }
+        
+        return $http . e::_domain() . $indexphp;
     }
     
     static function _fileextension($filename){
@@ -459,16 +468,13 @@ class e {
         return $return;
     }
     
-    static function _goto($gotoURL, $gotoCode = 301, $rebase = TRUE){
+    static function _goto($gotoURL, $gotoCode = 301){
         // Perform a subdirectory sage goto
         $lowergotoURL = strtolower($gotoURL);
         if (strpos($lowergotoURL,'http') === 0){
             // Fully qualified URL - we can just go there
         } else {
-            // Partial URL, assume a sub path
-            if ($rebase){
-            	$gotoURL = e::_basehref() . $gotoURL;
-            }
+            $gotoURL = e::_basehref() . $gotoURL;
         }
         
         // Clean out the buffer, send a header, and die
@@ -524,6 +530,7 @@ class e {
     static public function dump($data,$debuffer = TRUE,$staylive = FALSE){
         if($debuffer) { ob_end_clean(); }
         print "<pre>" . print_r($data,TRUE) . "</pre>";
+        // print "<pre>" . print_r(debug_backtrace(),TRUE) . "</pre>";
         if(!$staylive){ die(); }
     }
     
