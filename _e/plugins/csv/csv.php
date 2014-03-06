@@ -26,7 +26,7 @@ class _csv{
         return $return;
     }
     
-    public static function loadCSV2($file){
+    public static function loadCSV2($file,$useStatus = 'Status'){
         // Load a CSV file into an array of associated arrays
         // Constructing a dataset that is easily searched and sorted
         $return = array('_records' => array(), '_fields' => array());
@@ -47,10 +47,14 @@ class _csv{
                 
                 // Check for the Status field and use it to exclude records if necessary
                 $OK = TRUE;
-                if(isset($newrecord['Status'])){
-                    if($newrecord['Status'] == '0'){
-                        $OK = FALSE;
-                    }
+                if(strlen($useStatus) > 0 ){
+                	if(isset($newrecord[$useStatus])){
+                		if($newrecord[$useStatus] == '0'){
+                			$OK = FALSE;
+                		}
+                	} else {
+                		$OK = FALSE;
+                	}	
                 }
                 
                 if ($OK){
