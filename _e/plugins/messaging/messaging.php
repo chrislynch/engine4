@@ -69,9 +69,11 @@ class _messaging {
     			}
     		
     			// Subject and Message
+    			$mail->IsHTML(true);
     			$mail->Subject = $subject;
     			$mail->MsgHTML($message);
-    			// $mail->AltBody = 'To view the message, please use an HTML compatible email viewer!'; // optional - MsgHTML will create an alternate automatically
+    			// $mail->AltBody = 'To view the message, please use an HTML compatible email viewer.'; 
+    			// optional - MsgHTML will create an alternate automatically
     		
     			// Attachments
     			/*
@@ -93,8 +95,8 @@ class _messaging {
     		$subject = $subject;
     		$message = $message;
     		$headers = 'From: ' . $fromAddress . "\r\n" .
-                            'Reply-To: ' . $replyAddress . "\r\n" .
-                            'X-Mailer: PHP/' . phpversion();
+                       'Reply-To: ' . $replyAddress . "\r\n" .
+                       'X-Mailer: PHP/' . phpversion();
     		
     		return mail($to, $subject, $message, $headers);
     	}
