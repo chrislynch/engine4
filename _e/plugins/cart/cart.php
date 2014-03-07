@@ -26,8 +26,10 @@ class _cart {
                 
         $this->addToCart();
         $this->updateCart();
-        $this->loadCart();
-                
+        $this->loadCart('product');
+        $this->totalCart();
+        $this->applyServices();
+        $this->loadCart();  // Reload cart after services have been applied
         $this->totalCart();
     }
     
@@ -100,11 +102,19 @@ class _cart {
         $this->totalCart();
     }
     
-    private function loadCart(){
+    private function loadCart($typefilter = ''){
         // Clear the current items array
         $this->items = array();
-               
-        $serviceSQL = 'SELECT * FROM trn_cart WHERE session_id = "' . session_id() . '"';
+
+        if (strlen($typefilter) > 0){
+			$serviceSQL = 'SELECT * FROM trn_cart WHERE session_id = "' . session_id() . '"';
+			$serviceSQL .= " AND Type = '$typefilter'";
+        } else {
+        	$serviceSQL = 'SELECT * FROM trn_cart WHERE session_id = "' . session_id() . '" AND Type = "product" 
+        					UNION
+        				   SELECT * FROM trn_cart WHERE session_id = "' . session_id() . '" AND Type <> "product"';
+        }
+         
         $servicesData = $this->e->_db->select($serviceSQL);
         
         while($serviceRow = mysql_fetch_assoc($servicesData)){
@@ -123,11 +133,85 @@ class _cart {
         
     }
     
+    private function applyServices(){
+    	// Apply service lines to this cart.
+    	// Shipping and discounts are our normal service lines
+
+    	if(sizeof($this->items) > 0){
+    		// Check for discount function and apply
+    		if(function_exists('cart_get_discount_custom')){
+    			$discount = cart_get_discount_custom($this);
+    		} else {
+    			die('No discount');
+    			$discount = $this->cart_get_discount();
+    		}
+    		 
+    		if($discount['Price'] < 0){
+    			$this->addService($discount,'discount');
+    			$this->totalCart(); // Total the cart in case shipping is value based.
+    		}
+
+    		// Check for a shipping function and apply
+    		if(function_exists('cart_get_shipping_custom')){
+    			$shipping = cart_get_shipping_custom($this);
+    		} else {
+    			die('No shipping');
+    			$shipping = $this->cart_get_shipping();
+    		}
+    		$this->addService($shipping,'shipping');
+    		
+    	} else {
+    		// Cart is empty of products. Make sure no services linger
+    		$this->e->_db->delete("delete from trn_cart where session_id = '" . session_id() . "' AND Type = 'shipping'");
+    		$this->e->_db->delete("delete from trn_cart where session_id = '" . session_id() . "' AND Type = 'discount'");
+    	}
+    		   	
+    }
+    
+    private function cart_get_shipping(){
+    	$return = array('Code' => 'SHIPPING','Title'=>'Standard Shipping','Description'=>'','Price'=>0.00);
+    	return $return;
+    }
+    
+    private function cart_get_discount(){
+    	$return = array('Price' => 0.00,'Title'=>'Discount');
+    	return $return;
+    }
+    
+    private function addService($newservice,$type){
+    	$service = new cartItem();
+    	$service->Type = $type;
+    	$service->Code = $newservice['Code'];
+    	$service->QTY = 1;
+    	$service->Price = $newservice['Price'] * $service->QTY;
+    	$service->Title = $newservice['Title'];
+    	$service->Description = $newservice['Description'];
+    	$service->Data = @$newservice['Data'];
+    	$service->calculateTax();
+    	 
+    	$dSQL = "delete from trn_cart where session_id = '" . session_id() . "' AND Type = '$type'";
+    	$iSQL = "insert into trn_cart
+					set session_id = '" . session_id() . "',
+                    Type = '{$service->Type}',
+                    Code='{$service->Code}',
+                    QTY={$service->QTY},
+                    Price={$service->Price},
+                    Title='{$service->Title}',
+                    Description='{$service->Description}',
+                    Data = '{$service->Data}'
+                    ";
+                
+    	$this->e->_db->delete($dSQL);
+		$this->e->_db->insert($iSQL);
+    }
+    
     private function totalCart(){
         $this->totals->items = 0;
         $this->totals->value = 0.00;
         foreach($this->items as $cartthing){
-            $this->totals->items += $cartthing->QTY;
+        	if($cartthing->Type = 'product'){
+            	$this->totals->items += $cartthing->QTY;
+        	}
             $this->totals->value += $cartthing->Price;
         }
     }
@@ -207,7 +291,9 @@ class cartOrder {
     }
     
     public function saveProducts($data){
+    	// Delete the lines that are already there for this order, in case we are updating the order.
         $this->e->_db->delete('DELETE FROM trn_order_lines WHERE ID = "' . $this->ID . '"');
+        // Add in the product lines for this order.
         foreach($data as $cartThing){
             $insertSQL = 'INSERT INTO trn_order_lines SET ';
             $insertSQL .= "ID = '{$this->ID}'";
@@ -224,6 +310,7 @@ class cartOrder {
             $insertSQL .= ",Data = '{$cartThing->Data}'";
             $this->e->_db->insert($insertSQL);
         }
+        // Add in the shipping for this order.
     }
        
     public function savePayment($paid,$method){
