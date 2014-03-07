@@ -15,8 +15,9 @@ class _db {
     private function connect(){
         
         $this->db = mysql_connect($this->e->_config->get('mysql.server'),
-                                $this->e->_config->get('mysql.user'),
-                                $this->e->_config->get('mysql.password'));
+                                  $this->e->_config->get('mysql.user'),
+                                  $this->e->_config->get('mysql.password'),
+        						  TRUE); // Send new_link = TRUE to avoid stealing someone else's connection to the DB.
         if (!$this->db){
             $this->e->_messaging->addMessage('Unable to connect to database server',-9);
             $return = FALSE;

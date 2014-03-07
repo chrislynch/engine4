@@ -23,7 +23,7 @@ class _cart {
         $this->totals->value = '0.00';
         $this->items = array();
         $this->tracking = '';
-                
+        
         $this->addToCart();
         $this->updateCart();
         $this->loadCart('product');
@@ -31,6 +31,7 @@ class _cart {
         $this->applyServices();
         $this->loadCart();  // Reload cart after services have been applied
         $this->totalCart();
+        
     }
     
     public static function addToCartFormValue($Code,$Price,$QTY = 1,$Title = '',$Image = '',$Other = array()){
@@ -104,6 +105,7 @@ class _cart {
     
     private function loadCart($typefilter = ''){
         // Clear the current items array
+        
         $this->items = array();
 
         if (strlen($typefilter) > 0){
@@ -114,8 +116,8 @@ class _cart {
         					UNION
         				   SELECT * FROM trn_cart WHERE session_id = "' . session_id() . '" AND Type <> "product"';
         }
-         
-        $servicesData = $this->e->_db->select($serviceSQL);
+        
+        $servicesData = $this->e->_db->query($serviceSQL);
         
         while($serviceRow = mysql_fetch_assoc($servicesData)){
             $service = new cartItem();
