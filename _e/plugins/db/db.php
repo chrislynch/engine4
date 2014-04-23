@@ -1,5 +1,4 @@
 <?php
-
 class _db {
     
     private $e;
