@@ -16,4 +16,16 @@ class _cms {
 		return $indexrecordarray;
 	}
 	
+	public function loadfields($type){
+		// Load up the field definitions for a given type 
+		$this->e->loadPlugin('csv');
+		$templatefields = $this->e->_csv->loadCSV('_data/templates.csv');
+		$template = array();
+		foreach($templatefields as $templatefield){
+			if($templatefield['type'] == $type){
+				$template[] = $templatefield;
+			}
+		}
+	}
+	
 }
