@@ -87,6 +87,7 @@ class _db {
         } else {
             $return = FALSE;
         }
+        print "Returning $return<br>";
         return $return;
     }
     
@@ -115,8 +116,10 @@ class _db {
     			}
     		}
     	}
-    	if($debug){ print "$SQL<br>"; }
-    	return $this->insert($SQL);
+    	if($debug OR TRUE){ print "$SQL<br>"; }
+    	$return = $this->insert($SQL); 
+    	print "Returning $return";
+    	return $return;
     }
     
     function replaceinto($table,$args,$PK){
@@ -137,6 +140,7 @@ class _db {
     			}
     		}
     	}
+    	if($debug OR TRUE){ print "$SQL<br>"; }
     	return $this->update($SQL);
     }
     

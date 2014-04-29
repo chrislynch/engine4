@@ -4,7 +4,8 @@
 	<base href="<?= $this->_basehref() ?>">
 </head>
 <body>
-	<h1><?php print $this->admin_content->title;?></h1>
+	<a href="admin/data/new">New Item</a>&nbsp;&nbsp;
+	<a href="admin/data/">Content List</a>&nbsp;&nbsp;
 	<?php print $this->admin_content->html; ?>
 </body>
 </html>

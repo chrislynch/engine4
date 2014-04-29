@@ -1,2 +1,3 @@
-type	field	title	input-type	input-size
-	_title	Title	text	255
+"type","field","title","input-type","cols","rows","default"
+,"title","Title","text",120,1,
+,"html","Content","textarea",90,40,

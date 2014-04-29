@@ -8,7 +8,7 @@ class _cms {
 	}
 
 	public function loadfromdata($ID){
-		$indexrecorddata = $this->e->_db->select("SELECT * FROM data WHERE ID = $ID");
+		$indexrecorddata = $this->e->_db->select("SELECT * FROM data WHERE _ID = $ID");
 		$indexrecordarray = array();
 		while($indexrecorddatarecord = mysql_fetch_assoc($indexrecorddata)){
 			$indexrecordarray[$indexrecorddatarecord['Field']] = $indexrecorddatarecord['Data'];
@@ -16,9 +16,23 @@ class _cms {
 		return $indexrecordarray;
 	}
 	
+	public function loadtypes(){
+		$this->e->_loadplugin('csv');
+		$templatefields = $this->e->_csv->loadCSV('_data/templates.csv');
+		$types = array();
+		foreach($templatefields as $type => $fields){
+			if($type['type'] == ''){
+				$types['Default'] = 'Default';
+			} else {
+				$types[$type['type']] = $type['type'];
+			}
+		}
+		return $types;
+	}
+	
 	public function loadfields($type){
 		// Load up the field definitions for a given type 
-		$this->e->loadPlugin('csv');
+		$this->e->_loadplugin('csv');
 		$templatefields = $this->e->_csv->loadCSV('_data/templates.csv');
 		$template = array();
 		foreach($templatefields as $templatefield){
@@ -26,6 +40,7 @@ class _cms {
 				$template[] = $templatefield;
 			}
 		}
+		return $template;
 	}
 	
 }

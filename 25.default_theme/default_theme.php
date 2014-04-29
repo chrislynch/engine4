@@ -4,6 +4,12 @@
 </head>
 <body>
 	<h1><?php print $this->content->title;?></h1>
-	<?php print $this->content->html;?>
+	<?php 
+		if (strlen(@$this->content->html) > 0){
+			print $this->content->html;
+		} else {
+			print $this->default_content->html;
+		}
+	?>
 </body>
 </html>
