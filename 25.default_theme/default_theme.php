@@ -1,6 +1,7 @@
 <html>
 <head>
 	<base href="<?= $this->_basehref() ?>">
+	<link href="style.css" rel=stylesheet type="text/css">
 </head>
 <body>
 	<h1><?php print $this->content->title;?></h1>
