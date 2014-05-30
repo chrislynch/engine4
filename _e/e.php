@@ -527,8 +527,9 @@ class e {
     	e::trace($message);
     }
     
-    static public function dump($data,$debuffer = TRUE,$staylive = FALSE){
+    static public function dump($data,$debuffer = TRUE,$staylive = FALSE,$label=''){
         if($debuffer) { ob_end_clean(); }
+        if ($label !== ''){ print "<strong>$label</strong>"; }
         print "<pre>" . print_r($data,TRUE) . "</pre>";
         // print "<pre>" . print_r(debug_backtrace(),TRUE) . "</pre>";
         if(!$staylive){ die(); }
