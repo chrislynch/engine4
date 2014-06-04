@@ -211,11 +211,12 @@ class _cart {
         $this->totals->items = 0;
         $this->totals->value = 0.00;
         foreach($this->items as $cartthing){
-        	if($cartthing->Type = 'product'){
+        	if($cartthing->Type == 'product'){
             	$this->totals->items += $cartthing->QTY;
         	}
             $this->totals->value += $cartthing->Price;
         }
+        $this->totals->value = number_format($this->totals->value,2);
     }
     
     public function createOrder(){
