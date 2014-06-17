@@ -5,7 +5,7 @@ if(file_exists('wp-includes')) {
 	define('WP_USE_THEMES', true);
 	
 	// Run Wordpress natively or run combined Wordpress/engine4.
-	if(strstr($_SERVER["REQUEST_URI"],'wp-admin') OR isset($_GET['wp-debug'])){
+	if(strstr(@$_SERVER["REQUEST_URI"],'wp-admin') OR isset($_GET['wp-debug'])){
 		include('wp-index.php');
 	} else {
 		require('wp-load.php');
@@ -19,7 +19,7 @@ if(file_exists('wp-includes')) {
 	}	 
 } else {
 	// This is a pure engine4 website.
-	if(!isset($_REQUEST['q1'])) { $_REQUEST['q1'] = parse_url($_SERVER["REQUEST_URI"],PHP_URL_PATH); } // Just in case our .htaccess is a Wordpress one 
+	if(!isset($_REQUEST['q1'])) { $_REQUEST['q1'] = parse_url(@$_SERVER["REQUEST_URI"],PHP_URL_PATH); } // Just in case our .htaccess is a Wordpress one 
 	include ('_e/e.php');
 	_e_go();	
 }
