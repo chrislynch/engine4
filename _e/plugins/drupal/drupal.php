@@ -48,28 +48,19 @@ class _drupal{
 			while($field = mysql_fetch_object($fields)){
 				switch($field->type){
 					case 'text_with_summary':
-                                            $select .= ",f$i.{$field->field_name}_value, f$i.{$field->field_name}_summary";
-                                            $from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
-                                            break;
-					
-                                        case 'file':
+						$select .= ",f$i.{$field->field_name}_value, f$i.{$field->field_name}_summary";
+						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
+						break;
+					case 'file':
 					case 'image':
-                                            // $select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
-                                            $select .= ",GROUP_CONCAT(DISTINCT(REPLACE(fm$i.uri,'public://','_admin/sites/default/files/')) SEPARATOR '|') as {$field->field_name}_filename";
-                                            $from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid
-                                                               LEFT OUTER join file_managed fm$i ON fm$i.fid = f$i.{$field->field_name}_fid";
-                                            break;
-                                            
-                                        case 'taxonomy_term_reference':
-                                            $select .= ", GROUP_CONCAT(DISTINCT(f$i.{$field->field_name}_tid) SEPARATOR '|') as {$field->field_name}_tid, 
-                                                          GROUP_CONCAT(DISTINCT(t$i.name) SEPARATOR '|') as {$field->field_name}_name";
-                                            $from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid 
-                                                       LEFT OUTER join taxonomy_term_data t$i ON t$i.TID = f$i.{$field->field_name}_tid";
-                                            break;
-                                            
-                                        case 'text':
-                                        case 'list_text':
-                                        default:
+						// $select .= ",GROUP_CONCAT(fm$i.filename,'|') as {$field->field_name}_filename";
+                        $select .= ",GROUP_CONCAT(REPLACE(fm$i.uri,'public://','_admin/sites/default/files/') SEPARATOR '|') as {$field->field_name}_filename";
+						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid
+								   LEFT OUTER join file_managed fm$i ON fm$i.fid = f$i.{$field->field_name}_fid";
+						break;
+					case 'text':
+					case 'list_text':
+					case 'text_long':
 						$select .= ",f$i.{$field->field_name}_value ";
 						$from .= " LEFT OUTER join field_data_{$field->field_name} f$i ON f$i.entity_id = n.nid ";
 						break;
@@ -296,6 +287,20 @@ class _drupal{
 		}
 		
 		$menu = $this->e->_db->assocarray($SQL);
+		
+		if(mysql_num_rows($menu)){
+			$SQL = "SELECT plid FROM menu_links WHERE mlid = $mlid";
+			$plid = $this->e->_db->result($SQL);
+			if ($plid > 0){
+				$SQL = "select link_title as title, IFNULL(u.alias,m.link_path) as url, m.*
+				from menu_links m
+				left outer join url_alias u on u.source = m.link_path
+				where plid = $plid and hidden = 0
+				order by weight ASC,link_title ASC";
+			}
+			
+			$menu = $this->e->_db->assocarray($SQL);
+		}
 		
 		$return = array();
 		foreach ($menu as $mlid=>$menuitem){
