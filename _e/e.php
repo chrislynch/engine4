@@ -8,11 +8,13 @@ function _e_go(){
     	// We are being run from the command line. Parse out the arguments
     	$commandline_q = parse_url($argv[1]);
     	$_REQUEST['q1'] = $commandline_q['path'];
-    	parse_str($commandline_q['query'],$commandline_p);
-    	foreach($commandline_p as $key => $value){
-    		$_REQUEST[$key] = $value;
-    		$_GET[$key] = $value;
-    		$_POST[$key] = $value;
+    	if (isset($commandline_q['query'])){
+    		parse_str($commandline_q['query'],$commandline_p);
+    		foreach($commandline_p as $key => $value){
+    			$_REQUEST[$key] = $value;
+    			$_GET[$key] = $value;
+    			$_POST[$key] = $value;
+    		}
     	}
     }
     
