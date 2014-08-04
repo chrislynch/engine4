@@ -144,7 +144,6 @@ class _cart {
     		if(function_exists('cart_get_discount_custom')){
     			$discount = cart_get_discount_custom($this);
     		} else {
-    			die('No discount');
     			$discount = $this->cart_get_discount();
     		}
     		 
@@ -157,7 +156,6 @@ class _cart {
     		if(function_exists('cart_get_shipping_custom')){
     			$shipping = cart_get_shipping_custom($this);
     		} else {
-    			die('No shipping');
     			$shipping = $this->cart_get_shipping();
     		}
     		$this->addService($shipping,'shipping');
@@ -331,6 +329,18 @@ class cartOrder {
             $SQL = "UPDATE trn_order_header SET Paid = -1 WHERE ID = '{$this->ID}' AND Paid = 0";
         }
         $this->e->_db->update($SQL);
+    }
+    
+    public function saveDispatch($tracking = ''){
+    	 
+    	// Grab and hold a paid status
+    	$SQL = "UPDATE trn_order_header SET
+    	Despatched = 1,
+    	DespatchDate = NOW(),
+    	DespatchTracking = '$tracking'
+    	WHERE ID = '{$this->ID}'";
+    	 
+    	$this->e->_db->update($SQL);
     }
 }
 
