@@ -96,7 +96,9 @@ class _messaging {
     		$message = $message;
     		$headers = 'From: ' . $fromAddress . "\r\n" .
                        'Reply-To: ' . $replyAddress . "\r\n" .
-                       'X-Mailer: PHP/' . phpversion();
+                       'X-Mailer: PHP/' . phpversion() . 
+    		 		   "MIME-Version: 1.0" . "\r\n" . 
+               		   "Content-type: text/html; charset=UTF-8" . "\r\n"; 
     		
     		return mail($to, $subject, $message, $headers);
     	}
