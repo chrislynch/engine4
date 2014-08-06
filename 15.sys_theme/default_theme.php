@@ -18,7 +18,7 @@
 	
 </head>
 <body>
-	<?php print "q = {$this->q} and p = {$this->p} and basedir= " . $this->_basedir() . "<br>"; ?>
+	<?php print "q = '{$this->q}' and p = '{$this->p}' and basedir= '" . $this->_qbase() . "'<br>"; ?>
 	<h1><?php print $this->content->title;?></h1>
 	<?php 
 		if (strlen(@$this->content->html) > 0){

@@ -126,7 +126,7 @@ class e {
         $found = FALSE;
 
         if (isset($_REQUEST['q1'])){
-	    if($_REQUEST['q1'] == $this->_htaccessbase()){
+	    if($_REQUEST['q1'] !== $this->_qbase()){
 		$this->q = $_REQUEST['q1'];
 		$this->p = '';
 	    } else {
@@ -433,12 +433,12 @@ class e {
         }
     }
     
-    static function _htaccessbase(){
+    static function _qbase(){
 	$indexphp = $_SERVER['PHP_SELF'];
         $indexphp = explode('/',$indexphp);
         array_pop($indexphp);
         $indexphp = implode('/',$indexphp);
-        // $indexphp .= '/';
+        $indexphp .= '/';
 	return $indexphp;
     }
 
