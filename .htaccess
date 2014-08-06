@@ -10,5 +10,5 @@ Options +FollowSymLinks
   RewriteCond %{REQUEST_URI} !=/favicon.ico
   # RewriteRule ^_data/ - [NC,F,L]
   # RewriteRule ^_e/ - [NC,F,L]
-  RewriteRule ^(.*)$ index.php?q1=$1 [L,QSA]
+  RewriteRule ^(.*)$ index.php?q1=$1 [QSA]
 </IfModule>

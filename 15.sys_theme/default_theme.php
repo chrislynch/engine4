@@ -18,12 +18,13 @@
 	
 </head>
 <body>
+	<?php print "q = {$this->q} and p = {$this->p} and basedir= " . $this->_basedir() . "<br>"; ?>
 	<h1><?php print $this->content->title;?></h1>
 	<?php 
 		if (strlen(@$this->content->html) > 0){
 			print $this->content->html;
 		} else {
-			print $this->default_content->html;
+			print $this->sys_content->html;
 		}
 	?>
 </body>

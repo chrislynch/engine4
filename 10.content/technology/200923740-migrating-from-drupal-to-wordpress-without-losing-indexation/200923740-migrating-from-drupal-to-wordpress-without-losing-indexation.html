@@ -1,0 +1,32 @@
+@Title:Migrating From Drupal To Wordpress Without Losing Indexation
+
+#Migrating From Drupal To Wordpress Without Losing Indexation#
+
+Moving this site from Drupal 4.x to Wordpress 2.7, I was obviously concerned with losing indexation of my old Drupal URLs from search engines.
+
+As I had not set up clean URLs on my Drupal website for a lot of my content, I needed a quick and easy way of ensuring that any traffic destined for one of my Drupal pages firstly found it's way to the original content (as not everything has moved over to the new site) and secondly informed my users that the site had been moved.
+
+Enter the 301 redirect, the safest way to redirect both users and search engines.
+
+As I was not using clean URLs, the majority of my Drupal hits where coming in the form <em>http://www.planetofthepenguins.com?<strong>q=node/...</strong> <strong>. </strong></em>It's the <strong>q=</strong> that's key - Wordpress doesn't use this parameter and so I can safely assume that when I see it, it means the browser wanted a page from the old site.
+
+So, having pointed <a href="http://old.planetofthepenguins.com">a new subdomain (http://old.planetofthepenguins.com)</a> at my old Drupal site, the code to perform the automatic redirection is simple ...
+<blockquote>&lt;?php
+$drupalq = $_GET['q'];
+if ($drupalq){
+header("Status: 301 Moved Permanently");
+header("Location:http://old.planetofthepenguins.com?q=" . $drupalq);
+exit;
+}
+?&gt;</blockquote>
+This code
+<ol>
+	<li>Grabs the "q" parameter from the URL into a variable</li>
+	<li>Checks this variable and <em>if</em> it has been set</li>
+	<li>Writes a 301 redirect to the HTTP return header</li>
+	<li>Writes a location into the HTTP return header</li>
+	<li>Prevents the rest of the page from being rendered</li>
+</ol>
+All that remains now is to put a prominent message on my old site that I have moved to a new platform and provide my users with a link to click.
+
+Oh, and set up my Permalinks in Wordpress!

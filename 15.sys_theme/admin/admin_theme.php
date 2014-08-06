@@ -6,7 +6,7 @@
 <body>
 	<a href="admin/data/new">New Item</a>&nbsp;&nbsp;
 	<a href="admin/data/">Content List</a>&nbsp;&nbsp;
-	<?php print $this->admin_content->html; ?>
+	<?php print $this->sys_content->html; ?>
 </body>
 </html>
 

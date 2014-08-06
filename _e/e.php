@@ -31,7 +31,7 @@ function _e_go(){
             break;
         */
         default:
-        	if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
+	    if (!function_exists('Markdown')) { include_once('_e/lib/phpmarkdownextra/markdown.php'); }
         	
             $starttheclock = microtime(TRUE);   
 
@@ -124,15 +124,20 @@ class e {
     
     private function _find($inDirectory){
         $found = FALSE;
-        
+
         if (isset($_REQUEST['q1'])){
-            $this->q = $_REQUEST['q1'];
-            $this->p = '';
+	    if($_REQUEST['q1'] == $this->_htaccessbase()){
+		$this->q = $_REQUEST['q1'];
+		$this->p = '';
+	    } else {
+		$this->q= '';
+	        $this->p = '';
+	    }
         } else {
             $this->q= '';
             $this->p = '';
         }
-        
+
         while(strlen($this->q) > 0 && !$found){
             if (file_exists($inDirectory . '/' . $this->q)){
                 if ($this->_isValidDirectory($inDirectory . '/' . $this->q)){
@@ -153,7 +158,9 @@ class e {
         // open the "section" directory at root level (e.g. open 10.content)
         if (!$found){
             $this->_open($inDirectory);
-        }
+        } else {
+
+	}
     }
     
     public function _open($directory){
@@ -426,6 +433,15 @@ class e {
         }
     }
     
+    static function _htaccessbase(){
+	$indexphp = $_SERVER['PHP_SELF'];
+        $indexphp = explode('/',$indexphp);
+        array_pop($indexphp);
+        $indexphp = implode('/',$indexphp);
+        // $indexphp .= '/';
+	return $indexphp;
+    }
+
     static function _basedir(){
         $indexphp = $_SERVER['SCRIPT_FILENAME'];
         $indexphp = explode('/',$indexphp);
