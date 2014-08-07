@@ -1,0 +1,28 @@
+@Title:Proposing A Markdown Format For Comics Scripting
+
+A recent query from a friend about exporting/printing comics from Celtx in the "traditional" comic book format, as opposed to the mysterious tabular format that Celtx exports, got me to think about whether comics might not benefit from its own equivalent to [Foutain.io](http://www.fountain.io).
+
+
+### What is Fountain.io?
+
+For those not in the know, Fountain.io is a portable plain-text markup language from screen plays. Application and platform agnostic, it allows you to edit your screenplay on any device that can handle a plain-text file and then use software to format or convert it as you require.
+
+With comic book scripts and screenplays sharing so many conventions, the parallels are obvious.
+
+## The Proposed Format: "Bubble"
+
+I will script up a plain-text to formatted converter as soon as I can. In the meantime, these are the conventions I am considering.
+
+**New Page**: Start the line with `#`
+
+**Panel**: Start the line with `##`
+
+**Character Name**: Indent by one tab.
+
+**Dialogue or Dialogue Parenthetical**: Indent by two tabs
+
+Any line that does not start with one of these reserved chunks will be treated as per the previous line we detected. This should allow for one of the things I find hardest to get Celtx to do - panel descriptions that include a paragraph/line-break.
+
+When converted through the software, this markup would turn into the expected comic-book script layout. By using HTML & CSS output, users would be able to change the specific layout and formatting of the script without impacting the script itself.
+
+I will post a sample as soon as I can.
