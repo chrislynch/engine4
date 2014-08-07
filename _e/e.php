@@ -259,26 +259,28 @@ class e {
                         break;
                         
                     default:
-                        // Check to see if the file is binary or text
-                        if ($this->_isBinaryFile($directory . '/' . $file)){
-                            if(!isset($this->$directoryarray[0]->_files)){ $this->$directoryarray[0]->_files = array(); }
-                            // $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
-                            $this->$directoryarray[0]->_files[$file] = $directory . '/' . $file;
-                        } else {
-                            // Load the ascii content
-                            $asciicontent = file_get_contents($directory . '/' . $file);
-                            // Check for XML
-                            libxml_use_internal_errors(true);                   // Tell XML to keep its errors to itself
-                            $xmlcontent = simplexml_load_string($asciicontent); // Try to create an XML object from the string.
-                            libxml_clear_errors();                              // Throw away any XML errors.
-                            if (!($xmlcontent) === FALSE){
-                                // This is XML content, turned into an XML object
-                                $this->$directoryarray[0]->$filearray[1] = $xmlcontent;
-                            } else {
-                                // Add the content, no
-                                $this->$directoryarray[0]->$filearray[1] = $asciicontent;
-                            }
-                        }
+			if(!is_numeric(strtolower(@$filearray[1]))){
+		                // Check to see if the file is binary or text
+		                if ($this->_isBinaryFile($directory . '/' . $file)){
+		                    if(!isset($this->$directoryarray[0]->_files)){ $this->$directoryarray[0]->_files = array(); }
+		                    // $this->$directoryarray[0]->$filearray[1] = $directory . '/' . $file;
+		                    $this->$directoryarray[0]->_files[$file] = $directory . '/' . $file;
+		                } else {
+		                    // Load the ascii content
+		                    $asciicontent = file_get_contents($directory . '/' . $file);
+		                    // Check for XML
+		                    libxml_use_internal_errors(true);                   // Tell XML to keep its errors to itself
+		                    $xmlcontent = simplexml_load_string($asciicontent); // Try to create an XML object from the string.
+		                    libxml_clear_errors();                              // Throw away any XML errors.
+		                    if (!($xmlcontent) === FALSE){
+		                        // This is XML content, turned into an XML object
+		                        $this->$directoryarray[0]->$filearray[1] = $xmlcontent;
+		                    } else {
+		                        // Add the content, no
+		                        $this->$directoryarray[0]->$filearray[1] = $asciicontent;
+		                    }
+		                }
+			}
                 }
             }
         }

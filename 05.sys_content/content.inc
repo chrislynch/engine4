@@ -1,13 +1,16 @@
 <?php
 
+$this->sys_content->posts = array();
+
 if($this->p !== '' && $this->p !== $this->_basedir()){
-	outputContentDir($this->p);
+	$this->sys_content->posts = array_merge($this->sys_content->posts,outputContentDir($this->p));
 } else {
-	$dirs = scandir('10.content');
+	$dirs = scandir('10.content/posts/');
+	print_r($dirs);
 	foreach($dirs as $dir){
 		if ($dir !== '.' && $dir !== '..') {
 			if(substr($dir,0,1) !== '_'){
-				outputContentDir($dir);
+				$this->sys_content->posts = array_merge($this->sys_content->posts,outputContentDir($dir));
 			}
 		}
 	}
@@ -15,31 +18,18 @@ if($this->p !== '' && $this->p !== $this->_basedir()){
 
 
 function outputContentDir($dir){
-	$subdirs = scandir('10.content/' . $dir,SCANDIR_SORT_DESCENDING);
-	$cols = 4;
-	$rows = 1;
-	$colmd = 12/$cols;
-	$colcount = 0;
+	print '10.content/posts/' . $dir . "<br>";
+	$subdirs = scandir('10.content/posts/' . $dir,SCANDIR_SORT_DESCENDING);
+	$return = array();
 	foreach($subdirs as $subdir){
 		if ($subdir !== '.' && $subdir !== '..') {
 			$sube = new e();
-			$sube->_open("10.content/$dir/$subdir");
-			if($colcount == 0) { print "<div class='row'>";}
-			print "
-	<div class='col-md-$colmd'>
-		$dir
-		<a href='{$sube->content->url}'>
-		<img src='http://www.cwlynch.co.uk/wp-content/uploads/2014/07/18uzfo6h34q9tjpg-300x168.jpg' width='100%'>
-		<h2>{$sube->content->title}</h2>		
-		</a>
-	</div>
-	";
-			$colcount++;
-			if($colcount == $cols) { print "</div>"; $colcount = 0; $rows--;}
-			if($rows == 0) { break; }
+			$sube->_open("10.content/posts/$dir/$subdir");
+			$sube->dir = $dir;
+			$return[] = $sube;
 		}
 	}
-	if($colcount !== 0) { print "</div>"; }
+	return $return;
 }
 
 ?>
