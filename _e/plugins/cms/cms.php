@@ -7,13 +7,23 @@ class _cms {
 		$this->e =& $e;
 	}
 
-	public function loadfromdata($ID){
-		$indexrecorddata = $this->e->_db->select("SELECT * FROM data WHERE _ID = $ID");
-		$indexrecordarray = array();
-		while($indexrecorddatarecord = mysql_fetch_assoc($indexrecorddata)){
-			$indexrecordarray[$indexrecorddatarecord['Field']] = $indexrecorddatarecord['Data'];
+	static public function loadThing(&$thing) {
+		global $e;
+		// Load all of the data associated with a thing.
+		$postdatafields = $e->_db->query("SELECT * FROM things_data WHERE ID = ${thing['ID']}");
+		while($postdata = $postdatafields->fetch()){
+			$thing[$postdata['Field']] = $postdata['Value'];
 		}
-		return $indexrecordarray;
+		return $thing;
+	}
+
+	static public function loadID($ID){
+		global $e;
+		$posts = $e->_db->query('SELECT * FROM things WHERE ID = ' . $ID);
+		$post = $posts->fetch();
+		_cms::loadThing($post);
+		print_r($post);
+		return $post;
 	}
 	
 	public function loadtypes(){

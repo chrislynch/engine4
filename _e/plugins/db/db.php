@@ -7,16 +7,20 @@ class _db {
     public function __construct(&$e){
         $this->e =& $e;
         // DB requires messaging and config - load these plugins
-        if(!isset($this->e->_config)){ $this->e->_loadPlugin('config'); }
-        if(!isset($this->e->_messaging)){ $this->e->_loadPlugin('messaging'); }
+        // if(!isset($this->e->_config)){ $this->e->_loadPlugin('config'); }
+        // if(!isset($this->e->_messaging)){ $this->e->_loadPlugin('messaging'); }
     }
     
     private function connect(){
-        
+	$this->db = new PDO("sqlite:_custom/_default/data/f.db");        
+	return TRUE;
+
+	/*
         $this->db = mysql_connect($this->e->_config->get('mysql.server'),
                                   $this->e->_config->get('mysql.user'),
                                   $this->e->_config->get('mysql.password'),
         						  TRUE); // Send new_link = TRUE to avoid stealing someone else's connection to the DB.
+	
         if (!$this->db){
             $this->e->_messaging->addMessage('Unable to connect to database server',-9);
             $return = FALSE;
@@ -25,17 +29,6 @@ class _db {
             if (!($return)){
                 $this->e->_messaging->addMessage('Unable to select database schema ' . $this->e->_config->get('mysql.database'),-9);
             } else {
-                /*
-                $this->query("SET NAMES 'utf8';");
-                 */
-                /*
-                $this->query("SET character_set_results = 'utf8', 
-                              character_set_client = 'utf8', 
-                              character_set_connection = 'utf8', 
-                              character_set_database = 'utf8', 
-                              character_set_server = 'utf8'");
-                 
-                 */
             	if (function_exists('mysql_set_charset') == TRUE){
             		mysql_set_charset('utf8',$this->db);
             	}
@@ -45,10 +38,11 @@ class _db {
         }
         
         return $return;
+	*/
     }
     
     private function disconnect(){
-        mysql_close($this->db);
+        $this->db = NULL;
     }
     
     function OK(){
@@ -67,7 +61,7 @@ class _db {
         // Run a select statement
         if ($this->connect()){
             if(isset($_GET['debug'])){ print $SQL . "<br>"; }
-            $return = mysql_query($SQL,$this->db);
+            $return = $this->db->query($SQL);
             $this->disconnect();
         } else {
             $return = FALSE;
@@ -81,74 +75,77 @@ class _db {
     
     function insert($SQL){
         if ($this->connect()){
-            mysql_query($SQL,$this->db);
-            $return = mysql_insert_id($this->db);
+            $this->db->exec($SQL);
+            $return = $this->db->lastInsertId();
             $this->disconnect();
         } else {
             $return = FALSE;
         }
-        print "Returning $return<br>";
         return $return;
     }
     
-    function insertinto($table,$args,$PK,$debug=FALSE){
+    function insertinto($table,$args){
     	$functions = array('UNIX_TIMESTAMP()');
-    	
-    	// First field, normally the PK
-    	if(is_numeric($args[$PK])){
-    		$SQL = "INSERT INTO $table SET `$PK` = {$args[$PK]}";
-    	} else {
-    		$SQL = "INSERT INTO $table SET `$PK` = '". $this->escape($args[$PK]) . "'";
-    	}
-    	// Other fields.
+
+	$SQL = "INSERT INTO $table";
+	$fields = array();
+	$values = array();
+
     	foreach($args as $field => $value){
-    		if($field !== $PK){
-    			$SQL .= ", `$field` = ";
-    			if(is_numeric($value)){
-    				$SQL .= $value;
-    			} else {
-    				// Check if the field is a function
-    				if(in_array($value, $functions)){
-    					$SQL .= $value;
-    				} else {
-    					$SQL .= "'" . $this->escape($value) . "'";
-    				}
-    			}
-    		}
+		$fields[] = $field;
+		if(is_numeric($value)){
+			$values[] = $value;
+		} else {
+			// Check if the field is a function
+			if(in_array($value, $functions)){
+				$values[] = $value;
+			} else {
+				$values[] = $this->escape($value);
+			}
+		}
     	}
+	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$values) . ")";
+
     	if($debug OR TRUE){ print "$SQL<br>"; }
     	$return = $this->insert($SQL); 
     	print "Returning $return";
     	return $return;
     }
     
-    function replaceinto($table,$args,$PK){
-    	$SQL = "REPLACE INTO $table SET $PK = {$args[$PK]}";
+    function replaceinto($table,$args){
+    	$functions = array('UNIX_TIMESTAMP()');
+
+	$SQL = "REPLACE INTO $table";
+	$fields = array();
+	$values = array();
+
     	foreach($args as $field => $value){
-    		if($field !== $PK){
-    			$SQL .= ", $field = ";
-    			if(is_numeric($value)){
-    				$SQL .= $value;
-    			} else {
-    				if (strtoupper($value) == $value && substr($value,-2) == '()'){
-    					// Looks like a function call
-    					$SQL .= $value;
-    				} else {
-    					$SQL .= "'" . $this->escape($value) . "'";
-    				}
-    				
-    			}
-    		}
+		$fields[] = $field;
+		if(is_numeric($value)){
+			$values[] = $value;
+		} else {
+			// Check if the field is a function
+			if(in_array($value, $functions)){
+				$values[] = $value;
+			} else {
+				$values[] = $this->escape($value);
+			}
+		}
     	}
+	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$values) . ")";
+
     	if($debug OR TRUE){ print "$SQL<br>"; }
-    	return $this->update($SQL);
+    	$return = $this->insert($SQL); 
+    	print "Returning $return";
+    	return $return;
     }
     
     function update($SQL){
-        // Run the delete command and return how many rows were affected
+        // Run the update (or delete) command and return how many rows were affected
         if ($this->connect()){
-            mysql_query($SQL,$this->db);
-            $return = mysql_affected_rows($this->db);
+            $update = $this->db->prepare($SQL);
+	    $update->execute();
+            $return = $update->rowCount();
             $this->disconnect();
         } else {
             $return = FALSE;
@@ -161,6 +158,7 @@ class _db {
         return $this->update($SQL);
     }
     
+    /*
     function assocarray($SQL,$PK = ''){
         $data = $this->select($SQL);
         $array = array();
@@ -204,8 +202,13 @@ class _db {
         	return mysql_result($data, $row, $field);
         }
     }
-    
+    */
+
     function escape($string){
+	$this->connect();
+	$return = $this->db->quote($string);
+	$this->disconnect();
+	/*
     	$original = $string;
     	if($this->connect()){
     		if(! $string = mysql_real_escape_string($string,$this->db)){
@@ -216,10 +219,13 @@ class _db {
     	} else {
     		$return = addslashes($original);
     	}
+	*/
     	return $return;
     }
     
     /* Full text indexing and searching functions */
+
+    /*
     function fulltext_search($index,$keywords,$phrasemode = 0){
     
     	$SQL = 'SELECT 	ID, search_text,';
@@ -252,5 +258,6 @@ class _db {
     function fulltext_index_additem($item){
     	
     }
+    */
 }
 ?>
