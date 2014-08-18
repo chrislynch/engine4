@@ -68,8 +68,40 @@ if(isset($_POST['_OP'])){
 			<textarea name="HTML" rows="15" style="width: 100%" ><?= htmlspecialchars(@$thing['HTML']) ?></textarea>
 		</div>
 	</div>
+	<div class='row'>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h2>Fields</h2>
+			<?php
+				$fields = _cms::loadfields('post');
+				foreach($fields as $field){ print outputField($field,$thing); }
+			?>
+		</div>
+	</div>
 </form>
 
+
+<?php
+
+function outputField($field,$thing){
+	$value = @$thing[$field['FieldName']];
+	
+	switch ($field['FieldType']){
+		case 'text':
+			$return = "<input type='text' name='{$field['FieldName']}' value='{$value}'>";
+			break;
+		case 'textarea':	
+			$value = htmlspecialchars($value);
+			$return = "<textarea name='{$field['FieldName']}'>{$value}</textarea>";
+			break;
+		default:
+		// We don't know what to do with this field, so we output it as a hidden and a label
+		$return = "<input type='hidden' name='{$field['FieldName']}' value='{$value}'><p>{$value}</p>";
+	}
+	$return = "<h3>{$field['FieldName']}</h3>" . $return;
+	return $return;
+}
+
+?>
 
 <?php
 /*

@@ -27,7 +27,7 @@ class _cms {
 	
 	public function loadtypes(){
 		$this->e->_loadplugin('csv');
-		$templatefields = $this->e->_csv->loadCSV('_data/templates.csv');
+		$templatefields = $this->e->_csv->loadCSV('_custom/_default/config/types.csv');
 		$types = array();
 		foreach($templatefields as $type => $fields){
 			if($type['type'] == ''){
@@ -39,13 +39,14 @@ class _cms {
 		return $types;
 	}
 	
-	public function loadfields($type){
+	static public function loadfields($type){
 		// Load up the field definitions for a given type 
-		$this->e->_loadplugin('csv');
-		$templatefields = $this->e->_csv->loadCSV('_data/templates.csv');
+		global $e;
+		$e->_loadplugin('csv');
+		$templatefields = $e->_csv->loadCSV('_custom/_default/config/types.csv');
 		$template = array();
 		foreach($templatefields as $templatefield){
-			if($templatefield['type'] == $type){
+			if($templatefield['Type'] == $type){
 				$template[] = $templatefield;
 			}
 		}
