@@ -4,7 +4,7 @@
 	<th>Type</th>
 	<th>Name</th>
 	<th>Status</th>
-	<th>Security</th>
+	<th>URI</th>
 	<th>Timestamp</th>
 	<th>&nbsp</th>
 </tr>
@@ -31,7 +31,7 @@ while($indexrecord = $indexrecords->fetch()){
 		<td>{$indexrecord['Type']}</td>
 		<td>{$indexrecord['Name']}</td>
 		<td>{$indexrecord['Status']}</td>
-		<td>Public</td>
+		<td><a href='{$indexrecord['URI']}' target='_blank'>{$indexrecord['URI']}</a></td>
 		<td>{$indexrecord['Timestamp']}</td>
 		<td><a href='admin/data/edit?ID={$indexrecord['ID']}'>Edit</a></td>
 	</tr>";

@@ -1,0 +1,5 @@
+"Type","FieldGroup","FieldName","FieldType","Help"
+"post","_core","_Name","text",
+"post","_core","_URI","text",
+"post","_control","_status","checkbox",
+"post","_content","HTML","textarea",

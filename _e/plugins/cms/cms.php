@@ -22,7 +22,6 @@ class _cms {
 		$posts = $e->_db->query('SELECT * FROM things WHERE ID = ' . $ID);
 		$post = $posts->fetch();
 		_cms::loadThing($post);
-		print_r($post);
 		return $post;
 	}
 	

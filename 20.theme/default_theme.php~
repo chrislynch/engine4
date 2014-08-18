@@ -19,7 +19,7 @@
 </head>
 <body>
 	<h1><?php print $this->content->title;?></h1>
-	<?php print @$this->content->html; print @$this->app->html; ?>
+	<?php print $this->content->html; print $this->app->html; ?>
 	<?php
 		foreach($this->app->posts as $post){
 			print "<h2>" . $post['Name'] . "</h2>";

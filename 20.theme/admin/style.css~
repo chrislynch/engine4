@@ -1,7 +1,7 @@
 
 h1,h2,h3,h4,h5,h6 {
 	font-family: serif;
-	color: #4000A0;
+	color: #6B2EDD;
 }
 
 h1 {

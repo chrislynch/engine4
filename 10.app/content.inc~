@@ -15,7 +15,7 @@ if ($this->p == '') {
 $this->app->posts = array();
 
 while ($thing = $things->fetch()){
-	_cms::loadThing($thing);
+	_cms::loadThing($post);
 	$this->app->posts[$thing['ID']] = $thing;
 }
 
