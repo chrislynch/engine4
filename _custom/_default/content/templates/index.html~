@@ -1,0 +1,38 @@
+<html>
+<head>
+	<base href="">
+		
+	<!-- JQuery -->
+	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		
+	<!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	
+	<!-- Our stylesheet - overrides -->
+	<link href="style.css" rel=stylesheet type="text/css">
+	
+</head>
+<body>
+	<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+		{% for post in this.app.posts %}
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<img src="{{ post.FeaturedImage }}">					
+					<h2>{{ post.Name }}</h2>
+					<p></p>
+					<small>Posted on {{ post.Timestamp }}</small>
+				</div>
+			</div>
+		{% endfor %}
+		</div>
+	</div>
+	</div>
+</body>
+</html>
