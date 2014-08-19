@@ -1,5 +1,6 @@
-"Type","FieldGroup","FieldName","FieldType","Help"
-"post","_core","_Name","text",
-"post","_core","_URI","text",
-"post","_control","_status","checkbox",
-"post","_content","HTML","textarea",
+"Type","FieldGroup","FieldName","FieldLabel","FieldType","Help"
+"post","_core","Name","Name","text",
+"post","_core","URI","URI","text",
+"post","_control","Status","Publish this content","checkbox",
+"post","_content","HTML","Content","textarea",
+"post","_content","FeaturedImage","Featured Image","file",

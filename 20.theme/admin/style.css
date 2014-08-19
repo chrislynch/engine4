@@ -1,6 +1,6 @@
 
 h1,h2,h3,h4,h5,h6 {
-	font-family: serif;
+	font-family: sans-serif;
 	color: #4000A0;
 }
 
@@ -41,7 +41,13 @@ td {
 }
 
 form input[type=text] {
-	width: 100%
+	width: 100%;
+	font-family: serif;
+	font-size: 14pt;
+}
+
+textarea {
+	width: 100%;
 }
 
 .shade {
