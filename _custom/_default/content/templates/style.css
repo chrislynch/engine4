@@ -7,6 +7,10 @@ body {
 	text-align: justify;
 }
 
+.container {
+	
+}
+
 h1,h2,h3,h4,h5,h6, h1 a, h2 a {
 	font-family: 'Six Caps', sans-serif;
 	color: #8A0808;
@@ -23,4 +27,31 @@ h2 {
 
 h3 {
 	font-size: 36pt;
+}
+
+#logo {
+	border-bottom: 2px solid gray;
+}
+
+#logo h1, #logo h1 a {
+	color: gray;
+}
+
+#content {
+	background: url('background.jpg');
+	background-repeat: no-repeat;
+	background-position: top right;
+
+}
+
+#left {
+	background: white;
+	opacity: 0.8;
+    	filter: alpha(opacity=80);
+}
+
+#right {
+	background: white;
+	opacity: 0.8;
+    	filter: alpha(opacity=80); 
 }
