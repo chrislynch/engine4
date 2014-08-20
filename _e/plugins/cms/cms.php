@@ -48,9 +48,25 @@ class _cms {
 		foreach($templatefields as $templatefield){
 			if($templatefield['Type'] == $type){
 				$template[] = $templatefield;
-			}
+			} 
 		}
 		return $template;
 	}
 	
+	static public function renderThing(&$thing){
+		// Apply a set of rendering functions to a thing to render it properly.
+		// So, for example, apply Markdown rendering to a thing 
+		$fields = _cms::loadfields($thing['Type']);
+		foreach($fields as $field){
+			$fieldName = $field['FieldName'];
+			$fieldType = $field['FieldType'];
+			switch ($fieldType){
+				case 'markdown':
+					$thing[$fieldName] = Markdown($thing[$fieldName]);
+				default:
+					// Do nothing
+			}
+		}
+	}
+
 }

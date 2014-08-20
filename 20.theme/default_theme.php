@@ -18,7 +18,7 @@ foreach($templatevars as $var => $value){
 
 print $template->render(array('this' => $templatethis));
 
-print "<pre>" . print_r($templatethis,TRUE) . "</pre>";
+// print "<pre>" . print_r($templatethis,TRUE) . "</pre>";
 
 ?>
 

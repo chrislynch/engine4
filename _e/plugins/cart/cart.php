@@ -331,6 +331,19 @@ class cartOrder {
         $this->e->_db->update($SQL);
     }
     
+    public function saveCancellation(){
+    	
+    	// Grab and hold a paid status
+		$SQL = "UPDATE trn_order_header SET
+    				Paid = -1,
+    				PaymentTimestamp = NOW(),
+    				PaymentReference = '$method'
+    				WHERE ID = '{$this->ID}'";
+    	
+    	 
+    	$this->e->_db->update($SQL);
+    }
+    
     public function saveDispatch($tracking = ''){
     	 
     	// Grab and hold a paid status

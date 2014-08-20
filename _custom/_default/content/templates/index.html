@@ -14,25 +14,47 @@
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	
 	<!-- Our stylesheet - overrides -->
-	<link href="style.css" rel=stylesheet type="text/css">
+	<link href="{{ this.sys.custompath }}content/templates/style.css" rel=stylesheet type="text/css">
 	
 </head>
 <body>
 	<div class="container">
-	<div class="row">
-		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-		{% for post in this.app.posts %}
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					{% if post.FeaturedImage != '' %}<img src="{{ post.FeaturedImage }}">{% endif %}				
-					<h2>{{ post.Name }}</h2>
-					<p></p>
-					<small>Posted on {{ post.Timestamp }}</small>
+		<div class="row">
+		
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+				<div class="row">
+				{% if this.app.posts|length > 1 %}
+					{% for post in this.app.posts %}
+						<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							{% if post.FeaturedImage != '' %}
+								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}"></a>
+							{% endif %}				
+							<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
+							<p></p>
+							<small>Posted on {{ post.Timestamp }}</small>
+						</div>
+					{% endfor %}
+				{% else %}
+					{% for post in this.app.posts %}
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							{% if post.FeaturedImage != '' %}
+								<img src="{{ post.FeaturedImage }}">
+							{% endif %}				
+							<h2>{{ post.Name }}</h2>
+							<p></p>
+							<small>Posted on {{ post.Timestamp }}</small>
+						</div>
+					{% endfor %}
+				{% endif %}
+
 				</div>
 			</div>
-		{% endfor %}
+			<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+			</div>
 		</div>
-	</div>
 	</div>
 </body>
 </html>

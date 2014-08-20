@@ -9,4 +9,6 @@ $this->_loadPlugin('db');
 $this->_loadPlugin('cms');
 // 
 
+$this->sys->custompath = '_custom/_default/';
+
 ?>
