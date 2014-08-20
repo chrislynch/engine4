@@ -27,13 +27,13 @@
 				<div class="row">
 				{% if this.app.posts|length > 1 %}
 					{% for post in this.app.posts %}
-						<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							{% if post.FeaturedImage != '' %}
 								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}"></a>
 							{% endif %}				
 							<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
-							<p></p>
-							<small>Posted on {{ post.Timestamp }}</small>
+							<p><small>Posted on {{ post.Timestamp }}</small></p>
+							<p>{{ post.Excerpt | raw }}</p>
 						</div>
 					{% endfor %}
 				{% else %}
@@ -42,9 +42,9 @@
 							{% if post.FeaturedImage != '' %}
 								<img src="{{ post.FeaturedImage }}">
 							{% endif %}				
-							<h2>{{ post.Name }}</h2>
-							<p></p>
-							<small>Posted on {{ post.Timestamp }}</small>
+							<h1>{{ post.Name }}</h1>
+							<p><small>Posted on {{ post.Timestamp }}</small></p>
+							{{ post.HTML | raw }}
 						</div>
 					{% endfor %}
 				{% endif %}

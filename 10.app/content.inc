@@ -16,9 +16,11 @@ $this->app->posts = array();
 
 while ($thing = $things->fetch()){
 	_cms::loadThing($thing);
+	_cms::renderThing($thing);
 	$this->app->posts[$thing['ID']] = $thing;
 }
 
+/*
 function loadThing(&$thing) {
 	global $e;
 	// Load all of the data associated with a thing.
@@ -28,6 +30,7 @@ function loadThing(&$thing) {
 			$thing[$field] = $value;
 		}
 	}
-}
 
+}
+*/
 ?>
