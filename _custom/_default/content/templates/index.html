@@ -21,7 +21,7 @@
 	<div class="container">
 		<div id='logo' class="row">
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-			<h1><a href=''>Chris Lynch</a></h1>
+			<h1><a href=''>Chris Lynch: Hack of all Trades</a></h1>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 				<!-- Social media icons -->
@@ -34,13 +34,17 @@
 					{% for post in this.app.posts %}
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
-							{% if post.FeaturedImage != '' %}
-								<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+							{% if post.FeaturedImage != '' %}	
 								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive"></a>
-								</div>
 							{% endif %}				
+								<p><small>
+								Posted: {{ post.Timestamp }}<br>
+								In: {{ post.Category | raw }}<br>
+								Tagged: {{ post.Tags | raw }}
+								</small></p>
+							</div>
 							<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-								<p><small>Posted on {{ post.Timestamp }}</small></p>
 								<p>{{ post.Excerpt | raw }}</p>
 								<p><a href='{{ post.URI }}'><em>Read "{{ post.Name }}"</em></a></p>
 							</div>
@@ -50,6 +54,7 @@
 					{% for post in this.app.posts %}
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							{% if post.FeaturedImage != '' %}
+								<br>
 								<img src="{{ post.FeaturedImage }}" class="img-responsive">
 							{% endif %}				
 							<h1>{{ post.Name }}</h1>
@@ -78,12 +83,19 @@
 				<div class='col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2'>
 					<h2>OUT NOW</h2>
 					<div>
-					<img src='_custom/_default/content/uploads/budget-android-tablet-guide.png' class='img-responsive opaque'>
-					<h3>Budget Android Tablet Buyers Guide</h3>
-					<form action='budget-android-buyers-guide'>
-						<input type='submit' value='See Book' class='btn btn-primary'>
-					</form>
-				</div>
+						<a href='the-dark'><img src='_custom/_default/content/uploads/thedark-normalcover.png' class='img-responsive opaque'></a>
+						<h3>The Dark</h3>
+						<form action='the-dark' method="POST">
+							<input type='submit' value='See Book' class='btn btn-primary'>
+						</form>
+					</div>
+					<div>
+						<img src='_custom/_default/content/uploads/budget-android-tablet-guide.png' class='img-responsive opaque'>
+						<h3>Budget Android Tablet Buyers Guide</h3>
+						<form action='budget-android-buyers-guide' method="POST">
+							<input type='submit' value='See Book' class='btn btn-primary'>
+						</form>
+					</div>
 				<div class='col-sm-2 col-md-2 col-lg-2'>
 					&nbsp;
 				</div>
