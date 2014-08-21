@@ -39,7 +39,7 @@ h3 {
 
 #content {
 	background: url('background.jpg');
-	background-repeat: no-repeat;
+	background-repeat: repeat-y;
 	background-position: top right;
 
 }
@@ -57,4 +57,9 @@ h3 {
 
 #right .opaque {
 	background: rgba(255, 255, 255, 1);
+}
+
+.postinfo {
+	font-size: 12pt;
+	text-align: left;
 }

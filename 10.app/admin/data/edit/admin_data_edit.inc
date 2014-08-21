@@ -18,6 +18,9 @@ if(isset($_POST['_OP'])){
 	}
 	$thing = $tabledata;
 
+	// Validate Timestamp - let automatic content take over if nothing is set.
+	if($tabledata['Timestamp'] == ''){ unset($tabledata['Timestamp']); }
+
 	// Save to things table
 	if($_POST['ID'] == 0){
 		unset($tabledata['ID']);

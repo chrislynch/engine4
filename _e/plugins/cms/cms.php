@@ -69,7 +69,9 @@ class _cms {
 					$ltags = array();
 					foreach($tags as $tag){
 						$tag = trim($tag);
-						$ltags[] = "<a href='$fieldName/$tag'>$tag</a>";	
+						if(strlen($tag) > 0) {
+							$ltags[] = "<a href='$fieldName/$tag'>$tag</a>";	
+						}
 					}
 					$thing[$fieldName] = $ltags = implode(', ',$ltags);
 				default:

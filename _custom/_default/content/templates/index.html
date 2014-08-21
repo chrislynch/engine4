@@ -38,11 +38,16 @@
 							{% if post.FeaturedImage != '' %}	
 								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive"></a>
 							{% endif %}				
-								<p><small>
-								Posted: {{ post.Timestamp }}<br>
-								In: {{ post.Category | raw }}<br>
-								Tagged: {{ post.Tags | raw }}
-								</small></p>
+							<p class='postinfo'>
+								A <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
+								saved at {{ post.Timestamp }}
+								{% if post.category != '' %}
+								in {{ post.category | raw }} 
+								{% endif %}
+								{% if post.tags != '' %}
+								and tagged with {{ post.tags | raw }}
+								{% endif %}
+							</p>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
 								<p>{{ post.Excerpt | raw }}</p>
@@ -58,25 +63,23 @@
 								<img src="{{ post.FeaturedImage }}" class="img-responsive">
 							{% endif %}				
 							<h1>{{ post.Name }}</h1>
-							<p><small>Posted on {{ post.Timestamp }}</small></p>
 							{{ post.HTML | raw }}
+							<hr>
+							<p class='postinfo'>
+								This is a  <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
+								saved at {{ post.Timestamp }}
+								{% if post.category != '' %}
+								in {{ post.category | raw }} 
+								{% endif %}
+								{% if post.tags != '' %}
+								and tagged with {{ post.tags | raw }}
+								{% endif %}
+							</p>
+							<hr>
 						</div>
 					{% endfor %}
 				{% endif %}
 
-				</div>
-				<div class='row'>
-					<div id='pager' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						{% if this.app.pages > 1 %}
-							<ul class="pagination">
-								<li><a href="#">&laquo;</a></li>
-								{% for i in range(1,this.app.pages) %}
-			    					<li><a href='?page={{ i }}'>{{ i }}</a></li>
-								{% endfor %}
-								<li><a href="#">&raquo;</a></li>
-							</ul>
-						{% endif %}
-					</div>
 				</div>
 			</div>
 			<div id='right' class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -99,6 +102,24 @@
 				<div class='col-sm-2 col-md-2 col-lg-2'>
 					&nbsp;
 				</div>
+			</div>
+		</div>
+		<div class='row'>
+			<div id='pager' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				{% if this.app.pages > 1 %}
+					<ul class="pagination">
+						<li><a href="#">&laquo;</a></li>
+						{% for i in range(1,this.app.pages) %}
+	    					<li><a href='?page={{ i }}'>{{ i }}</a></li>
+						{% endfor %}
+						<li><a href="#">&raquo;</a></li>
+					</ul>
+				{% endif %}
+			</div>
+		</div>
+		<div class='row'>
+			<div id='footer' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				
 			</div>
 		</div>
 	</div>
