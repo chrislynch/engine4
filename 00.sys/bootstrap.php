@@ -10,5 +10,5 @@ $this->_loadPlugin('cms');
 // 
 
 $this->sys->custompath = '_custom/_default/';
-
+$this->sys->basehref = $this->_basehref();
 ?>

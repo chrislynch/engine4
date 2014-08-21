@@ -1,8 +1,14 @@
 <?php
 
-// $db = new PDO("sqlite:_custom/_default/data/f.db");
+// Set up pager
+$this->app->pages = 1;
+if(isset($_GET['page'])) { $this->app->page = $_GET['page']; } else { $this->app->page = 1; }
+
 if ($this->p == '') {
-	$things = $this->_db->query('SELECT * FROM things WHERE Status = 1 ORDER BY Timestamp DESC LIMIT 10');
+	$start = 10 * ($this->app->page -1 );
+	$end = 10 * ($this->app->page);
+	$things = $this->_db->query("SELECT * FROM things WHERE Status = 1 AND ID > 1 ORDER BY Timestamp DESC LIMIT $start,$end");
+	$this->app->pages = ceil($this->_db->result('SELECT COUNT(0) FROM things WHERE Status = 1 AND ID > 1') / 10);
 } else {
 	// Check for a direct match on the URI
 	$things = $this->_db->query('SELECT * FROM things WHERE Status = 1 AND URI = "' . $this->p . '"');

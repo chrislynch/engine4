@@ -1,8 +1,14 @@
 <?php
 
-// $db = new PDO("sqlite:_custom/_default/data/f.db");
+// Set up pager
+$this->app->pages = 1;
+if(isset($_GET['page'])) { $this->app->page = $_GET['page']; } else { $this->app->page = 1; }
+
 if ($this->p == '') {
-	$things = $this->_db->query('SELECT * FROM things WHERE Status = 1 ORDER BY Timestamp DESC LIMIT 10');
+	$start = 10 * ($this->app->page -1 );
+	$end = 10 * ($this->app->page);
+	$things = $this->_db->query("SELECT * FROM things WHERE Status = 1 AND ID > 1 ORDER BY Timestamp DESC LIMIT $start,$end");
+	$this->app->pages = $this->_db->result('SELECT COUNT(0) FROM things WHERE Status = 1 AND ID > 1') / 10;
 } else {
 	// Check for a direct match on the URI
 	$things = $this->_db->query('SELECT * FROM things WHERE Status = 1 AND URI = "' . $this->p . '"');
@@ -15,10 +21,12 @@ if ($this->p == '') {
 $this->app->posts = array();
 
 while ($thing = $things->fetch()){
-	_cms::loadThing($post);
+	_cms::loadThing($thing);
+	_cms::renderThing($thing);
 	$this->app->posts[$thing['ID']] = $thing;
 }
 
+/*
 function loadThing(&$thing) {
 	global $e;
 	// Load all of the data associated with a thing.
@@ -28,6 +36,7 @@ function loadThing(&$thing) {
 			$thing[$field] = $value;
 		}
 	}
-}
 
+}
+*/
 ?>

@@ -37,6 +37,7 @@
         <li><a href="admin/data/edit?ID=0&type=post">New Content</a></li>
 	<li><a href="admin/data">Edit Content</a></li>
         <li><a href="admin/filesystem">File Manager</a></li>
+        <li><a href="_custom/_default/data/phpliteadmin.php" target='_blank'>Database Manager</a></li>
         <li><a href="admin/data/edit?ID=-1">System Configuration</a></li>
 	<!--
         <li class="dropdown">

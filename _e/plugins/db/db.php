@@ -193,16 +193,12 @@ class _db {
         }
         return $array;
     }
-    
-    function result($SQL,$row = 0,$field = 0,$default = FALSE){
-        $data = $this->select($SQL);
-        if(mysql_num_rows($data) == 0){
-        	return $default;
-        } else {
-        	return mysql_result($data, $row, $field);
-        }
-    }
     */
+
+    function result($SQL){
+        $data = $this->select($SQL);
+	return $data->fetchColumn();        
+    }
 
     function escape($string){
 	$this->connect();
