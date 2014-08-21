@@ -63,6 +63,15 @@ class _cms {
 			switch ($fieldType){
 				case 'markdown':
 					$thing[$fieldName] = Markdown($thing[$fieldName]);
+					break;
+				case 'tags':
+					$tags = explode(',',$thing[$fieldName]);
+					$ltags = array();
+					foreach($tags as $tag){
+						$tag = trim($tag);
+						$ltags[] = "<a href='$fieldName/$tag'>$tag</a>";	
+					}
+					$thing[$fieldName] = $ltags = implode(', ',$ltags);
 				default:
 					// Do nothing
 			}

@@ -156,11 +156,14 @@ if(isset($_POST['_OP'])){
 
 function outputField($field,$thing){
 	$value = @$thing[$field['FieldName']];
-	
+
+
 	switch ($field['FieldType']){
 		case 'text':
+		case 'tags':
+			$value = htmlspecialchars($value);
 			$return = "<h3>{$field['FieldLabel']}</h3>";
-			$return .= "<input type='text' name='{$field['FieldName']}' value='{$value}'>";
+			$return .= "<input type='text' name='{$field['FieldName']}' value=\"$value\">";
 			break;
 		case 'markdown':
 		case 'textarea':	

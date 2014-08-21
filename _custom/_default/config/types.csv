@@ -5,6 +5,8 @@
 "post","_control","Timestamp","Timestamp","text","",
 "post","_content","Excerpt","Excerpt","markdown","Enter the excerpt/teaser text for the post here. This will be used in search results and on category pages. Markdown formatting is supported.",3
 "post","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
+"post","_content","Category","Category","tags","Enter a category/section for the post.",1
+"post","_content","Tags","Tags","tags","Enter tags for the post.",1
 "post","_content","FeaturedImage","Featured Image","file","The featured image will appear on your post in preview and in full display.",
 "config",_core,"Name","Site Name","text"
 "config","_control","Status","Site Online","checkbox","",
