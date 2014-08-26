@@ -36,8 +36,10 @@ if(isset($_POST['_OP'])){
 			$tabledata = array();
 			$tabledata['ID'] = $_POST['ID'];
 			$tabledata['Field'] = $field;
+			$value = convert_ascii($value); // Get rid of non-ASCII characters
 			$tabledata['Value'] = $value;
-			$this->_db->replaceinto('things_data',$tabledata);
+			$check = $this->_db->replaceinto('things_data',$tabledata);
+			if ($check == 0) { print "Error saving field $field<br>"; }
 			$thing[$field] = $value;
 		}
 	}
@@ -74,7 +76,7 @@ if(isset($_POST['_OP'])){
 	}
 
 	// Reload for sanity and safety
-	$this->_goto("admin/data/edit?ID={$_POST['ID']}");
+	// $this->_goto("admin/data/edit?ID={$_POST['ID']}");
 
 } else {
 	if($_GET['ID'] <> 0){
@@ -190,6 +192,49 @@ function outputField($field,$thing){
 	}
 	$return .= "<p><small>{$field['Help']}</small></p>";
 	return $return;
+}
+
+function convert_ascii($string) 
+{ 
+  // Replace Single Curly Quotes
+  $search[]  = chr(226).chr(128).chr(152);
+  $replace[] = "'";
+  $search[]  = chr(226).chr(128).chr(153);
+  $replace[] = "'";
+ 
+  // Replace Smart Double Curly Quotes
+  $search[]  = chr(226).chr(128).chr(156);
+  $replace[] = '"';
+  $search[]  = chr(226).chr(128).chr(157);
+  $replace[] = '"';
+ 
+  // Replace En Dash
+  $search[]  = chr(226).chr(128).chr(147);
+  $replace[] = '--';
+ 
+  // Replace Em Dash
+  $search[]  = chr(226).chr(128).chr(148);
+  $replace[] = '---';
+ 
+  // Replace Bullet
+  $search[]  = chr(226).chr(128).chr(162);
+  $replace[] = '*';
+ 
+  // Replace Middle Dot
+  $search[]  = chr(194).chr(183);
+  $replace[] = '*';
+ 
+  // Replace Ellipsis with three consecutive dots
+  $search[]  = chr(226).chr(128).chr(166);
+  $replace[] = '...';
+ 
+  // Apply Replacements
+  $string = str_replace($search, $replace, $string);
+ 
+  // Remove any non-ASCII Characters
+  $string = preg_replace("/[^\x01-\x7F]/","", $string);
+ 
+  return $string; 
 }
 
 ?>
