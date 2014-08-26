@@ -73,9 +73,10 @@ class _db {
         return $this->select($SQL);
     }
     
-    function insert($SQL){
+    function insert($SQL,$Values = array()){
         if ($this->connect()){
-            $this->db->exec($SQL);
+	    $cmd = $this->db->prepare($SQL);
+            $cmd->execute($Values);
             $return = $this->db->lastInsertId();
             $this->disconnect();
         } else {
@@ -89,26 +90,28 @@ class _db {
 
 	$SQL = "INSERT INTO $table";
 	$fields = array();
+	$placeholders = array();
 	$values = array();
 
     	foreach($args as $field => $value){
 		$fields[] = $field;
 		if(is_numeric($value)){
-			$values[] = $value;
+			$placeholders[] = $value;
 		} else {
 			// Check if the field is a function
 			if(in_array($value, $functions)){
-				$values[] = $value;
+				$placeholders[] = $value;
 			} else {
-				$values[] = $this->escape($value);
+				$placeholders[] = ":$field";
+				$values[":$field"] = $value;
 			}
 		}
     	}
-	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$values) . ")";
+	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$placeholders) . ")";
 
-    	if($debug OR TRUE){ print "$SQL<br>"; }
-    	$return = $this->insert($SQL); 
-    	print "Returning $return";
+    	if(FALSE){ print "$SQL<br>" . print_r($args,TRUE) . '<br>'; }
+    	$return = $this->insert($SQL,$values); 
+    	// print "Returning $return";
     	return $return;
     }
     
@@ -117,26 +120,28 @@ class _db {
 
 	$SQL = "REPLACE INTO $table";
 	$fields = array();
+	$placeholders = array();
 	$values = array();
 
     	foreach($args as $field => $value){
 		$fields[] = $field;
 		if(is_numeric($value)){
-			$values[] = $value;
+			$placeholders[] = $value;
 		} else {
 			// Check if the field is a function
 			if(in_array($value, $functions)){
-				$values[] = $value;
+				$placeholders[] = $value;
 			} else {
-				$values[] = $this->escape($value);
+				$placeholders[] = ":$field";
+				$values[":$field"] = $value;
 			}
 		}
     	}
-	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$values) . ")";
+	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$placeholders) . ")";
 
-    	if($debug OR TRUE){ print "$SQL<br>"; }
-    	$return = $this->insert($SQL); 
-    	print "Returning $return";
+    	if(FALSE){ print "$SQL<br>" . print_r($args,TRUE) . '<br>'; }
+    	$return = $this->insert($SQL,$values); 
+    	// print "Returning $return<br>";
     	return $return;
     }
     
