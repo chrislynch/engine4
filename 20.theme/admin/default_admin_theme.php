@@ -39,6 +39,7 @@
         <li><a href="admin/filesystem">File Manager</a></li>
         <li><a href="_custom/_default/data/phpliteadmin.php" target='_blank'>Database Manager</a></li>
         <li><a href="admin/data/edit?ID=-1">System Configuration</a></li>
+	<li><a href="admin/user?logout">Log Out</a></li>
 	<!--
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
