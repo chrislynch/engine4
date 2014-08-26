@@ -17,7 +17,7 @@ $start = ($page -1) * 30;
 // $end = $start + 30;
 $end = 30;
 
-$indexrecords = $this->_db->query("SELECT * FROM things WHERE ID > 0 ORDER BY ID DESC LIMIT $start,$end");
+$indexrecords = $this->_db->query("SELECT * FROM things WHERE System >= 0 ORDER BY ID DESC LIMIT $start,$end");
 
 while($indexrecord = $indexrecords->fetch()){
 	// Make the status pretty
