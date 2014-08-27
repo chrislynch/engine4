@@ -15,7 +15,9 @@
 	
 	<!-- Our stylesheet - overrides -->
 	<link href="{{ this.sys.custompath }}content/templates/style.css" rel=stylesheet type="text/css">
-	
+
+	<!-- SEO -->
+	<title>{{ this.seo.title }}</title>
 </head>
 <body>
 	<div class="container">
@@ -36,16 +38,16 @@
 							<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
 							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
 							{% if post.FeaturedImage != '' %}	
-								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive"></a>
+								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
 							{% endif %}				
 							<p class='postinfo'>
 								A <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
 								saved at {{ post.Timestamp }}
-								{% if post.category != '' %}
-								in {{ post.category | raw }} 
+								{% if post.Category != '' %}
+								in {{ post.Category | raw }} 
 								{% endif %}
-								{% if post.tags != '' %}
-								and tagged with {{ post.tags | raw }}
+								{% if post.Tags != '' %}
+								and tagged with {{ post.Tags | raw }}
 								{% endif %}
 							</p>
 							</div>
@@ -60,7 +62,7 @@
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							{% if post.FeaturedImage != '' %}
 								<br>
-								<img src="{{ post.FeaturedImage }}" class="img-responsive">
+								<img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}">
 							{% endif %}				
 							<h1>{{ post.Name }}</h1>
 							{{ post.HTML | raw }}
@@ -68,11 +70,11 @@
 							<p class='postinfo'>
 								This is a  <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
 								saved at {{ post.Timestamp }}
-								{% if post.category != '' %}
-								in {{ post.category | raw }} 
+								{% if post.Category != '' %}
+								in {{ post.Category | raw }} 
 								{% endif %}
-								{% if post.tags != '' %}
-								and tagged with {{ post.tags | raw }}
+								{% if post.Tags != '' %}
+								and tagged with {{ post.Tags | raw }}
 								{% endif %}
 							</p>
 							<hr>

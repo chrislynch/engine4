@@ -43,23 +43,5 @@ while ($thing = $things->fetch()){
 	$this->app->posts[$thing['ID']] = $thing;
 }
 
-/*
-if(sizeof($this->app->posts) == 1 && !$directhit){
-	$thing = array_shift($this->app->posts);
-	$this->_goto($thing['URI']);
-}
-*/
-/*
-function loadThing(&$thing) {
-	global $e;
-	// Load all of the data associated with a thing.
-	$postdatafields = $e->_db->query("SELECT * FROM things_data WHERE ID = ${thing['ID']}");
-	while($postdata = $postdatafields->fetch()){
-		foreach($postdata as $field => $value){
-			$thing[$field] = $value;
-		}
-	}
 
-}
-*/
 ?>

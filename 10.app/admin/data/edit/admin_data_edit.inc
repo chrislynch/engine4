@@ -18,6 +18,13 @@ if(isset($_POST['_OP'])){
 	}
 	$thing = $tabledata;
 
+	// Validate URL
+	if($tabledata['URI'] == ''){ $tabledata['URI'] = e::_textToPath($tabledata['Name']); print "Calculated URI '{$tabledata['URI']}'"; }
+	$tabledata['URI'] = strtolower(urlencode($tabledata['URI'])); 
+	// Check that this URL doesn't already exist
+	$URICount = $this->_db->result("SELECT COUNT(0) FROM things WHERE URI = '{$tabledata['URI']}' AND ID <> {$tabledata['ID']}");
+	if ($URICount > 0) { $tabledata['URI'] .= '-' . $URICount; }
+
 	// Validate Timestamp - let automatic content take over if nothing is set.
 	if($tabledata['Timestamp'] == ''){ unset($tabledata['Timestamp']); }
 
@@ -32,7 +39,7 @@ if(isset($_POST['_OP'])){
 	// Save to things_data table
 	$this->_db->update("DELETE FROM things_data WHERE ID = " . $_POST['ID']);
 	foreach($_POST as $field => $value){
-		if(substr($field,0,1) !== '_'){
+		if(!(in_array($field,$corefields))){
 			$tabledata = array();
 			$tabledata['ID'] = $_POST['ID'];
 			$tabledata['Field'] = $field;
@@ -76,7 +83,7 @@ if(isset($_POST['_OP'])){
 	}
 
 	// Reload for sanity and safety
-	// $this->_goto("admin/data/edit?ID={$_POST['ID']}");
+	$this->_goto("admin/data/edit?ID={$_POST['ID']}");
 
 } else {
 	if($_GET['ID'] <> 0){
@@ -93,7 +100,7 @@ if(isset($_POST['_OP'])){
 
 ?>
 
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="admin/data/edit?debug" method="POST" enctype="multipart/form-data">
 	<input type="hidden" name="ID" value="<?= isset($_GET['ID']) ? $_GET['ID'] : 0; ?>">
 	<input type="hidden" name="Type" value="<?= $thing['Type'] ?>">
 	<div class='row'><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><h1>Editing <?= @$thing['Name'] == '' ? 'New Item' : $thing['Name'] ?></h1></div>
@@ -165,10 +172,16 @@ function outputField($field,$thing){
 
 	switch ($field['FieldType']){
 		case 'text':
+		case 'url':
 		case 'tags':
 			$value = htmlspecialchars($value);
 			$return = "<h3>{$field['FieldLabel']}</h3>";
 			$return .= "<input type='text' name='{$field['FieldName']}' value=\"$value\">";
+			break;
+		case 'password':
+			$value = htmlspecialchars($value);
+			$return = "<h3>{$field['FieldLabel']}</h3>";
+			$return .= "<input type='password' name='{$field['FieldName']}' value=\"$value\">";
 			break;
 		case 'markdown':
 		case 'textarea':	

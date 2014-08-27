@@ -109,7 +109,7 @@ class _db {
     	}
 	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$placeholders) . ")";
 
-    	if(FALSE){ print "$SQL<br>" . print_r($args,TRUE) . '<br>'; }
+    	if(TRUE){ print "$SQL<br>" . print_r($args,TRUE) . '<br>'; }
     	$return = $this->insert($SQL,$values); 
     	// print "Returning $return";
     	return $return;
@@ -139,7 +139,7 @@ class _db {
     	}
 	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$placeholders) . ")";
 
-    	if(FALSE){ print "$SQL<br>" . print_r($args,TRUE) . '<br>'; }
+    	if(TRUE){ print "$SQL<br>" . print_r($args,TRUE) . '<br>'; }
     	$return = $this->insert($SQL,$values); 
     	// print "Returning $return<br>";
     	return $return;

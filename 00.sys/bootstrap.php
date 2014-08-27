@@ -19,4 +19,7 @@ if($this->parray(0) == 'admin' && $this->p !== 'admin/user'){
 	}
 }
 
+// Load up the configuration
+$this->sys->config = _cms::loadID(-1);
+
 ?>

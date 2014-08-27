@@ -34,11 +34,37 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="admin/data/edit?ID=0&type=post">New Content</a></li>
+        <li><a href="admin/data/new?ID=0&type=post">New Content</a></li>
 	<li><a href="admin/data">Edit Content</a></li>
-        <li><a href="admin/filesystem">File Manager</a></li>
-        <li><a href="_custom/_default/data/phpliteadmin.php" target='_blank'>Database Manager</a></li>
         <li><a href="admin/data/edit?ID=-1">System Configuration</a></li>
+	<li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="admin/data/edit?type=user">New User</a></li>
+            <li><a href="admin/data?type=user">Edit Users</a></li>
+	    <!--
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+	    -->
+          </ul>
+        </li>
+	<li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="admin/filesystem">File Manager</a></li>
+            <li><a href="_custom/_default/data/phpliteadmin.php" target='_blank'>Database Manager</a></li>
+	    <!--
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+	    -->
+          </ul>
+        </li>  
 	<li><a href="admin/user?logout">Log Out</a></li>
 	<!--
         <li class="dropdown">

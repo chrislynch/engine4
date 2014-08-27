@@ -12,7 +12,9 @@ class _cms {
 		// Load all of the data associated with a thing.
 		$postdatafields = $e->_db->query("SELECT * FROM things_data WHERE ID = ${thing['ID']}");
 		while($postdata = $postdatafields->fetch()){
-			$thing[$postdata['Field']] = $postdata['Value'];
+			// if(!isset($thing[$postdata['Field']])){
+				$thing[$postdata['Field']] = $postdata['Value'];
+			// }
 		}
 		return $thing;
 	}
@@ -25,15 +27,16 @@ class _cms {
 		return $post;
 	}
 	
-	public function loadtypes(){
-		$this->e->_loadplugin('csv');
-		$templatefields = $this->e->_csv->loadCSV('_custom/_default/config/types.csv');
+	static public function loadtypes(){
+		global $e;
+		$e->_loadplugin('csv');
+		$templatefields = $e->_csv->loadCSV('_custom/_default/config/types.csv');
 		$types = array();
-		foreach($templatefields as $type => $fields){
-			if($type['type'] == ''){
+		foreach($templatefields as $type){
+			if($type['Type'] == ''){
 				$types['Default'] = 'Default';
 			} else {
-				$types[$type['type']] = $type['type'];
+				$types[$type['Type']] = $type['Type'];
 			}
 		}
 		return $types;
@@ -74,6 +77,22 @@ class _cms {
 						}
 					}
 					$thing[$fieldName] = $ltags = implode(', ',$ltags);
+				default:
+					// Do nothing
+			}
+		}
+	}
+
+	static public function prepareThing(&$thing){
+		// Prepares a thing to be saved.
+		$fields = _cms::loadfields($thing['Type']);
+		foreach($fields as $field){
+			$fieldName = $field['FieldName'];
+			$fieldType = $field['FieldType'];
+			switch ($fieldType){
+				case 'url':
+					$thing[$fieldName] = urlencode(strtolower($thing[$fieldName]));
+					break;
 				default:
 					// Do nothing
 			}

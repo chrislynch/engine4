@@ -10,14 +10,23 @@
 </tr>
 
 <?php
-// Configure paging
+
+// Configure WHERE
+if(isset($_GET['type'])) { $where = "WHERE type = '{$_GET['type']}'"; } else { $where = 'WHERE System >= 0'; }
+
+// Configure ORDER BY
+$orderby = 'ORDER BY ID DESC';
+
+// Configure LIMIT
 if(!isset($_GET['page'])){ $_GET['page'] = 1;}
 $page = $_GET['page'];
-$start = ($page -1) * 30;
-// $end = $start + 30;
-$end = 30;
+$start = ($page -1) * 10;
+$end = 10;
+$limit = "LIMIT $start,$end";
+$pages = 1;
 
-$indexrecords = $this->_db->query("SELECT * FROM things WHERE System >= 0 ORDER BY ID DESC LIMIT $start,$end");
+$indexrecords = $this->_db->query("SELECT * FROM things $where $orderby $limit");
+$pages = ceil($this->_db->result("SELECT COUNT(0) FROM things $where")/10);
 
 while($indexrecord = $indexrecords->fetch()){
 	// Make the status pretty
@@ -39,6 +48,20 @@ while($indexrecord = $indexrecords->fetch()){
 ?>
 
 </table>
+
+<ul class="pagination">
+	<!-- <li><a href="#">&laquo;</a></li> -->
+<?php 
+	for($i = 1; $i <= $pages; $i++){
+		if ($i == @$_GET['page']) {
+			print "<li class='active'><a href='#'>$i</a></li>"; 
+		} else {
+			print "<li><a href='admin/data?page=$i'>$i</a></li>";
+		}
+	}
+?>
+	<!-- <li><a href="#">&raquo;</a></li> -->
+</ul>
 
 
 <?php
