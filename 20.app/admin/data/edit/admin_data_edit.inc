@@ -86,7 +86,7 @@ if(isset($_POST['_OP'])){
 	$this->_goto("admin/data/edit?ID={$_POST['ID']}");
 
 } else {
-	if($_GET['ID'] <> 0){
+	if(isset($_GET['ID']) && strval(@$_GET['ID']) !== 0){
 		$thing = _cms::loadID($_GET['ID']);	
 	} else {
 		$thing = array();
@@ -168,7 +168,9 @@ if(isset($_POST['_OP'])){
 
 function outputField($field,$thing){
 	$value = @$thing[$field['FieldName']];
-
+	if(strlen(@$field['FieldDefaultValue']) > 0 && !(isset($thing[$field['FieldName']]))){
+		$value = $field['FieldDefaultValue'];
+	}
 
 	switch ($field['FieldType']){
 		case 'text':
@@ -177,6 +179,9 @@ function outputField($field,$thing){
 			$value = htmlspecialchars($value);
 			$return = "<h3>{$field['FieldLabel']}</h3>";
 			$return .= "<input type='text' name='{$field['FieldName']}' value=\"$value\">";
+			break;
+		case 'hidden':
+			$return = "<input type='hidden' name='{$field['FieldName']}' value=\"$value\">";
 			break;
 		case 'password':
 			$value = htmlspecialchars($value);

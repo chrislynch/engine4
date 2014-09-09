@@ -2,7 +2,7 @@
 "post","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
 "post","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
 "post","_control","Status","Publish this content","checkbox","",
-"post","_control","System","Publish to front page","checkbox","","","1"
+"post","_control","System","","hidden","","","1"
 "post","_control","Timestamp","Timestamp","text","",
 "post","_content","Excerpt","Excerpt","markdown","Enter the excerpt/teaser text for the post here. This will be used in search results and on category pages. Markdown formatting is supported.",3
 "post","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
@@ -11,11 +11,9 @@
 "post","_content","FeaturedImage","Featured Image","file","The featured image will appear on your post in preview and in full display.",
 "config",_core,"Name","Site Name","text"
 "config","_control","Status","Site Online","checkbox","",
-"config","_control","System","","hidden","","","-1"
 "user","_core","Name","User Name","text","",
 "user","_core","Password","Password","password","",
 "user","_control","Status","User Active","checkbox","",
-"user","_control","System","","hidden","","","-1"
 "book","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
 "book","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
 "book","_control","Status","Publish this content","checkbox","",

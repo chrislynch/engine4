@@ -12,33 +12,34 @@ class _db {
     }
     
     private function connect(){
-	$this->db = new PDO("sqlite:_custom/_default/data/f.db");        
-	return TRUE;
-
-	/*
-        $this->db = mysql_connect($this->e->_config->get('mysql.server'),
-                                  $this->e->_config->get('mysql.user'),
-                                  $this->e->_config->get('mysql.password'),
-        						  TRUE); // Send new_link = TRUE to avoid stealing someone else's connection to the DB.
+    	if ($this->e->_config->get('mysql.server') !== ''){
+    		
+    		$this->db = mysql_connect($this->e->_config->get('mysql.server'),
+    				$this->e->_config->get('mysql.user'),
+    				$this->e->_config->get('mysql.password'),
+    				TRUE); // Send new_link = TRUE to avoid stealing someone else's connection to the DB.
+    		
+    		if (!$this->db){
+    			$this->e->_messaging->addMessage('Unable to connect to database server',-9);
+    			$return = FALSE;
+    		} else {
+    			$return = mysql_select_db($this->e->_config->get('mysql.database'),$this->db);
+    			if (!($return)){
+    				$this->e->_messaging->addMessage('Unable to select database schema ' . $this->e->_config->get('mysql.database'),-9);
+    			} else {
+    				if (function_exists('mysql_set_charset') == TRUE){
+    					mysql_set_charset('utf8',$this->db);
+    				}
+    				$return = TRUE;
+    			}
+    		}
+    		
+    		return $return;
+    	} else {
+    		$this->db = new PDO("sqlite:_custom/_default/data/f.db");
+    		return TRUE;
+    	}
 	
-        if (!$this->db){
-            $this->e->_messaging->addMessage('Unable to connect to database server',-9);
-            $return = FALSE;
-        } else {
-            $return = mysql_select_db($this->e->_config->get('mysql.database'),$this->db);
-            if (!($return)){
-                $this->e->_messaging->addMessage('Unable to select database schema ' . $this->e->_config->get('mysql.database'),-9);
-            } else {
-            	if (function_exists('mysql_set_charset') == TRUE){
-            		mysql_set_charset('utf8',$this->db);
-            	}
-                
-                $return = TRUE;
-            }
-        }
-        
-        return $return;
-	*/
     }
     
     private function disconnect(){
@@ -61,6 +62,7 @@ class _db {
         // Run a select statement
         if ($this->connect()){
             if(isset($_GET['debug'])){ print $SQL . "<br>"; }
+            // $return = mysql_query($SQL,$this->db);
             $return = $this->db->query($SQL);
             $this->disconnect();
         } else {
@@ -88,10 +90,10 @@ class _db {
     function insertinto($table,$args){
     	$functions = array('UNIX_TIMESTAMP()');
 
-	$SQL = "INSERT INTO $table";
-	$fields = array();
-	$placeholders = array();
-	$values = array();
+		$SQL = "INSERT INTO $table";
+		$fields = array();
+		$placeholders = array();
+		$values = array();
 
     	foreach($args as $field => $value){
 		$fields[] = $field;
@@ -107,7 +109,7 @@ class _db {
 			}
 		}
     	}
-	$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$placeholders) . ")";
+		$SQL .= "(" . implode(',',$fields) . ") VALUES(" . implode(',',$placeholders) . ")";
 
     	if(TRUE){ print "$SQL<br>" . print_r($args,TRUE) . '<br>'; }
     	$return = $this->insert($SQL,$values); 
@@ -118,10 +120,10 @@ class _db {
     function replaceinto($table,$args){
     	$functions = array('UNIX_TIMESTAMP()');
 
-	$SQL = "REPLACE INTO $table";
-	$fields = array();
-	$placeholders = array();
-	$values = array();
+		$SQL = "REPLACE INTO $table";
+		$fields = array();
+		$placeholders = array();
+		$values = array();
 
     	foreach($args as $field => $value){
 		$fields[] = $field;
