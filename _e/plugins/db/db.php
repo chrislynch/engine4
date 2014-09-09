@@ -12,6 +12,7 @@ class _db {
     }
     
     private function connect(){
+	/*
     	if ($this->e->_config->get('mysql.server') !== ''){
     		
     		$this->db = mysql_connect($this->e->_config->get('mysql.server'),
@@ -35,10 +36,10 @@ class _db {
     		}
     		
     		return $return;
-    	} else {
+    	} else {*/
     		$this->db = new PDO("sqlite:_custom/_default/data/f.db");
     		return TRUE;
-    	}
+    	/*} */
 	
     }
     

@@ -12,6 +12,7 @@
 "config",_core,"Name","Site Name","text"
 "config","_control","Status","Site Online","checkbox","",
 "config","_control","System","","hidden","","","-1"
+"config",_content,"HeaderTags","HTML Header Tags","textarea"
 "user","_core","Name","User Name","text","",
 "user","_core","Password","Password","password","",
 "user","_control","Status","User Active","checkbox","",
