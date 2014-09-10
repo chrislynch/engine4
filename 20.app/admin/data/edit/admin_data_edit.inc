@@ -1,5 +1,5 @@
 <?php 
-$corefields = array('ID','Name','URI','Type','Status','Timestamp');
+$corefields = array('ID','Name','URI','Type','Status','Timestamp','System');
 $coregroups = array('_core','_control','_content');
 
 if(isset($_POST['_OP'])){

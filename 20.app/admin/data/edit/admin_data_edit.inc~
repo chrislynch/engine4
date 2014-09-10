@@ -86,7 +86,7 @@ if(isset($_POST['_OP'])){
 	$this->_goto("admin/data/edit?ID={$_POST['ID']}");
 
 } else {
-	if($_GET['ID'] <> 0){
+	if(isset($_GET['ID']) && strval(@$_GET['ID']) !== 0){
 		$thing = _cms::loadID($_GET['ID']);	
 	} else {
 		$thing = array();
