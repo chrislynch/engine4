@@ -17,9 +17,14 @@
 	<link href="{{ this.sys.custompath }}content/templates/style.css" rel=stylesheet type="text/css">
 
 	<!-- Masonary -->
-	<script src="{{ this.sys.custompath }}content/templates/masonry.pkgd.min.js"></script>
+	<script src="{{ this.sys.custompath }}content/templates/packery.pkgd.min.js"></script>
 	<style>
-		.item {  }
+		.item { width:360px; margin:0px; padding: 10px;}
+		.item-video { width:720px; margin:0px; padding: 10px; }
+
+		.item h2 { margin-top: 0px; margin-bottom: 2px }
+
+		.postexcerpt p { font-size: 8pt; }
 	</style>
 
 
@@ -42,8 +47,10 @@
 	<div id='content' class='container-fluid'><div class='row'>
 		{% if this.app.posts|length > 1 %}
 			{% for post in this.app.posts %}
-				<div class="item col-lg-2">
+				<div class="item item-{{ post.Type }}">
+				
 					<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
+
 					{% if post.FeaturedImage != '' %}	
 						<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
 					{% endif %}	
@@ -53,9 +60,8 @@
 						</div>			
 					{% endif %}			
 				
-					<p>{{ post.Excerpt | raw }}</p>
-					<p><a href='{{ post.URI }}'><em>Read "{{ post.Name }}"</em></a></p>
-				
+					<!-- <p>{{ post.Excerpt | raw }}</p> -->
+					<!--
 					<p class='postinfo'>
 						A <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
 						saved at {{ post.Timestamp }}
@@ -66,6 +72,7 @@
 						and tagged with {{ post.Tags | raw }}
 						{% endif %}
 					</p>
+					-->
 				</div>
 			{% endfor %}
 		{% else %}
@@ -142,8 +149,11 @@
 // jQuery
 var $container = jQuery('#content');
 // initialize
-$container.masonry({
+$container.packery({
   itemSelector: '.item',
+  columnWidth: 180,
+  rowHeight: 0,
+  gutter: 3
 });
 </script>
 </html>
