@@ -77,6 +77,12 @@ class _cms {
 						}
 					}
 					$thing[$fieldName] = $ltags = implode(', ',$ltags);
+					break;
+				case 'youtube':
+					$youtube = explode('?v=',$thing[$fieldName]);
+					$youtube = $youtube[1];
+					$thing[$fieldName] = '<iframe width="480" height="360" src="//www.youtube.com/embed/' . $youtube . '?rel=0" frameborder="0" allowfullscreen></iframe>';
+					break;
 				default:
 					// Do nothing
 			}

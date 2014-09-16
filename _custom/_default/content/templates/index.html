@@ -7,11 +7,11 @@
 		
 	<!-- Bootstrap -->
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<!-- Optional theme -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 	<!-- Latest compiled and minified JavaScript -->
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	
 	<!-- Our stylesheet - overrides -->
 	<link href="{{ this.sys.custompath }}content/templates/style.css" rel=stylesheet type="text/css">
@@ -54,6 +54,23 @@
 									{% endif %}
 								</p>
 							</div>
+						{% elseif post.Type == 'video' %}
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
+								<div class="embed-responsive embed-responsive-16by9">
+								{{ post.Video | raw }}
+								</div>
+								<p class='postinfo'>
+									A <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
+									saved at {{ post.Timestamp }}
+									{% if post.Category != '' %}
+									in {{ post.Category | raw }} 
+									{% endif %}
+									{% if post.Tags != '' %}
+									and tagged with {{ post.Tags | raw }}
+									{% endif %}
+								</p>
+							</div>
 						{% else %}
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 								<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
@@ -85,7 +102,13 @@
 							{% if post.FeaturedImage != '' %}
 								<br>
 								<img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}">
-							{% endif %}				
+							{% endif %}
+							{% if post.Video != '' %}
+								<br>
+								<div class="embed-responsive embed-responsive-16by9">
+									{{ post.Video | raw }}
+								</div>			
+							{% endif %}	
 							<h1>{{ post.Name }}</h1>
 							{{ post.HTML | raw }}
 							<hr>
@@ -170,5 +193,7 @@
 			</div>
 		</div>
 	</div>
+
+
 </body>
 </html>

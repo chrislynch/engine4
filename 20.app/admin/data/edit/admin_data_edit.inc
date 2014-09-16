@@ -176,6 +176,7 @@ function outputField($field,$thing){
 		case 'text':
 		case 'url':
 		case 'tags':
+		case 'youtube':
 			$value = htmlspecialchars($value);
 			$return = "<h3>{$field['FieldLabel']}</h3>";
 			$return .= "<input type='text' name='{$field['FieldName']}' value=\"$value\">";
