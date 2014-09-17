@@ -19,12 +19,7 @@
 	<!-- Masonary -->
 	<script src="{{ this.sys.custompath }}content/templates/packery.pkgd.min.js"></script>
 	<style>
-		.item { width:360px; margin:0px; padding: 10px;}
-		.item-video { width:720px; margin:0px; padding: 10px; }
-
-		.item h2 { margin-top: 0px; margin-bottom: 2px }
-
-		.postexcerpt p { font-size: 8pt; }
+		
 	</style>
 
 
@@ -34,21 +29,24 @@
 	{{ this.sys.config.HeaderTags | raw }}
 </head>
 <body>
-	<div class="container-fluid">
-		<div id='logo' class="row">
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+	<div class="container">
+		<div id='masthead' class="row">
+			<div id='logo' class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
 			<h1><a href=''>Chris Lynch: Hack of all Trades</a></h1>
 			</div>
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
 				<!-- Social media icons -->
 			</div>
 		</div>
 	</div>
-	<div id='content' class='container-fluid'><div class='row'>
+	<div class='container'>
+	<div class='row'>
+	<div id='content' class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+		<div class='itemsizer'></div>
 		{% if this.app.posts|length > 1 %}
 			{% for post in this.app.posts %}
 				<div class="item item-{{ post.Type }}">
-				
+				<div class='iteminner'>
 					<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
 
 					{% if post.FeaturedImage != '' %}	
@@ -60,9 +58,10 @@
 						</div>			
 					{% endif %}			
 				
-					<!-- <p>{{ post.Excerpt | raw }}</p> -->
-					<!--
-					<p class='postinfo'>
+					<div class='excerpt'>{{ post.Excerpt | raw }}</div>
+					
+					<div class='postinfo'>
+						<p>
 						A <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
 						saved at {{ post.Timestamp }}
 						{% if post.Category != '' %}
@@ -71,8 +70,9 @@
 						{% if post.Tags != '' %}
 						and tagged with {{ post.Tags | raw }}
 						{% endif %}
-					</p>
-					-->
+						</p>
+					</div>
+				</div>
 				</div>
 			{% endfor %}
 		{% else %}
@@ -120,7 +120,36 @@
 				</div>
 			{% endfor %}
 		{% endif %}
-	</div></div>
+	</div> <!-- End of content -->
+	<div id='sidebar' class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>
+
+		<h1>OUT NOW</h1>
+		<div>
+			<a href='http://www.amazon.co.uk/Magpye-Circus-CW-Lynch-ebook/dp/B00G3BKUSW'><img src='_custom/_default/content/uploads/MagpyeFrontCover.jpg' class='img-responsive opaque'></a>
+			<h3>The Magpye Circus</h3>
+			<form action='http://www.amazon.co.uk/Magpye-Circus-CW-Lynch-ebook/dp/B00G3BKUSW' method="POST">
+				<input type='submit' value='See Book' class='btn btn-primary'>
+			</form>
+
+		</div>
+		<div>
+			<a href='the-dark'><img src='_custom/_default/content/uploads/thedark-normalcover.png' class='img-responsive opaque'></a>
+			<h3>The Dark</h3>
+			<form action='the-dark' method="POST">
+				<input type='submit' value='See Book' class='btn btn-primary'>
+			</form>
+		</div>
+		<div>
+			<img src='_custom/_default/content/uploads/budget-android-tablet-guide.png' class='img-responsive opaque'>
+			<h3>Budget Android Tablet Buyers Guide</h3>
+			<form action='budget-android-buyers-guide' method="POST">
+				<input type='submit' value='See Book' class='btn btn-primary'>
+			</form>
+		</div>
+
+	</div>
+	</div> <!-- End of row -->
+	</div> <!-- End of container -->
 
 	<div class='container-fluid'>
 		<div class='row'>
@@ -149,11 +178,15 @@
 // jQuery
 var $container = jQuery('#content');
 // initialize
-$container.packery({
-  itemSelector: '.item',
-  columnWidth: 180,
-  rowHeight: 0,
-  gutter: 3
+$(document).ready(function() {
+	$container.packery({
+	  itemSelector: '.item',
+	  columnWidth: ".itemsizer",
+	  rowHeight: 1,
+	  gutter: 0
+	});
+	$container.layout();
+	$(window).trigger('resize');
 });
 </script>
 </html>

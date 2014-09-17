@@ -5,7 +5,7 @@ $this->app->pages = 1;
 if(isset($_GET['page'])) { $this->app->page = $_GET['page']; } else { $this->app->page = 1; }
 
 if ($this->p == '') {
-	$pagesize = 30;
+	$pagesize = 10;
 	$start = $pagesize * ($this->app->page -1 );
 	$end = $pagesize * ($this->app->page);
 	$things = $this->_db->query("SELECT * FROM things WHERE Status = 1 AND System = 1 ORDER BY Timestamp DESC LIMIT $start,$end");
