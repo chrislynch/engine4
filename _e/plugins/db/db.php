@@ -12,7 +12,7 @@ class _db {
     }
     
     private function connect(){
-	/*
+	
     	if ($this->e->_config->get('mysql.server') !== ''){
     		
     		$this->db = mysql_connect($this->e->_config->get('mysql.server'),
@@ -36,10 +36,10 @@ class _db {
     		}
     		
     		return $return;
-    	} else {*/
+    	} else { 
     		$this->db = new PDO("sqlite:_custom/_default/data/f.db");
     		return TRUE;
-    	/*} */
+    	} 
 	
     }
     
@@ -63,8 +63,11 @@ class _db {
         // Run a select statement
         if ($this->connect()){
             if(isset($_GET['debug'])){ print $SQL . "<br>"; }
-            // $return = mysql_query($SQL,$this->db);
-            $return = $this->db->query($SQL);
+            if ($this->e->_config->get('mysql.server') !== ''){
+            	$return = mysql_query($SQL,$this->db);
+            } else {
+            	$return = $this->db->query($SQL);
+            }
             $this->disconnect();
         } else {
             $return = FALSE;

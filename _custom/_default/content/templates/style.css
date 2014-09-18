@@ -62,6 +62,11 @@ h4 { font-size: 16pt; }
 .item { width:33%; marginl-left:0px; margin-right:0px; margin-top:5px; margin-bottom:0px; padding-right: 10px;}
 .item-video { width:33%; margin:0px; padding-right: 10px; }
 
+.item-status .iteminner { background-color: gainsboro; padding: 20px;}
+.item-status h3 {margin-top: 5px; }
+.item-status h3 a {color: #8A0808; }
+.item-status p {font-size: 24px; font-weight: 400; text-align: left; font-style: italic; }
+
 .iteminner {border-bottom: solid 1px black; background: white; padding: 5px; }
 
 .item h2, .item h2 a { font-family: Oswald, serif; text-transform: uppercase;

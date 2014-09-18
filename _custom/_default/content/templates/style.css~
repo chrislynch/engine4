@@ -1,7 +1,10 @@
-@import url(http://fonts.googleapis.com/css?family=Cardo:400,400italic,700|Six+Caps);
+@import url(http://fonts.googleapis.com/css?family=Oswald:400,700);
+@import url(http://fonts.googleapis.com/css?family=Bitter:400,700);
+@import url(http://fonts.googleapis.com/css?family=Roboto:300,400,700,900);
 
 body {
-	font-family: 'Cardo', serif;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
 	font-size: 14pt;
 	line-height: 20pt;
 	text-align: justify;
@@ -11,50 +14,76 @@ body {
 	
 }
 
-h1,h2,h3,h4,h5,h6, h1 a, h2 a {
-	font-family: 'Six Caps', sans-serif;
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+h1, h1 a {
+	font-family: 'Oswald', sans-serif;
+	font-weight: 700;
 	color: #8A0808;
-	/* text-align: left; */
+	text-align: left;
+	text-transform: uppercase;
 }
 
-h1 {
-	font-size: 48pt;
+h2,h3,h4,h5,h6, h2 a {
+	font-family: 'Bitter', serif;
+	font-weight: 700;
+	color: #8A0808;
+	text-align: left;
 }
 
-h2 {
-	font-size: 36pt;
-}
+h1 { font-size: 36pt; }
 
-h3 {
-	font-size: 24pt;
-}
+h2 { font-size: 24pt; }
 
-#logo {
+h3 { font-size: 18pt; }
+
+h4 { font-size: 16pt; }
+
+#masthead {
 	border-bottom: 2px solid gray;
+	padding-left: 0px;
 }
+
+#logo { padding-left: 0px; }
 
 #logo h1, #logo h1 a {
 	color: gray;
 }
 
-#content {
-	background: url('background.jpg');
-	background-repeat: no-repeat;
-	background-position: top right;
 
+#content { padding: 0px; }
+		
+.itemsizer { width:33% }
+
+.item { width:33%; marginl-left:0px; margin-right:0px; margin-top:5px; margin-bottom:0px; padding-right: 10px;}
+.item-video { width:33%; margin:0px; padding-right: 10px; }
+
+.item-status .iteminner { background-color: gainsboro; padding: 20px;}
+.item-status h3 {margin-top: 5px; }
+.item-status p {font-size: 24px; font-weight: 400; text-align: left; font-style: italic; }
+
+.iteminner {border-bottom: solid 1px black; background: white; padding: 5px; }
+
+.item h2, .item h2 a { font-family: Oswald, serif; text-transform: uppercase;
+	   margin-top: 0px; margin-bottom: 2px }
+
+.excerpt { font-size: 10pt; }
+
+.postinfo {
+	font-size: 10pt;
+	text-align: left;
+	background-color: gainsboro;
 }
 
-#left {
-	background: white;
-	opacity: 0.8;
-    	filter: alpha(opacity=80);
+.postinfo a {
+	color: #8A0808;
 }
 
-#right {
-	background: rgba(255, 255, 255, 0.8);
-	text-align: center;
-}
-
-.rightopaque {
-	background: rgba(255, 255, 255, 1);
-}
+#sidebar { text-align: center; }
+#sidebar h1 { text-align: center; margin-top: 5px; }
+#sidebar h2 { font-size: 18pt; text-align: center; }
+#sidebar h3 { font-size: 16pt; text-align: center; }

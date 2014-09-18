@@ -45,6 +45,14 @@
 		<div class='itemsizer'></div>
 		{% if this.app.posts|length > 1 %}
 			{% for post in this.app.posts %}
+			{% if post.Type == 'status' %}
+				<div class="item item-{{ post.Type }}">
+				<div class='iteminner'>
+					<h3>{{ post.Tags | raw }}</h3>
+					<p>"{{ post.Name }}"</p>
+				</div>
+				</div>
+			{% else %}
 				<div class="item item-{{ post.Type }}">
 				<div class='iteminner'>
 					<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
@@ -74,6 +82,7 @@
 					</div>
 				</div>
 				</div>
+			{% endif %}
 			{% endfor %}
 		{% else %}
 			{% for post in this.app.posts %}
