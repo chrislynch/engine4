@@ -57,10 +57,48 @@ h4 { font-size: 16pt; }
 
 #content { padding: 0px; }
 		
-.itemsizer { width:33% }
+.item { margin-left:0px; margin-right:0px; margin-top:5px; margin-bottom:0px; padding-right: 10px;}
 
-.item { width:33%; marginl-left:0px; margin-right:0px; margin-top:5px; margin-bottom:0px; padding-right: 10px;}
-.item-video { width:33%; margin:0px; padding-right: 10px; }
+/* Supersize me */
+@media only screen and (min-width : 1200px) {
+	.item, .itemsizer { width: 280px }
+	.item-video { width:540px; }
+	.itemsizer { color: white; }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1199px) {
+	.item, .itemsizer { width: 240px }
+	.item-video { width:480px; }
+	.itemsizer { color: red; }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+	.item, .itemsizer { width: 280px }
+	.item-video { width:280px; }
+	.itemsizer { color: orange; }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+	.item, .itemsizer { width: 480px }
+	.item-video { width:480px; }
+	.itemsizer { color: green; }
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+	.item, .itemsizer { width: 100% }
+	.item-video { width:100%;  }
+	.itemsizer { color: black; }
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+	.item, .itemsizer { width: 100% }
+	.item-video { width:100%;  }
+}
 
 .item-status .iteminner { background-color: gainsboro; padding: 20px;}
 .item-status h3 {margin-top: 5px; }
@@ -88,3 +126,4 @@ h4 { font-size: 16pt; }
 #sidebar h1 { text-align: center; margin-top: 5px; }
 #sidebar h2 { font-size: 18pt; text-align: center; }
 #sidebar h3 { font-size: 16pt; text-align: center; }
+

@@ -12,35 +12,38 @@ class _db {
     }
     
     private function connect(){
-	
-    	if ($this->e->_config->get('mysql.server') !== ''){
-    		
-    		$this->db = mysql_connect($this->e->_config->get('mysql.server'),
-    				$this->e->_config->get('mysql.user'),
-    				$this->e->_config->get('mysql.password'),
-    				TRUE); // Send new_link = TRUE to avoid stealing someone else's connection to the DB.
-    		
-    		if (!$this->db){
-    			$this->e->_messaging->addMessage('Unable to connect to database server',-9);
-    			$return = FALSE;
-    		} else {
-    			$return = mysql_select_db($this->e->_config->get('mysql.database'),$this->db);
-    			if (!($return)){
-    				$this->e->_messaging->addMessage('Unable to select database schema ' . $this->e->_config->get('mysql.database'),-9);
-    			} else {
-    				if (function_exists('mysql_set_charset') == TRUE){
-    					mysql_set_charset('utf8',$this->db);
-    				}
-    				$return = TRUE;
-    			}
-    		}
-    		
-    		return $return;
-    	} else { 
-    		$this->db = new PDO("sqlite:_custom/_default/data/f.db");
+	if (isset($this->e->_config)) {
+	    	if ($this->e->_config->get('mysql.server') !== ''){
+	    		
+	    		$this->db = mysql_connect($this->e->_config->get('mysql.server'),
+	    				$this->e->_config->get('mysql.user'),
+	    				$this->e->_config->get('mysql.password'),
+	    				TRUE); // Send new_link = TRUE to avoid stealing someone else's connection to the DB.
+	    		
+	    		if (!$this->db){
+	    			$this->e->_messaging->addMessage('Unable to connect to database server',-9);
+	    			$return = FALSE;
+	    		} else {
+	    			$return = mysql_select_db($this->e->_config->get('mysql.database'),$this->db);
+	    			if (!($return)){
+	    				$this->e->_messaging->addMessage('Unable to select database schema ' . $this->e->_config->get('mysql.database'),-9);
+	    			} else {
+	    				if (function_exists('mysql_set_charset') == TRUE){
+	    					mysql_set_charset('utf8',$this->db);
+	    				}
+	    				$return = TRUE;
+	    			}
+	    		}
+	    		
+	    		return $return;
+	    	} else { 
+	    		$this->db = new PDO("sqlite:_custom/_default/data/f.db");
+	    		return TRUE;
+	    	} 
+	} else {
+		$this->db = new PDO("sqlite:_custom/_default/data/f.db");
     		return TRUE;
-    	} 
-	
+	}
     }
     
     private function disconnect(){
@@ -63,11 +66,15 @@ class _db {
         // Run a select statement
         if ($this->connect()){
             if(isset($_GET['debug'])){ print $SQL . "<br>"; }
-            if ($this->e->_config->get('mysql.server') !== ''){
-            	$return = mysql_query($SQL,$this->db);
-            } else {
-            	$return = $this->db->query($SQL);
-            }
+	    if (isset($this->e->_config)) {
+		    if ($this->e->_config->get('mysql.server') !== ''){
+		    	$return = mysql_query($SQL,$this->db);
+		    } else {
+		    	$return = $this->db->query($SQL);
+		    }
+	    } else {
+		$return = $this->db->query($SQL);
+	    }
             $this->disconnect();
         } else {
             $return = FALSE;

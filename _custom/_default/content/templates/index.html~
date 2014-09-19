@@ -42,14 +42,14 @@
 	<div class='container'>
 	<div class='row'>
 	<div id='content' class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-		<div class='itemsizer'></div>
+		<div class='itemsizer'>ITEM SIZER</div>
 		{% if this.app.posts|length > 1 %}
 			{% for post in this.app.posts %}
 			{% if post.Type == 'status' %}
 				<div class="item item-{{ post.Type }}">
 				<div class='iteminner'>
 					<h3>{{ post.Tags | raw }}</h3>
-					<p>{{ post.Name }}</p>
+					<p>"{{ post.Name }}"</p>
 				</div>
 				</div>
 			{% else %}
@@ -160,7 +160,7 @@
 	</div> <!-- End of row -->
 	</div> <!-- End of container -->
 
-	<div class='container-fluid'>
+	<div class='container'>
 		<div class='row'>
 			<div id='pager' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				{% if this.app.pages > 1 %}
