@@ -16,26 +16,37 @@
 	<!-- Our stylesheet - overrides -->
 	<link href="{{ this.sys.custompath }}content/templates/style.css" rel=stylesheet type="text/css">
 
-	<!-- Masonary -->
+	<!-- Packery -->
 	<script src="{{ this.sys.custompath }}content/templates/packery.pkgd.min.js"></script>
-	<style>
-		
-	</style>
-
 
 	<!-- SEO -->
 	<title>{{ this.seo.title }}</title>
 
+	<link rel="alternate" type="application/rss+xml" title="{{ this.seo.title }} Feed" href="{{ this.sys.basehref }}?feed" />
+
 	{{ this.sys.config.HeaderTags | raw }}
 </head>
 <body>
-	<div class="container">
-		<div id='masthead' class="row">
-			<div id='logo' class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-			<h1><a href=''>Chris Lynch: Hack of all Trades</a></h1>
+	<div class="container">		
+		<div class='row'>
+			<div id='social' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				{% if this.sys.config.SocialLinkFacebook != '' %} <a href='{{ this.sys.config.SocialLinkFacebook }}'><img src='_custom/_default/content/templates/images/social/24/facebook_24.png' /></a>{% endif %}
+				{% if this.sys.config.SocialLinkGooglePlus != '' %} <a href='{{ this.sys.config.SocialLinkGooglePlus }}'><img src='_custom/_default/content/templates/images/social/24/google-plus_24.png' /></a> {% endif %}
+				{% if this.sys.config.SocialLinkLinkedIn != '' %} <a href='{{ this.sys.config.SocialLinkLinkedIn }}'><img src='_custom/_default/content/templates/images/social/24/linkedin_24.png' /></a>{% endif %}
+				{% if this.sys.config.SocialLinkTumblr != '' %} <a href='{{ this.sys.config.SocialLinkTumblr }}'><img src='_custom/_default/content/templates/images/social/24/tumblr_24.png' /></a> {% endif %}
+				{% if this.sys.config.SocialLinkTwitter != '' %} <a href='{{ this.sys.config.SocialLinkTwitter }}'><img src='_custom/_default/content/templates/images/social/24/twitter_24.png' /></a> {% endif %}
+				<!-- RSS Link -->
+				{% if this.app.posts|length > 1 %}											<a href='{{ this.sys.basehref }}?feed'>
+				{% else %}
+				<a href='{{ this.sys.basehref }}?feed'>
+				{% endif %}
+				<img src='_custom/_default/content/templates/images/social/24/rss_24.png' />
+				</a>
 			</div>
-			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-				<!-- Social media icons -->
+		</div>
+		<div id='masthead' class='row'>
+			<div id='logo' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h1><a href=''>Chris Lynch: Hack of all Trades</a></h1>
 			</div>
 		</div>
 	</div>
@@ -70,7 +81,7 @@
 					
 					<div class='postinfo'>
 						<p>
-						A <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
+						A <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
 						saved at {{ post.Timestamp }}
 						{% if post.Category != '' %}
 						in {{ post.Category | raw }} 
@@ -86,74 +97,71 @@
 			{% endfor %}
 		{% else %}
 			{% for post in this.app.posts %}
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					{% if post.FeaturedImage != '' %}
-						<br>
-						<img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}">
-					{% endif %}
-					{% if post.Video != '' %}
-						<br>
-						<div class="embed-responsive embed-responsive-16by9">
-							{{ post.Video | raw }}
-						</div>			
-					{% endif %}	
-					<h1>{{ post.Name }}</h1>
-					{{ post.HTML | raw }}
-					<hr>
-					<div id="disqus_thread"></div>
-					<script type="text/javascript">
-					/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-					var disqus_shortname = 'planetofthepenguins'; // required: replace example with your forum shortname
+				<div class='pageinner'>	
+				{% if post.FeaturedImage != '' %}
+					<br>
+					<img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}">
+				{% endif %}
+				{% if post.Video != '' %}
+					<br>
+					<div class="embed-responsive embed-responsive-16by9">
+						{{ post.Video | raw }}
+					</div>			
+				{% endif %}	
+				<h1>{{ post.Name }}</h1>
+				{{ post.HTML | raw }}
+				<hr>
+				<div id="disqus_thread"></div>
+				<script type="text/javascript">
+				/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+				var disqus_shortname = 'planetofthepenguins'; // required: replace example with your forum shortname
 
-					/* * * DON'T EDIT BELOW THIS LINE * * */
-					(function() {
-					    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-					    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-					    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-					})();
-					</script>
-					<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-					<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-					<hr>
-					<p class='postinfo'>
-						This is a  <a href='type/{{ post.Type }}'>{{ post.Type }}</a> 
-						saved at {{ post.Timestamp }}
-						{% if post.Category != '' %}
-						in {{ post.Category | raw }} 
-						{% endif %}
-						{% if post.Tags != '' %}
-						and tagged with {{ post.Tags | raw }}
-						{% endif %}
-					</p>
-					<hr>
+				/* * * DON'T EDIT BELOW THIS LINE * * */
+				(function() {
+				    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+				    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+				    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+				})();
+				</script>
+				<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+				<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+				<hr>
+				<p class='postinfo'>
+					This is a  <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
+					saved at {{ post.Timestamp }}
+					{% if post.Category != '' %}
+					in {{ post.Category | raw }} 
+					{% endif %}
+					{% if post.Tags != '' %}
+					and tagged with {{ post.Tags | raw }}
+					{% endif %}
+				</p>
+				<hr>
 				</div>
 			{% endfor %}
 		{% endif %}
 	</div> <!-- End of content -->
 	<div id='sidebar' class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>
+		<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'><h1>Out Now</h1></div>
 
-		<h1>OUT NOW</h1>
-		<div>
-			<a href='http://www.amazon.co.uk/Magpye-Circus-CW-Lynch-ebook/dp/B00G3BKUSW'><img src='_custom/_default/content/uploads/MagpyeFrontCover.jpg' class='img-responsive opaque'></a>
-			<h3>The Magpye Circus</h3>
-			<form action='http://www.amazon.co.uk/Magpye-Circus-CW-Lynch-ebook/dp/B00G3BKUSW' method="POST">
-				<input type='submit' value='See Book' class='btn btn-primary'>
-			</form>
+		<div class='book col-xs-4 col-sm-12 col-md-12 col-lg-12'>
+			<a href="http://www.amazon.co.uk/gp/product/B00G3BKUSW/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=B00G3BKUSW&linkCode=as2&tag=chrislynch&linkId=ZMLDJRYWCVLROTKD"><img border="0" src="http://ws-eu.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00G3BKUSW&Format=_SL250_&ID=AsinImage&MarketPlace=GB&ServiceVersion=20070822&WS=1&tag=chrislynch" ></a><img src="http://ir-uk.amazon-adsystem.com/e/ir?t=chrislynch&l=as2&o=2&a=B00G3BKUSW" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+		</div>
 
+		<div class='book col-xs-4 col-sm-12 col-md-12 col-lg-12'>
+			<a href="http://www.amazon.co.uk/gp/product/B006YG7C1O/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=B006YG7C1O&linkCode=as2&tag=chrislynch&linkId=W3TG5VXKENOK64JR"><img border="0" src="http://ws-eu.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B006YG7C1O&Format=_SL250_&ID=AsinImage&MarketPlace=GB&ServiceVersion=20070822&WS=1&tag=chrislynch" ></a><img src="http://ir-uk.amazon-adsystem.com/e/ir?t=chrislynch&l=as2&o=2&a=B006YG7C1O" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 		</div>
-		<div>
-			<a href='the-dark'><img src='_custom/_default/content/uploads/thedark-normalcover.png' class='img-responsive opaque'></a>
-			<h3>The Dark</h3>
-			<form action='the-dark' method="POST">
-				<input type='submit' value='See Book' class='btn btn-primary'>
-			</form>
+
+		<div class='book col-xs-4 col-sm-12 col-md-12 col-lg-12'>
+			<a href="http://www.amazon.co.uk/gp/product/1905692374/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=1905692374&linkCode=as2&tag=chrislynch&linkId=ZV43WSQERNOOWIE4"><img border="0" src="http://ws-eu.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=1905692374&Format=_SL250_&ID=AsinImage&MarketPlace=GB&ServiceVersion=20070822&WS=1&tag=chrislynch" ></a><img src="http://ir-uk.amazon-adsystem.com/e/ir?t=chrislynch&l=as2&o=2&a=1905692374" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 		</div>
-		<div>
-			<img src='_custom/_default/content/uploads/budget-android-tablet-guide.png' class='img-responsive opaque'>
-			<h3>Budget Android Tablet Buyers Guide</h3>
-			<form action='budget-android-buyers-guide' method="POST">
-				<input type='submit' value='See Book' class='btn btn-primary'>
-			</form>
+
+		<div class='book col-xs-4 col-sm-12 col-md-12 col-lg-12'>
+			<a href="http://www.amazon.co.uk/gp/product/B00G97233U/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=B00G97233U&linkCode=as2&tag=chrislynch&linkId=H5XHCZ2CJVOOCOKO"><img border="0" src="http://ws-eu.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00G97233U&Format=_SL250_&ID=AsinImage&MarketPlace=GB&ServiceVersion=20070822&WS=1&tag=chrislynch" ></a><img src="http://ir-uk.amazon-adsystem.com/e/ir?t=chrislynch&l=as2&o=2&a=B00G97233U" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+		</div>
+
+		<div class='book col-xs-4 col-sm-12 col-md-12 col-lg-12'>
+			<a href="http://www.amazon.co.uk/gp/product/B004R1Q0UM/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=B004R1Q0UM&linkCode=as2&tag=chrislynch&linkId=AWVYNZRYTJO5RNLX"><img border="0" src="http://ws-eu.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B004R1Q0UM&Format=_SL250_&ID=AsinImage&MarketPlace=GB&ServiceVersion=20070822&WS=1&tag=chrislynch" ></a><img src="http://ir-uk.amazon-adsystem.com/e/ir?t=chrislynch&l=as2&o=2&a=B004R1Q0UM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 		</div>
 
 	</div>
@@ -183,19 +191,21 @@
 
 
 </body>
-<script>
-// jQuery
-var $container = jQuery('#content');
-// initialize
-$(document).ready(function() {
-	$container.packery({
-	  itemSelector: '.item',
-	  columnWidth: ".itemsizer",
-	  rowHeight: 1,
-	  gutter: 0
+{% if this.app.posts|length > 1 %}
+	<script>
+	// jQuery
+	var $container = jQuery('#content');
+	// initialize
+	$(document).ready(function() {
+		$container.packery({
+		  itemSelector: '.item',
+		  columnWidth: ".itemsizer",
+		  rowHeight: 1,
+		  gutter: 0
+		});
+		$container.layout();
+		$(window).trigger('resize');
 	});
-	$container.layout();
-	$(window).trigger('resize');
-});
-</script>
+	</script>
+{% endif %}
 </html>
