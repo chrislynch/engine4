@@ -2,10 +2,12 @@
 
 // Set up pager
 $this->app->pages = 1;
+$pagesize = 10;
+
 if(isset($_GET['page'])) { $this->app->page = $_GET['page']; } else { $this->app->page = 1; }
 
 if ($this->p == '') {
-	$pagesize = 10;
+	
 	$start = $pagesize * ($this->app->page -1 );
 	$end = $pagesize * ($this->app->page);
 	$things = $this->_db->query("SELECT * FROM things WHERE Status = 1 AND System = 1 ORDER BY Timestamp DESC LIMIT $start,$end");
@@ -18,17 +20,28 @@ if ($this->p == '') {
 		$search = $this->parray(0);
 		$searchfor = $this->parray(1);
 		if ($search !== '' && $searchfor !== ''){
-			$start = 10 * ($this->app->page -1 );
-			$end = 10 * ($this->app->page);
-			$things = $this->_db->query("SELECT t.* FROM things t
+			$start = $pagesize * ($this->app->page -1 );
+			$end = $pagesize * ($this->app->page);
+			if ($search == 'Type'){
+				$thingsSQL = "SELECT t.* FROM things t
+						WHERE Type = '$searchfor'
+						AND t.Status = 1 AND System >= 0 AND t.ID > 1 ORDER BY t.Timestamp DESC LIMIT $start,$end";
+				$pageSQL = "SELECT t.* FROM things t
+						WHERE Type = '$searchfor'
+						AND t.Status = 1 AND System >= 0 AND t.ID > 1";
+			} else {
+				$thingsSQL = "SELECT t.* FROM things t
 							JOIN things_data td ON td.ID = t.ID
 							WHERE td.Field = '$search' AND td.Value LIKE '%$searchfor%'
-							AND t.Status = 1 AND System >= 0 AND t.ID > 1 ORDER BY t.Timestamp DESC LIMIT $start,$end");
+							AND t.Status = 1 AND System >= 0 AND t.ID > 1 ORDER BY t.Timestamp DESC LIMIT $start,$end";
+				$pageSQL = "SELECT COUNT(0) FROM things t
+							JOIN things_data td ON td.ID = t.ID
+							WHERE td.Field = '$search' AND td.Value LIKE '%$searchfor%'
+							AND t.Status = 1 AND System >= 0 AND t.ID > 1";
+			}
 
-			$this->app->pages = ceil($this->_db->result("SELECT COUNT(0) FROM things t
-							JOIN things_data td ON td.ID = t.ID
-							WHERE td.Field = '$search' AND td.Value LIKE '%$searchfor%'
-							AND t.Status = 1 AND System >= 0 AND t.ID > 1") / $pagesize);
+			$things = $this->_db->query($thingsSQL);
+			$this->app->pages = ceil($this->_db->result($pageSQL) / $pagesize);
 		}
 	} else {
 		// For now, just pick it up again. A bit annoying but there you are!
