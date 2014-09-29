@@ -364,6 +364,7 @@ class e {
     }
     
     static function _isValidDirectory($directory){
+	// TODO: Ignore directories that are no number prefixed.
         $return = is_dir($directory);
         if (strstr($directory,'/')){
             $directory = explode('/',$directory);
@@ -378,6 +379,7 @@ class e {
             if (substr($directory,0,1) == '.') { $return = FALSE; }
             if (substr($directory,0,1) == '_') { $return = FALSE; }
             if ($directory == 'nbproject') { $return = FALSE; }
+            if ($directory == 'bubble') { $return = FALSE; }
         }
         return $return;
     }
