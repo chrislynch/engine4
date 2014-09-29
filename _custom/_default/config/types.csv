@@ -24,6 +24,11 @@
 "book","_content","Excerpt","Excerpt","markdown","Enter the excerpt/teaser text for the post here. This will be used in search results and on category pages. Markdown formatting is supported.",3
 "book","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
 "book","_content","FeaturedImage","Cover","file","The cover image for the book.",
+"book","Links","Link_Amazon_US","Amazon.com Link","text","",
+"book","Links","Link_Amazon_UK","Amazon.co.uk Link","text","",
+"book","Links","Link_Smashwords","Smashwords Link","text","",
+"book","Links","Link_Smashwords_Sample","Smashwords Sample Link","text","",
+"book","Links","Link_WattPad","WattPad Link","text","",
 "picture","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
 "picture","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
 "picture","_control","Status","Publish this content","checkbox","",
