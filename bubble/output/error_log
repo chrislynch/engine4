@@ -1,0 +1,11 @@
+[24-Sep-2014 20:45:01 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 4
+[24-Sep-2014 20:50:03 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 8
+[24-Sep-2014 20:53:40 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 8
+[24-Sep-2014 20:57:16 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 8
+[24-Sep-2014 21:00:17 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 8
+[24-Sep-2014 21:00:23 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 8
+[24-Sep-2014 21:03:23 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 8
+[24-Sep-2014 21:03:38 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 8
+[24-Sep-2014 21:07:32 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 9
+[24-Sep-2014 21:10:29 UTC] PHP Warning:  Header may not contain more than a single header, new line detected in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 10
+[24-Sep-2014 21:13:06 UTC] PHP Parse error:  syntax error, unexpected 'header' (T_STRING) in /home/theficti/planetofthepenguins.com/bubble/output/bubble_app_output.php on line 7
