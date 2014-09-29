@@ -9,11 +9,22 @@
       <link></link>
   </image>
   {% for post in this.app.posts %}
+	{% if post.Type == 'status' %}
+		<item>
+		    <title>{{ post.Name }}</title>
+		    <link>{{ this.sys.basehref }}Type/status</link>
+		    <description>{{ post.Excerpt }}</description>
+		</item>		
+	{% else %}
 		<item>
 		    <title>{{ post.Name }}</title>
 		    <link>{{ this.sys.basehref }}{{ post.URI }}</link>
 		    <description>{{ post.Excerpt }}</description>
+		    {% if post.FeaturedImage != '' %}
+		    	<!-- <enclosure url="{{ this.sys.basehref }}{{ post.FeaturedImage }}" /> -->
+		    {% endif %}
 		</item>		
+	{% endif %}
   {% endfor %}
 </channel>
 </rss> 
