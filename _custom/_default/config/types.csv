@@ -59,3 +59,8 @@
 "status","_control","Timestamp","Timestamp","text","",
 "status","_core","Category","Category","hidden","",1,"status"
 "status","_core","Tags","Hashtags","tags","Enter hastagstags for the post.",1
+"block","_core","Name","Block Title","text","Title of the block",
+"block","_content","HTML","Content","textarea","Enter the content for the block here. Markdown formatting is supported.",15
+"block","_control","Status","Publish this block","checkbox","",
+"block","_control","System","System","hidden","","","0"
+"block","_control","Timestamp","Timestamp","text","",

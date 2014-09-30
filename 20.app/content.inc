@@ -58,4 +58,21 @@ while ($thing = $things->fetch()){
 }
 
 
+/*
+* LOAD RELATED ITEMS
+*/
+
+/*
+* LOAD BLOCKS
+*/
+$things = $this->_db->query("SELECT * FROM things WHERE Status = 1 AND Type = 'block' ORDER BY Timestamp DESC");
+
+$this->app->blocks = array();
+
+while ($thing = $things->fetch()){
+	_cms::loadThing($thing);
+	_cms::renderThing($thing);
+	$this->app->blocks[$thing['ID']] = $thing;
+}
+
 ?>

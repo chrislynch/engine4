@@ -36,6 +36,7 @@
       <ul class="nav navbar-nav">
         <li><a href="admin/data/new?ID=0&type=post">New Content</a></li>
 	<li><a href="admin/data">Edit Content</a></li>
+        <li><a href="admin/data?type=block">Edit Blocks</a></li>
         <li><a href="admin/data/edit?ID=-1">System Configuration</a></li>
 	<li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <span class="caret"></span></a>

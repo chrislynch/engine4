@@ -12,7 +12,12 @@
 "config",_core,"Name","Site Name","text"
 "config","_control","Status","Site Online","checkbox","",
 "config","_control","System","","hidden","","","-1"
-"config",_content,"HeaderTags","HTML Header Tags","textarea"
+"config","_content","HeaderTags","HTML Header Tags","textarea"
+"config","Social","SocialLinkFacebook","Facebook Public Profile URL","text"
+"config","Social","SocialLinkGooglePlus","Google Plus Public Profile URL","text"
+"config","Social","SocialLinkLinkedIn","Linked In Public Profile URL","text"
+"config","Social","SocialLinkTumblr","Tumblr Public Profile URL","text"
+"config","Social","SocialLinkTwitter","Twitter Public Profile URL","text"
 "user","_core","Name","User Name","text","",
 "user","_core","Password","Password","password","",
 "user","_control","Status","User Active","checkbox","",
@@ -24,6 +29,11 @@
 "book","_content","Excerpt","Excerpt","markdown","Enter the excerpt/teaser text for the post here. This will be used in search results and on category pages. Markdown formatting is supported.",3
 "book","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
 "book","_content","FeaturedImage","Cover","file","The cover image for the book.",
+"book","Links","Link_Amazon_US","Amazon.com Link","text","",
+"book","Links","Link_Amazon_UK","Amazon.co.uk Link","text","",
+"book","Links","Link_Smashwords","Smashwords Link","text","",
+"book","Links","Link_Smashwords_Sample","Smashwords Sample Link","text","",
+"book","Links","Link_WattPad","WattPad Link","text","",
 "picture","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
 "picture","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
 "picture","_control","Status","Publish this content","checkbox","",
@@ -47,5 +57,10 @@
 "status","_control","Status","Publish this content","checkbox","",
 "status","_control","System","Publish to front page","checkbox","","","1"
 "status","_control","Timestamp","Timestamp","text","",
-"status","_content","Category","Category","hidden","",1,"status"
-"status","_content","Tags","Hashtags","tags","Enter hastagstags for the post.",1
+"status","_core","Category","Category","hidden","",1,"status"
+"status","_core","Tags","Hashtags","tags","Enter hastagstags for the post.",1
+"block","_core","Name","Block Title","text","Title of the block",
+"block","_content","HTML","Content","markdown","Enter the content for the block here. Markdown formatting is supported.",15
+"block","_control","Status","Publish this block","checkbox","",
+"block","_control","System","System","hidden","","","0"
+"block","_control","Timestamp","Timestamp","text","",

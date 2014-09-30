@@ -54,6 +54,9 @@ h4 { font-size: 16pt; }
 	color: gray;
 }
 
+#social {
+	text-align:right;
+}
 
 #content { padding: 0px; }
 		
@@ -82,7 +85,7 @@ h4 { font-size: 16pt; }
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
-	.item, .itemsizer { width: 240px }
+	.item, .itemsizer { width: 480px }
 	.item-video { width:480px; }
 	.itemsizer { color: green; }
 }
@@ -106,6 +109,7 @@ h4 { font-size: 16pt; }
 .item-status p {font-size: 24px; font-weight: 400; text-align: left; font-style: italic; }
 
 .iteminner {border-bottom: solid 1px black; background: white; padding: 5px; }
+.pageinner {padding-left: 5px; padding-right: 15px; }
 
 .item h2, .item h2 a { font-family: Oswald, serif; text-transform: uppercase;
 	   margin-top: 0px; margin-bottom: 2px }
@@ -122,8 +126,37 @@ h4 { font-size: 16pt; }
 	color: #8A0808;
 }
 
-#sidebar { text-align: center; }
-#sidebar h1 { text-align: center; margin-top: 5px; }
-#sidebar h2 { font-size: 18pt; text-align: center; }
-#sidebar h3 { font-size: 16pt; text-align: center; }
+#sidebar { text-align: center; background-color: #A66A6A; color: white;}
+#sidebar h1 { text-align: center; margin-top: 5px; color: white; }
+#sidebar h2 { font-size: 18pt; text-align: center; color: white; }
+#sidebar h3 { font-size: 16pt; text-align: center; color: white; }
 
+.book { margin-bottom: 12px; }
+.book img { max-width: 100%; }
+
+/* Supersize me */
+@media only screen and (min-width : 1200px) {
+	.img-full{ float: right; width: 33%; }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1199px) {
+	.img-full{ float: right; width: 33%; }}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+	.img-full{ float: right; width: 33%; }}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+	.img-full{ width: 100%; }}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+	.img-full{ width: 100%; }}}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+	.item, .itemsizer { width: 100% }
+	.item-video { width:100%;  }
+}
