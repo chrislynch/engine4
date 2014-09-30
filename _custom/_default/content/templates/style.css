@@ -133,3 +133,33 @@ h4 { font-size: 16pt; }
 
 .book { margin-bottom: 12px; }
 .book img { max-width: 100%; }
+
+/* Supersize me */
+@media only screen and (min-width : 1200px) {
+	.img-full{ float: right; width: 33%; margin-left: 20px; margin-top: 25px;}
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1199px) {
+	.img-full{ float: right; width: 33%;  margin-left: 20px; margin-top: 25px;}
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+	.img-full{ float: right; width: 33%;  margin-left: 20px; margin-top: 25px;}
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+	.img-full{ width: 100%; }
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+	.img-full{ width: 100%; }
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+	.img-full{ width: 100%; }
+}
