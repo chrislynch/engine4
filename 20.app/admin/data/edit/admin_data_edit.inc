@@ -117,7 +117,7 @@ if(isset($_POST['_OP'])){
 				}
 			?>			
 		</div>
-		<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 shade">
+		<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 background-secondary-1-0">
 			<h2>Control Panel</h2>
 			<?php
 				$fields = _cms::loadfields($thing['Type']);

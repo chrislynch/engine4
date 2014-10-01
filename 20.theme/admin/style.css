@@ -1,7 +1,7 @@
 
 h1,h2,h3,h4,h5,h6 {
 	font-family: sans-serif;
-	color: #4000A0;
+	color: #FD840D;
 }
 
 h1 {
@@ -20,6 +20,7 @@ h4 {
 	font-size: 12pt;
 	font-weight: bold;
 }
+
 
 table {
 	width: 100%;
@@ -50,6 +51,60 @@ textarea {
 	width: 100%;
 }
 
-.shade {
-	background: #CEB5FF;
-}
+/* 
+* Colour scheme developed at Palletone
+* http://paletton.com/#uid=70z0u0kunvMb7UckCEvyNkgPj4L
+*/
+
+.color-primary-0 { color: #FD840D }	/* Main Primary color */
+.color-primary-1 { color: #FFD2A6 }
+.color-primary-2 { color: #FFAC5B }
+.color-primary-3 { color: #A15000 }
+.color-primary-4 { color: #261300 }
+
+.color-secondary-1-0 { color: #FDB40D }	/* Main Secondary color (1) */
+.color-secondary-1-1 { color: #FFE4A6 }
+.color-secondary-1-2 { color: #FFCD5B }
+.color-secondary-1-3 { color: #A17000 }
+.color-secondary-1-4 { color: #261A00 }
+
+.color-secondary-2-0 { color: #1C3BAC }	/* Main Secondary color (2) */
+.color-secondary-2-1 { color: #A5B4EE }
+.color-secondary-2-2 { color: #556DC5 }
+.color-secondary-2-3 { color: #0C216E }
+.color-secondary-2-4 { color: #01061A }
+
+.color-complement-0 { color: #0C819D }	/* Main Complement color */
+.color-complement-1 { color: #9BDBEA }
+.color-complement-2 { color: #46A4BB }
+.color-complement-3 { color: #035164 }
+.color-complement-4 { color: #001317 }
+
+.background-primary-0 { background: #FD840D; color: black }	/* Main Primary background */
+.background-primary-1 { background: #FFD2A6; color: black }
+.background-primary-2 { background: #FFAC5B; color: black }
+.background-primary-3 { background: #A15000; color: white }
+.background-primary-4 { background: #261300; color: white }
+
+.background-secondary-1-0 { background: #FDB40D; color: black }	/* Main Secondary background (1) */
+.background-secondary-1-0 h1, .background-secondary-1-0 h2, .background-secondary-1-0 h3 { color: white; }
+.background-secondary-1-1 { background: #FFE4A6; color: black }
+.background-secondary-1-2 { background: #FFCD5B; color: black }
+.background-secondary-1-3 { background: #A17000; color: white }
+.background-secondary-1-4 { background: #261A00; color: white }
+
+.background-secondary-2-0 { background: #1C3BAC; color: black }	/* Main Secondary background (2) */
+.background-secondary-2-1 { background: #A5B4EE; color: black }
+.background-secondary-2-2 { background: #556DC5; color: white }
+.background-secondary-2-3 { background: #0C216E; color: white }
+.background-secondary-2-4 { background: #01061A; color: white }
+
+.background-complement-0 { background: #0C819D; color: black }	/* Main Complement background */
+.background-complement-1 { background: #9BDBEA; color: black }
+.background-complement-2 { background: #46A4BB; color: white }
+.background-complement-3 { background: #035164; color: white }
+.background-complement-4 { background: #001317; color: white }
+
+.white { color: white; }
+.black { color: black; }
+.blue, .link { color: #428bca; }

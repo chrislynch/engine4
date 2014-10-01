@@ -43,6 +43,11 @@ h3 { font-size: 18pt; }
 
 h4 { font-size: 16pt; }
 
+small {
+    font-size: 12px;
+    line-height: 16px;
+}
+
 #masthead {
 	border-bottom: 2px solid gray;
 	padding-left: 0px;

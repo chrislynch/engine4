@@ -32,7 +32,6 @@
 "book","Links","Link_Amazon_US","Amazon.com Link","text","",
 "book","Links","Link_Amazon_UK","Amazon.co.uk Link","text","",
 "book","Links","Link_Smashwords","Smashwords Link","text","",
-"book","Links","Link_Smashwords_Sample","Smashwords Sample Link","text","",
 "book","Links","Link_WattPad","WattPad Link","text","",
 "picture","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
 "picture","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
@@ -60,7 +59,7 @@
 "status","_core","Category","Category","hidden","",1,"status"
 "status","_core","Tags","Hashtags","tags","Enter hastagstags for the post.",1
 "block","_core","Name","Block Title","text","Title of the block",
-"block","_content","HTML","Content","markdown","Enter the content for the block here. Markdown formatting is supported.",15
+"block","_content","HTML","Content","textarea","Enter the content for the block here. Markdown formatting is supported.",15
 "block","_control","Status","Publish this block","checkbox","",
 "block","_control","System","System","hidden","","","0"
 "block","_control","Timestamp","Timestamp","text","",
