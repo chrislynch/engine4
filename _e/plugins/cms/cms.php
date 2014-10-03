@@ -60,6 +60,8 @@ class _cms {
 		// Apply a set of rendering functions to a thing to render it properly.
 		// So, for example, apply Markdown rendering to a thing 
 		$fields = _cms::loadfields($thing['Type']);
+		$thing['_meta'] = array();
+		$thing['_meta']['tags'] = array();
 		foreach($fields as $field){
 			$fieldName = $field['FieldName'];
 			$fieldType = $field['FieldType'];
@@ -72,6 +74,7 @@ class _cms {
 					$ltags = array();
 					foreach($tags as $tag){
 						$tag = trim($tag);
+						$thing['_meta']['tags'][] = $tag;
 						if(strlen($tag) > 0) {
 							$ltags[] = "<a href='$fieldName/$tag'>$tag</a>";	
 						}

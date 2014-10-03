@@ -1,4 +1,4 @@
-"Type","FieldGroup","FieldName","FieldLabel","FieldType","Help","FieldSize","FieldDefaultValue"
+"Type","FieldGroup","FieldName","FieldLabel","FieldType","Help","FieldSize","FieldDefaultValue","Related"
 "post","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
 "post","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
 "post","_control","Status","Publish this content","checkbox","",
@@ -7,7 +7,7 @@
 "post","_content","Excerpt","Excerpt","markdown","Enter the excerpt/teaser text for the post here. This will be used in search results and on category pages. Markdown formatting is supported.",3
 "post","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
 "post","_content","Category","Category","tags","Enter a category/section for the post.",1
-"post","_content","Tags","Tags","tags","Enter tags for the post.",1
+"post","_content","Tags","Tags","tags","Enter tags for the post.",1,"",TRUE
 "post","_content","FeaturedImage","Featured Image","file","The featured image will appear on your post in preview and in full display.",
 "config",_core,"Name","Site Name","text"
 "config","_control","Status","Site Online","checkbox","",
@@ -50,7 +50,7 @@
 "video","_core","Video","YouTube Video Link","youtube","The featured video will appear on your post in preview and in full display.",
 "video","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
 "video","_content","Category","Category","tags","Enter a category/section for the post.",1
-"video","_content","Tags","Tags","tags","Enter tags for the post.",1
+"video","_content","Tags","Tags","tags","Enter tags for the post.",1,"",TRUE
 "status","_core","Name","Status","text","What is your status today?",
 "status","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
 "status","_control","Status","Publish this content","checkbox","",
@@ -59,7 +59,7 @@
 "status","_core","Category","Category","hidden","",1,"status"
 "status","_core","Tags","Hashtags","tags","Enter hastagstags for the post.",1
 "block","_core","Name","Block Title","text","Title of the block",
-"block","_content","HTML","Content","textarea","Enter the content for the block here. Markdown formatting is supported.",15
+"block","_content","HTML","Content","markdown","Enter the content for the block here. Markdown formatting is supported.",15
 "block","_control","Status","Publish this block","checkbox","",
 "block","_control","System","System","hidden","","","0"
 "block","_control","Timestamp","Timestamp","text","",
