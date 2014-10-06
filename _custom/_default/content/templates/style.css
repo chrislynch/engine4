@@ -160,6 +160,8 @@ small {
 #sidebar p a, #sidebar p a:hover { color: white; font-weight: 700}
 #sidebar .btn {color: #8A0808;}
 
+#sidebar #block-About p { font-size: 11pt; text-align: left; }
+
 .book { margin-bottom: 12px; }
 .book img { max-width: 100%; }
 

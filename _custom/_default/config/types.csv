@@ -33,6 +33,7 @@
 "book","Links","Link_Amazon_UK","Amazon.co.uk Link","text","",
 "book","Links","Link_Smashwords","Smashwords Link","text","",
 "book","Links","Embed_WattPad","WattPad Embed Code","text","",
+"book","_content","Tags","Tags","tags","Enter tags for the book to link it to posts.",1,"",TRUE
 "picture","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
 "picture","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
 "picture","_control","Status","Publish this content","checkbox","",

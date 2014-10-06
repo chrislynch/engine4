@@ -147,12 +147,12 @@
 					and tagged with {{ post.Tags | raw }}
 					{% endif %}
 				</p>
-				{% if post.Related|length > 1 %}
+				{% if post.Related|length > 0 %}
 					<hr>
 					<h4 class='related'>Read More</h4>
 					{% for rpost in post.Related %}
 						<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>						
-							{% if post.FeaturedImage != '' %}
+							{% if rpost.FeaturedImage != '' %}
 							<img src="{{ rpost.FeaturedImage }}" class="img-small" alt="{{ rpost.Name }}">
 							{% endif %}
 							<p class='left'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a><br>
@@ -166,7 +166,9 @@
 	</div> <!-- End of content -->
 	<div id='sidebar' class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>
 		{% for block in this.app.blocks %}
+			<div id='block-{{ block.Name }}' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
 			{{ block.HTML | raw }}
+			</div>
 		{% endfor %}
 	</div>
 	</div> <!-- End of row -->
