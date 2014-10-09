@@ -41,6 +41,8 @@ if (isset($_POST['bubbletext'])){
 		#left textarea { width: 100%; height: calc(100% - 120px); }
 		#right { height: auto; }
 		#right #bubbleout { width: 100%; height: 90%; overflow: scroll}
+
+		input[type="file"] { display: inline !important; }
 	</style>
 
 <script>
@@ -77,9 +79,7 @@ if (isset($_POST['bubbletext'])){
 					<li><button type="submit" name="op" value="SAVE" class="btn btn-success navbar-btn">Save Script</button></li>
 		    </ul>
 				<ul class="nav navbar-nav navbar-right">
-					<p class="navbar-text">
-						<input name='upload' type='file'>
-					</p>
+					<input name='upload' type='file'>
 					<button type="submit" name="op" class="btn btn-danger navbar-btn" value="UPLOAD">Upload TXT</button>
 				</ul>
 		  </div><!-- /.navbar-collapse -->
