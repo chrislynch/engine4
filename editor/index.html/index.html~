@@ -1,0 +1,88 @@
+<html>
+<head>
+	<!-- JQuery -->
+	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		
+	<!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+	<style>
+		#left { height: auto; }
+		#left textarea { width: 100%; height: calc(100% - 120px); }
+	</style>
+
+</head>
+<body>
+<form id="bubblein" method="POST" action="http://www.planetofthepenguins.com/bubble/output/bubble_app_output.php" enctype="multipart/form-data">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+		  <!-- Brand and toggle get grouped for better mobile display -->
+		  <div class="navbar-header">
+		    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		      <span class="sr-only">Toggle navigation</span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		    </button>
+		    <a class="navbar-brand" href="#">Bubble: Plain Text Comic Book Scripting</a>
+		  </div>
+
+		  <!-- Collect the nav links, forms, and other content for toggling -->
+		  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		    <ul class="nav navbar-nav">
+					<li><button type="submit" name="op" class="btn btn-primary navbar-btn">Print Script</button>&nbsp;&nbsp;</li>
+					<li><button type="submit" name="op" value="Save script as TXT" class="btn btn-success navbar-btn">Save Script</button></li>
+		    </ul>
+				<ul class="nav navbar-nav navbar-right">
+					<p class="navbar-text">
+						<input name='upload' type='file'>
+					</p>
+					<button type="submit" name="op" class="btn btn-danger navbar-btn" value="Upload script as TXT">Upload TXT</button>
+				</ul>
+		  </div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+
+	<div class="container-fluid">
+		<div id="left" class="col-lg-6 col-md-8 col-sm-12 col-xs-12">			
+			<textarea name="bubbletext" class="formcontrol"></textarea>
+		</div>
+		<div id="right" class="col-lg-6 col-md-4 col-sm-12 col-xs-12">
+			<div id="bubbleout"></div>
+			<div id="counter"></div>
+		</div>
+	</div>
+</form>
+
+</body>
+
+<script>
+function count(){  
+  var val   = $.trim($('textarea').val()), // Remove spaces from b/e of string
+      words = val.replace(/\s+/gi, ' ').split(' ').length, // Count word-splits
+      chars = val.length;                                  // Count characters
+  if(!chars)words=0;
+
+  $('#counter').html('<br>'+words+' words and '+ chars +' characters');
+}
+count();
+
+function bubble(){
+	$.post("http://localhost/Github/engine4/bubble/output/bubble_app_output.php",
+					$("#bubblein").serialize()).done(
+					function(data){
+						$('#bubbleout').html(data);
+					}
+				);
+}
+
+/* $('textarea').on('input', count); */
+$('textarea').on('input', bubble);
+</script>
+
+</html>
