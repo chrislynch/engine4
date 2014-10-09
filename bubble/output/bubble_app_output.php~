@@ -35,7 +35,7 @@ function Bubble($text){
         $textlinechars = str_split($textline);
         // Check for a new page or panel
         if ($textlinechars[0] == '#'){
-            if (@$textlinechars[1] !== '#'){
+            if ($textlinechars[1] !== '#'){
                 // New page
                 $currentline = 'page';
 		$foundfirstpage = TRUE;
