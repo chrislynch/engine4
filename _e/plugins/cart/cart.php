@@ -128,7 +128,11 @@ class _cart {
             $service->Title = $serviceRow['Title'];
             $service->Description = $serviceRow['Description'];
             $service->Data = $serviceRow['Data'];
-            $service->calculateTax();
+            if($type == 'shipping'){
+                $service->calculateTax(FALSE);
+            } else {
+                $service->calculateTax(TRUE);
+            }
             
             $this->items[$serviceRow['Code']] = $service; 
         }
@@ -187,7 +191,11 @@ class _cart {
     	$service->Title = $newservice['Title'];
     	$service->Description = $newservice['Description'];
     	$service->Data = @$newservice['Data'];
-    	$service->calculateTax();
+        if($type == 'shipping'){
+            $service->calculateTax(FALSE);
+        } else {
+            $service->calculateTax(TRUE);
+        }
     	 
     	$dSQL = "delete from trn_cart where session_id = '" . session_id() . "' AND Type = '$type'";
     	$iSQL = "insert into trn_cart
@@ -257,12 +265,14 @@ class cartItem {
     public $Description;
     public $Data;
     
-    function calculateTax(){
+    function calculateTax($VATable = TRUE){
         // Force a calculation of tax elements.
         // Assumings that $this->Price is the gross line price
+        if($VATable) { $VAT = 1.2; } else { $VAT = 1; }
+                
         $this->Price = number_format($this->Price,2);
         $this->grossunitprice = number_format(strval($this->Price) / $this->QTY,2);
-        $this->netunitprice = number_format(strval($this->grossunitprice) / 1.2,2);      
+        $this->netunitprice = number_format(strval($this->grossunitprice) / $VAT,2);      
         $this->unittax = number_format(strval($this->grossunitprice) - strval($this->netunitprice),2);
         $this->netlineprice = number_format(strval($this->netunitprice) * $this->QTY,2);
         $this->linetax = number_format(strval($this->unittax) * $this->QTY,2);

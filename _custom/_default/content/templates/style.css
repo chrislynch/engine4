@@ -43,6 +43,15 @@ h3 { font-size: 18pt; }
 
 h4 { font-size: 16pt; }
 
+h4.related { 
+	font-family: 'Oswald', sans-serif;
+	font-weight: 700;
+	color: #8A0808;
+	text-align: left;
+	text-transform: uppercase;
+	font-size: 32pt;
+}
+
 small {
     font-size: 12px;
     line-height: 16px;
@@ -55,8 +64,20 @@ small {
 
 #logo { padding-left: 0px; }
 
-#logo h1, #logo h1 a {
+#logo p {
 	color: gray;
+}
+
+#logo #name, #logo #name a {
+	font-family: 'Oswald', sans-serif;
+	font-weight: 700;
+	font-size: 36pt; 
+	color: #8A0808;
+	text-align: left;
+	text-transform: uppercase;
+	color: gray;
+	line-height: 38pt;
+  	margin-top: 10px;
 }
 
 #social {
@@ -132,12 +153,19 @@ small {
 }
 
 #sidebar { text-align: center; background-color: #A66A6A; color: white;}
-#sidebar h1 { text-align: center; margin-top: 5px; color: white; }
-#sidebar h2 { font-size: 18pt; text-align: center; color: white; }
-#sidebar h3 { font-size: 16pt; text-align: center; color: white; }
+#sidebar h1, #sidebar h1 a { text-align: center; margin-top: 5px; color: white; }
+#sidebar h1 a:hover { text-align: center; margin-top: 5px; color: white; }
+#sidebar h2, #sidebar h2 a, #sidebar h2 a:hover { font-size: 18pt; text-align: center; color: #8A0808; }
+#sidebar h3, #sidebar h3 a, #sidebar h3 a:hover { font-size: 16pt; text-align: center; color: #8A0808; }
+#sidebar p a, #sidebar p a:hover { color: white; font-weight: 700}
+#sidebar .btn {color: #8A0808;}
+
+#sidebar #block-About p { font-size: 11pt; text-align: left; }
 
 .book { margin-bottom: 12px; }
 .book img { max-width: 100%; }
+
+.img-small { float:right; width: 50%; padding-left: 10px;}
 
 /* Supersize me */
 @media only screen and (min-width : 1200px) {
@@ -167,4 +195,8 @@ small {
 /* Custom, iPhone Retina */ 
 @media only screen and (max-width : 320px) {
 	.img-full{ width: 100%; }
+}
+
+.left {
+	text-align: left;
 }
