@@ -55,33 +55,40 @@
 	<div class='container'>
 	<div class='row'>
 	<div id='content' class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
-		<div class='itemsizer'></div>
 		{% if this.app.posts|length > 1 %}
 			{% for post in this.app.posts %}
 			{% if post.Type == 'status' %}
-				<div class="item item-{{ post.Type }}">
+				<div class='row'>
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 item item-{{ post.Type }}">
 				<div class='iteminner'>
 					<h3>{{ post.Tags | raw }}</h3>
 					<p>"{{ post.Name }}"</p>
 				</div>
 				</div>
+				</div>
 			{% else %}
-				<div class="item item-{{ post.Type }}">
+				<div class='row'>
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 item item-{{ post.Type }}">
 				<div class='iteminner'>
-					<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>
+					<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+						{% if post.FeaturedImage != '' %}
+							<div class='imgcontainer'>	
+							<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
+							</div>
+						{% endif %}	
+						{% if post.Video != '' %}
+							<div class="embed-responsive embed-responsive-16by9">
+								{{ post.Video | raw }}
+							</div>			
+						{% endif %}			
+					</div>
 
-					{% if post.FeaturedImage != '' %}	
-						<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
-					{% endif %}	
-					{% if post.Video != '' %}
-						<div class="embed-responsive embed-responsive-16by9">
-							{{ post.Video | raw }}
-						</div>			
-					{% endif %}			
-				
-					<div class='excerpt'>{{ post.Excerpt | raw }}</div>
+					<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+						<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>				
+						<div class='excerpt'>{{ post.Excerpt | raw }}</div>
+					</div>
 					
-					<div class='postinfo'>
+					<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 postinfo'>
 						<p>
 						A <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
 						saved at {{ post.Timestamp }}
@@ -93,6 +100,7 @@
 						{% endif %}
 						</p>
 					</div>
+				</div>
 				</div>
 				</div>
 			{% endif %}
@@ -149,16 +157,32 @@
 				</p>
 				{% if post.Related|length > 0 %}
 					<hr>
-					<h4 class='related'>Read More</h4>
+					<!-- <h4 class='related'>Read More</h4> -->
+					<div class='row'>
 					{% for rpost in post.Related %}
-						<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>						
-							{% if rpost.FeaturedImage != '' %}
-							<img src="{{ rpost.FeaturedImage }}" class="img-small" alt="{{ rpost.Name }}">
-							{% endif %}
-							<p class='left'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a><br>
-							</p>
-						</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 item item-{{ post.Type }}">
+					<div class='iteminner'>
+					<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+						{% if rpost.FeaturedImage != '' %}
+							<div class='imgcontainer'>	
+							<a href='{{ rpost.URI }}'><img src="{{ rpost.FeaturedImage }}" class="img-responsive" alt="{{ rpost.Name }}"></a>
+							</div>
+						{% endif %}	
+						{% if rpost.Video != '' %}
+							<div class="embed-responsive embed-responsive-16by9">
+								{{ rpost.Video | raw }}
+							</div>			
+						{% endif %}			
+					</div>
+
+					<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+						<h5 class='related'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a></h5>				
+					</div>
+					
+					</div>
+					</div>
 					{% endfor %} 
+					</div>
 				{% endif %}
 				</div>
 			{% endfor %}
@@ -179,11 +203,12 @@
 			<div id='pager' class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				{% if this.app.pages > 1 %}
 					<ul class="pagination">
-						<li><a href="#">&laquo;</a></li>
-						{% for i in range(1,this.app.pages) %}
+						<!-- <li><a href="#">&laquo;</a></li> -->
+						<li><a href=''>1</a></li>
+						{% for i in range(2,this.app.pages) %}
 	    					<li><a href='?page={{ i }}'>{{ i }}</a></li>
 						{% endfor %}
-						<li><a href="#">&raquo;</a></li>
+						<!-- <li><a href="#">&raquo;</a></li> -->
 					</ul>
 				{% endif %}
 			</div>
@@ -199,6 +224,7 @@
 </body>
 {% if this.app.posts|length > 1 %}
 	<script>
+	/*
 	// jQuery
 	var $container = jQuery('#content');
 	// initialize
@@ -212,6 +238,7 @@
 		$container.layout();
 		$(window).trigger('resize');
 	});
+	*/
 	</script>
 {% endif %}
 </html>
