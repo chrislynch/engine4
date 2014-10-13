@@ -11,7 +11,18 @@ class _db {
         // if(!isset($this->e->_messaging)){ $this->e->_loadPlugin('messaging'); }
     }
     
-    private function connect($connectString){
+    public function connect($connectString = ''){
+        if($connectString == ''){
+            // No connectString given.
+            // Connect to our default DB?
+            $this->db = new PDO("sqlite:_custom/_default/data/f.db");
+            return TRUE;
+        } else {
+            // Connect to the DB that we've been given
+            $this->db = new PDO($connectString);
+            return TRUE; // How do we know if PDO connected?
+        }
+        /*
         if (isset($this->e->_config)) {
 	    	if ($this->e->_config->get('mysql.server') !== ''){
 	    		
@@ -41,16 +52,16 @@ class _db {
 	    		return TRUE;
 	    	} 
 	} else {
-		$this->db = new PDO("sqlite:_custom/_default/data/f.db");
-    		return TRUE;
+		
 	}
+         */
     }
     
-    private function disconnect(){
+    public function disconnect(){
         $this->db = NULL;
     }
     
-    function OK(){
+    private function OK(){
     	// Check that we have a database by connecting and disconnecting
     	$return = FALSE;
     	if($this->connect()){
@@ -62,7 +73,7 @@ class _db {
     	return $return;
     }
     
-    function select($SQL){
+    public function select($SQL){
         // Run a select statement
         if ($this->connect()){
             if(isset($_GET['debug'])){ print $SQL . "<br>"; }
@@ -82,11 +93,11 @@ class _db {
         return $return;
     }
     
-    function query($SQL){
+    public function query($SQL){
         return $this->select($SQL);
     }
     
-    function insert($SQL,$Values = array()){
+    public function insert($SQL,$Values = array()){
         if ($this->connect()){
 	    $cmd = $this->db->prepare($SQL);
             $cmd->execute($Values);
@@ -98,7 +109,7 @@ class _db {
         return $return;
     }
     
-    function insertinto($table,$args){
+    public function insertinto($table,$args){
     	$functions = array('UNIX_TIMESTAMP()');
 
 		$SQL = "INSERT INTO $table";
@@ -128,7 +139,7 @@ class _db {
     	return $return;
     }
     
-    function replaceinto($table,$args){
+    public function replaceinto($table,$args){
     	$functions = array('UNIX_TIMESTAMP()');
 
 		$SQL = "REPLACE INTO $table";
@@ -158,7 +169,7 @@ class _db {
     	return $return;
     }
     
-    function update($SQL){
+    public function update($SQL){
         // Run the update (or delete) command and return how many rows were affected
         if ($this->connect()){
             $update = $this->db->prepare($SQL);
@@ -171,7 +182,7 @@ class _db {
         return $return;
     }
     
-    function delete($SQL){
+    public function delete($SQL){
         // Run the delete command and return how many rows were affected
         return $this->update($SQL);
     }
@@ -213,12 +224,12 @@ class _db {
     }
     */
 
-    function result($SQL){
+    public function result($SQL){
         $data = $this->select($SQL);
 	return $data->fetchColumn();        
     }
 
-    function escape($string){
+    public function escape($string){
 	$this->connect();
 	$return = $this->db->quote($string);
 	$this->disconnect();
