@@ -11,8 +11,8 @@ class _db {
         // if(!isset($this->e->_messaging)){ $this->e->_loadPlugin('messaging'); }
     }
     
-    private function connect(){
-	if (isset($this->e->_config)) {
+    private function connect($connectString){
+        if (isset($this->e->_config)) {
 	    	if ($this->e->_config->get('mysql.server') !== ''){
 	    		
 	    		$this->db = mysql_connect($this->e->_config->get('mysql.server'),
