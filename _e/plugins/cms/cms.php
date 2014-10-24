@@ -108,4 +108,145 @@ class _cms {
 		}
 	}
 
+	static public function corefields(){
+		$corefields = array('ID','Name','URI','Type','Status','Timestamp','System');		
+		return $corefields;
+	}
+
+	static public function newThing(){
+		$corefields = corefields();
+		$thing = array();
+		foreach($corefields as $field){
+			$thing[$field] = '';
+		}
+	}
+
+	static public function saveThing($post,$files = array()){
+		global $e;
+
+		$corefields = corefields();
+		// Set defaults
+		if(!(isset($post['Status']))) { $post['Status'] = 0; }
+
+		// Start a spare thing to collect data
+		$thing = array();
+			
+		// Build the tabledata array
+		$tabledata = array();
+		foreach($post as $field => $value){
+			if(in_array($field,$corefields)){
+				$tabledata[$field] = $value;
+			}
+		}
+		$thing = $tabledata;
+
+		// Validate URL
+		if($tabledata['URI'] == ''){ $tabledata['URI'] = e::_textToPath($tabledata['Name']); print "Calculated URI '{$tabledata['URI']}'"; }
+		$tabledata['URI'] = strtolower(urlencode($tabledata['URI'])); 
+		// Check that this URL doesn't already exist
+		$URICount = $e->_db->result("SELECT COUNT(0) FROM things WHERE URI = '{$tabledata['URI']}' AND ID <> {$tabledata['ID']}");
+		if ($URICount > 0) { $tabledata['URI'] .= '-' . $URICount; }
+
+		// Validate Timestamp - let automatic content take over if nothing is set.
+		if($tabledata['Timestamp'] == ''){ unset($tabledata['Timestamp']); }
+
+		// Save to things table
+		if($post['ID'] == 0){
+			unset($tabledata['ID']);
+			$post['ID'] = $e->_db->insertinto('things',$tabledata);	
+		} else {
+			$e->_db->replaceinto('things',$tabledata);
+		}
+
+		// Save to things_data table
+		$e->_db->update("DELETE FROM things_data WHERE ID = " . $post['ID']);
+		foreach($post as $field => $value){
+			if(!(in_array($field,$corefields))){
+				$tabledata = array();
+				$tabledata['ID'] = $post['ID'];
+				$tabledata['Field'] = $field;
+				$value = _cms::convert_ascii($value); // Get rid of non-ASCII characters
+				$tabledata['Value'] = $value;
+				$check = $e->_db->replaceinto('things_data',$tabledata);
+				if ($check == 0) { print "Error saving field $field<br>"; }
+				$thing[$field] = $value;
+			}
+		}
+
+		// Save any inbound files
+		foreach($files as $field => $file){
+			if($file['error'] == 0){
+				$newfilename = "_custom/_default/content/uploads/{$file['name']}";
+				move_uploaded_file($file['tmp_name'], $newfilename);
+				$tabledata = array();
+				$tabledata['ID'] = $post['ID'];
+				$tabledata['Field'] = $field;
+				$tabledata['Value'] = $newfilename;
+				$e->_db->replaceinto('things_data',$tabledata);
+				$thing[$field] = $newfilename;
+			} else {
+
+			}
+		}
+
+		// Save any default or cached values (like old files)
+		foreach($post as $field => $value){
+			if(substr($field,0,1) == '_'){
+				$field = substr($field,1);
+				if(!(isset($thing[$field]))){
+					$tabledata = array();
+					$tabledata['ID'] = $post['ID'];
+					$tabledata['Field'] = $field;
+					$tabledata['Value'] = $value;
+					$e->_db->replaceinto('things_data',$tabledata);
+					$thing[$field] = $value;
+				}
+			}
+		}
+
+		return $thing;
+	}
+
+	static public function convert_ascii($string) { 
+  		// Replace Single Curly Quotes
+		$search[]  = chr(226).chr(128).chr(152);
+		$replace[] = "'";
+		$search[]  = chr(226).chr(128).chr(153);
+		$replace[] = "'";
+
+		// Replace Smart Double Curly Quotes
+		$search[]  = chr(226).chr(128).chr(156);
+		$replace[] = '"';
+		$search[]  = chr(226).chr(128).chr(157);
+		$replace[] = '"';
+
+		// Replace En Dash
+		$search[]  = chr(226).chr(128).chr(147);
+		$replace[] = '--';
+
+		// Replace Em Dash
+		$search[]  = chr(226).chr(128).chr(148);
+		$replace[] = '---';
+
+		// Replace Bullet
+		$search[]  = chr(226).chr(128).chr(162);
+		$replace[] = '*';
+
+		// Replace Middle Dot
+		$search[]  = chr(194).chr(183);
+		$replace[] = '*';
+
+		// Replace Ellipsis with three consecutive dots
+		$search[]  = chr(226).chr(128).chr(166);
+		$replace[] = '...';
+
+		// Apply Replacements
+		$string = str_replace($search, $replace, $string);
+
+		// Remove any non-ASCII Characters
+		$string = preg_replace("/[^\x01-\x7F]/","", $string);
+
+		return $string; 
+	}
+
 }

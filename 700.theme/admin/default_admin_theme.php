@@ -14,7 +14,7 @@
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	
 	<!-- Our stylesheet - overrides -->
-	<link href="20.theme/admin/style.css" rel=stylesheet type="text/css">
+	<link href="700.theme/admin/style.css" rel=stylesheet type="text/css">
 	
 </head>
 <body>
