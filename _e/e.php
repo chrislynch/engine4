@@ -623,30 +623,30 @@ class eThing extends stdClass {
         
         while($loop == TRUE){
             $loop = FALSE;
-            $variableStart = stripos($this->html,'{@');
+            $variableStart = stripos($this->html,'{{');
             if (!($variableStart === FALSE)){
-                $variableEnd = stripos($this->html,'@}');
+                $variableEnd = stripos($this->html,'}}');
                 if (!($variableEnd === FALSE)){
                     // Grab the variable
                     $variable = substr($this->html, $variableStart, ($variableEnd - $variableStart) + 2);
                     // Expunge the variable from the html
                     $this->html = str_ireplace($variable, '', $this->html);
                     // Remove the delimiters from the variable
-                    $variable = str_ireplace('{@', '', $variable);
-                    $variable = str_ireplace('@}', '', $variable);
+                    $variable = str_ireplace('{{', '', $variable);
+                    $variable = str_ireplace('}}', '', $variable);
                     // Split the variable to name & value
                     $variable = explode('=',$variable);
                     $variablename = trim(array_shift($variable));
                     $variablevalue = trim(implode('=',$variable));
                     // Apply the value to the object
-                    $this->variablename = $variablevalue;
+                    $this->$variablename = $variablevalue;
                     // If we have found one, there may be more. Go and look for them.
                     $loop = TRUE;
                 }
 
             }
         }
-        
+        $this->html = trim($this->html);
     }
     
     

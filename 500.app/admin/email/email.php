@@ -20,13 +20,18 @@ for ($i=1; $i <= $msgcount; $i++) {
 	array_shift($body);
 	array_shift($body);
 	$body = implode("\n",$body);
-	print "Saving message $i";
+	print "Saving message $i\n";
 	email2thing($header,$body);
+	print "Deleting message $i\n";
+	imap_delete($conn,$i);
 }
+imap_expunge($conn);
 
 print "Closing connection\n";
 imap_close($conn);
 print "Closed\n";
+
+exit();
 
 function email2thing($header,$body,$files=array()){
 	global $e;
@@ -44,7 +49,17 @@ function email2thing($header,$body,$files=array()){
 	// Read the header and pick up any useful info
 	$post['Name'] = $header->subject;
 
-	// Parse the body text and work out what we are doing
+	// Create a standard thing and use it to extract variables
+	$thing = new eThing;
+	$thing->html = $body;
+	$thing->extractVariables();
+	
+	$data = get_object_vars($thing);
+	foreach($data as $key=>$value){
+		$post[$key] = $value;
+	}
+
+	// Parse the remaining text and work out what we are doing based on message content
 	$body = explode("\n",$body);
 	$line1 = $body[0];
 	if (stripos($line1, 'http://') === 0){
@@ -69,19 +84,11 @@ function email2thing($header,$body,$files=array()){
 	// Rebuild the body
 	$body = implode("\n",$body);
 
-	// Create a standard thing and use it to extract variables
-	$thing = new eThing;
-	$thing->html = $body;
-	$thing->extractVariables();
-	
-	$data = get_object_vars($thing);
-	foreach($data as $key=>$value){
-		$post[$key] = $value;
-	}
-
 	// Set the body using the remaining data
 	unset($post['html']);
 	$post['HTML'] = $thing->html;
+
+	print_r($post);
 
 	// Save the thing
 	return (_cms::saveThing($post,$files));
