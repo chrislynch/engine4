@@ -580,14 +580,19 @@ class eThing extends stdClass {
     var $title;
     var $timestamp;
     
-    function __construct($path) {
-        $this->path = $path;
-        
-        $url = explode('/',$path);
-        array_shift($url);
-        $url = implode('/',$url);
-        if (strlen($url) == 0) { $url = '/'; }
-        $this->url = $url;
+    function __construct($path='') {
+        if(strlen($path) > 0){
+            $this->path = $path;
+            
+            $url = explode('/',$path);
+            array_shift($url);
+            $url = implode('/',$url);
+            if (strlen($url) == 0) { $url = '/'; }
+            $this->url = $url;    
+        } else {
+            $this->path = '';
+            $this->url = '';
+        }
     }
  
     function _load($file){
@@ -611,7 +616,7 @@ class eThing extends stdClass {
         
     }
     
-    private function extractVariables(){
+    public function extractVariables(){
         $variableStart = FALSE;
         $variableEnd = FALSE;
         $loop = TRUE;

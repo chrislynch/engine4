@@ -54,7 +54,7 @@ h4.related {
 	font-size: 32pt;
 }
 
-h5.related { 
+h5.related, h5.related a { 
 	font-family: 'Oswald', sans-serif;
 	font-weight: 700;
 	color: #8A0808;
@@ -82,12 +82,12 @@ small {
 #logo #name, #logo #name a {
 	font-family: 'Oswald', sans-serif;
 	font-weight: 700;
-	font-size: 36pt; 
+	font-size: 12pt; 
 	color: #8A0808;
 	text-align: left;
 	text-transform: uppercase;
 	color: gray;
-	line-height: 38pt;
+	line-height: 12pt;
   	margin-top: 10px;
 }
 

@@ -9,10 +9,8 @@ $msgcount = imap_num_msg($conn);
 print "Found $msgcount messages\n";
 
 for ($i=1; $i <= $msgcount; $i++) { 
-	print "Printing message $i\n\t";
 	$header = imap_headerinfo($conn, $i);
 	$subject = $header->subject;
-	print_r($header);
 	$body = imap_body($conn, $i);
 	$txtend = stripos($body, 'Content-Type: text/html;');
 	$body = substr($body, 0,$txtend);
@@ -22,8 +20,7 @@ for ($i=1; $i <= $msgcount; $i++) {
 	array_shift($body);
 	array_shift($body);
 	$body = implode("\n",$body);
-	print $body;
-	print "\n";
+	print "Saving message $i";
 	email2thing($header,$body);
 }
 
@@ -32,8 +29,17 @@ imap_close($conn);
 print "Closed\n";
 
 function email2thing($header,$body,$files=array()){
-	$post = _cms::newThing();
+	global $e;
+
+	$post = _cms::newThing();	
 	$files = array();
+
+	// Default to creating a new item
+	$post['ID'] = 0;
+	// Assume the item will be published
+	$post['Status'] = 1;
+	// Assume the item belongs on the front page
+	$post['System'] = 1;
 
 	// Read the header and pick up any useful info
 	$post['Name'] = $header->subject;
@@ -45,26 +51,40 @@ function email2thing($header,$body,$files=array()){
 		// If the line starts with http:// we could be looking at either a video or a link.
 		if (stripos($line1, 'youtube')){
 			// This is a video
-			$post['Type'] == 'video';
+			$post['Type'] = 'video';
 		} else {
 			// This is a link (for now, this is treated as a post)
-			$post['Type'] == 'post';
+			$post['Type'] = 'post';
 		}
 	} else {
 		// This is a post or a status
 		if (count($body) == 1){
 			// Single line posts are treated as a status
-			$post['Type'] == 'status';
+			$post['Type'] = 'status';
 		} else {
 			// Multi-line posts that do not start with a http:// resource are a post
-			$post['Type'] == 'post';
+			$post['Type'] = 'post';
 		}
 	}
-
+	// Rebuild the body
 	$body = implode("\n",$body);
-	$post['HTML'] = $body;
 
-	_cms::saveThing($post,$files);
+	// Create a standard thing and use it to extract variables
+	$thing = new eThing;
+	$thing->html = $body;
+	$thing->extractVariables();
+	
+	$data = get_object_vars($thing);
+	foreach($data as $key=>$value){
+		$post[$key] = $value;
+	}
+
+	// Set the body using the remaining data
+	unset($post['html']);
+	$post['HTML'] = $thing->html;
+
+	// Save the thing
+	return (_cms::saveThing($post,$files));
 
 }
 

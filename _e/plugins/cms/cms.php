@@ -114,7 +114,7 @@ class _cms {
 	}
 
 	static public function newThing(){
-		$corefields = corefields();
+		$corefields = _cms::corefields();
 		$thing = array();
 		foreach($corefields as $field){
 			$thing[$field] = '';
@@ -124,7 +124,7 @@ class _cms {
 	static public function saveThing($post,$files = array()){
 		global $e;
 
-		$corefields = corefields();
+		$corefields = _cms::corefields();
 		// Set defaults
 		if(!(isset($post['Status']))) { $post['Status'] = 0; }
 

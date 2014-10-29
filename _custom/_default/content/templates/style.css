@@ -82,12 +82,12 @@ small {
 #logo #name, #logo #name a {
 	font-family: 'Oswald', sans-serif;
 	font-weight: 700;
-	font-size: 36pt; 
+	font-size: 22pt; 
 	color: #8A0808;
 	text-align: left;
 	text-transform: uppercase;
 	color: gray;
-	line-height: 38pt;
+	line-height: 12pt;
   	margin-top: 10px;
 }
 
@@ -108,15 +108,32 @@ small {
 .item-status p {font-size: 24px; font-weight: 400; text-align: left; font-style: italic; }
 
 .iteminner img { max-width: 100%; }
-.iteminner .imgcontainer { height: 215px; overflow: hidden; }
 
-/* .iteminner {border-bottom: solid 1px black; background: white; padding: 5px; } */
+.iteminner .imgcontainer {
+    float: left;
+    margin-right: 10px;
+    max-height: 240px;
+    overflow: hidden;
+    width: 240px;
+}
+
+.item-picture .iteminner .imgcontainer {
+	max-height: inherit;
+	width: 100%;
+
+}
+
+.item-picture .iteminner .imgcontainer img{
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .pageinner {padding-left: 5px; padding-right: 15px; }
 
 .item h2, .item h2 a { font-family: Oswald, serif; text-transform: uppercase;
 	   margin-top: 0px; margin-bottom: 2px }
 
-.excerpt { font-size: 10pt; }
+.excerpt { font-size: 14pt; }
 
 .postinfo {
 	font-size: 10pt;

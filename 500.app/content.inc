@@ -9,8 +9,8 @@ if(isset($_GET['page'])) { $this->app->page = $_GET['page']; } else { $this->app
 if ($this->p == '') {
 	
 	$start = $pagesize * ($this->app->page -1 );
-	$end = $pagesize * ($this->app->page);
-	$things = $this->_db->query("SELECT * FROM things WHERE Status = 1 AND System = 1 ORDER BY Timestamp DESC LIMIT $start,$end");
+		
+	$things = $this->_db->query("SELECT * FROM things WHERE Status = 1 AND System = 1 ORDER BY Timestamp DESC LIMIT $start,$pagesize");
 	$this->app->pages = ceil($this->_db->result('SELECT COUNT(0) FROM things WHERE Status = 1 AND ID > 1') / $pagesize);
 } else {
 	// Check for a direct match on the URI
@@ -25,7 +25,7 @@ if ($this->p == '') {
 			if ($search == 'Type'){
 				$thingsSQL = "SELECT t.* FROM things t
 						WHERE Type = '$searchfor'
-						AND t.Status = 1 AND System >= 0 AND t.ID > 1 ORDER BY t.Timestamp DESC LIMIT $start,$end";
+						AND t.Status = 1 AND System >= 0 AND t.ID > 1 ORDER BY t.Timestamp DESC LIMIT $start,$pagesize";
 				$pageSQL = "SELECT t.* FROM things t
 						WHERE Type = '$searchfor'
 						AND t.Status = 1 AND System >= 0 AND t.ID > 1";
@@ -33,7 +33,7 @@ if ($this->p == '') {
 				$thingsSQL = "SELECT t.* FROM things t
 							JOIN things_data td ON td.ID = t.ID
 							WHERE td.Field = '$search' AND td.Value LIKE '%$searchfor%'
-							AND t.Status = 1 AND System >= 0 AND t.ID > 1 ORDER BY t.Timestamp DESC LIMIT $start,$end";
+							AND t.Status = 1 AND System >= 0 AND t.ID > 1 ORDER BY t.Timestamp DESC LIMIT $start,$pagesize";
 				$pageSQL = "SELECT COUNT(0) FROM things t
 							JOIN things_data td ON td.ID = t.ID
 							WHERE td.Field = '$search' AND td.Value LIKE '%$searchfor%'

@@ -12,7 +12,7 @@ $this->_loadPlugin('cms');
 $this->sys->custompath = '_custom/_default/';
 $this->sys->basehref = $this->_basehref();
 
-if($this->parray(0) == 'admin' && $this->p !== 'admin/user'){
+if($this->parray(0) == 'admin' && $this->p !== 'admin/user' && $this->p !== 'admin/email'){
 	// We are on the /admin path. Need an admin user
 	if(@$_COOKIE['_e_admin'] !== '1'){
 		$this->_goto('admin/user');
