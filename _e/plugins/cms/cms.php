@@ -153,7 +153,8 @@ class _cms {
 		// Save to things table
 		if($post['ID'] == 0){
 			unset($tabledata['ID']);
-			$post['ID'] = $e->_db->insertinto('things',$tabledata);	
+			$post['ID'] = $e->_db->insertinto('things',$tabledata);
+			$thing['ID'] = $post['ID'];	
 		} else {
 			$e->_db->replaceinto('things',$tabledata);
 		}

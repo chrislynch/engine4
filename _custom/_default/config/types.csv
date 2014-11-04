@@ -64,3 +64,14 @@
 "block","_control","Status","Publish this block","checkbox","",
 "block","_control","System","System","hidden","","","0"
 "block","_control","Timestamp","Timestamp","text","",
+"link","_core","Name","Name","text","Every post should have a name. Unique meaningful names make posts easy to find and help SEO.",
+"video","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
+"link","_control","Status","Publish this content","checkbox","",
+"link","_control","System","Publish to front page","checkbox","","","1"
+"link","_control","Timestamp","Timestamp","text","",
+"link","_core","Link","Web Link","text","The featured video will appear on your post in preview and in full display.",
+"link","_core","URI","URI","url","Every post needs a URI. This will form part of the web address to access the post. If you do not specify one, the system will calculate one for you based on the Name field (above)",
+"link","_content","Excerpt","Excerpt","markdown","Enter the excerpt/teaser text for the post here. This will be used in search results and on category pages. Markdown formatting is supported.",3
+"link","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
+"link","_content","Category","Category","tags","Enter a category/section for the post.",1
+"link","_content","Tags","Tags","tags","Enter tags for the post.",1,"",TRUE
