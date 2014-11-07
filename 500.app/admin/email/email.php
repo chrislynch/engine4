@@ -61,19 +61,20 @@ function email2thing($header,$body,$files=array()){
 
 	// Parse the remaining text and work out what we are doing based on message content
 	$body = explode("\n",$body);
-	$line1 = $body[0];
+	$line1 = $body[1];
 	if (stripos($line1, 'http') === 0){
 		// If the line starts with http:// we could be looking at either a video or a link.
 		if (stripos($line1, 'youtube')){
 			// This is a video
 			$post['Type'] = 'video';
 			$post['Video'] = $line1;
-			unset($body[0]);
+			unset($body[1]);
 		} else {
 			// This is a link (for now, this is treated as a post)
 			$post['Type'] = 'link';
 			$post['Link'] = $line1;
-			unset($body[0]);
+			if(!isset($post['Excerpt'])){$post['Excerpt'] = $body[3];}
+			unset($body[1]);
 		}
 	} else {
 		// This is a post or a status
@@ -83,8 +84,10 @@ function email2thing($header,$body,$files=array()){
 		} else {
 			// Multi-line posts that do not start with a http:// resource are a post
 			$post['Type'] = 'post';
+			if(!isset($post['Excerpt'])){$post['Excerpt'] = $body[3];}
 		}
 	}
+
 	// Rebuild the body
 	$body = implode("\n",$body);
 
