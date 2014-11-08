@@ -18,11 +18,15 @@
 
 	<!-- Packery -->
 	<script src="{{ this.sys.custompath }}content/templates/packery.pkgd.min.js"></script>
+	<script src="{{ this.sys.custompath }}content/templates/imagesloaded.pkgd.min.js"></script>
 
 	<!-- SEO -->
 	<title>{{ this.seo.title }}</title>
-
+	<!-- RSS -->
 	<link rel="alternate" type="application/rss+xml" title="{{ this.seo.title }} Feed" href="{{ this.sys.basehref }}?feed" />
+
+	<!-- MOBILE -->
+	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=2.0; user-scalable=1;"/>
 
 	{{ this.sys.config.HeaderTags | raw }}
 </head>
@@ -78,7 +82,7 @@
 								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
 							{% else %} 
 								{% if post.Video == '' %}	
-								<a href='{{ post.URI }}'><img src="http://lorempixel.com/400/200/abstract" class="img-responsive" alt="{{ post.Name }}"></a>
+								<a href='{{ post.URI }}'><img src="http://lorempixel.com/400/200/?x={post.ID}" class="img-responsive" alt="{{ post.Name }}"></a>
 								{% endif %}
 							{% endif %}	
 							</div>
@@ -107,94 +111,90 @@
 			{% endfor %}
 		{% else %}
 			{% for post in this.app.posts %}
+				<div class='page'>
 				<div class='pageinner'>	
-				{% if post.FeaturedImage != '' %}
-					<br>
-					<img src="{{ post.FeaturedImage }}" class="img-full" alt="{{ post.Name }}">
-				{% endif %}
-				{% if post.Video != '' %}
-					<br>
-					<div class="embed-responsive embed-responsive-16by9">
-						{{ post.Video | raw }}
-					</div>			
-				{% endif %}	
-				<h1>{{ post.Name }}</h1>
-				{{ post.HTML | raw }}
-				{% if post.Link != '' %}
-				<div class='link'>
-				Source: <a href='{{ post.Link }}'>{{ post.Link }}</a>
-				</div>
-				{% endif %}
-				{% if post.Type == 'book' %}
-					<h2>Where to Buy</h2>
-					{% if post.Link_Amazon_US != '' %}<p><a href='{{ post.Link_Amazon_US }}'><button type="button" class="btn btn-danger">Download from Amazon (US/World)</button></a>&nbsp;&nbsp;<a href='{{ post.Link_Amazon_UK }}'><button type="button" class="btn btn-warning">Download from Amazon (UK)</button></a><br><small>Download now for your Amazon Kindle eReader or if you have the Kindle app installed on your tablet or smartphone.</small></p>{% endif %}
-					{% if post.Link_Smashwords != '' %}<p><a href='{{ post.Link_Smashwords }}'><button type="button" class="btn btn-primary">Download from Smashwords</button></a><br><small>Smashwords offer eBooks in .mobi format for your Kindle and .epub for all other eBook readers, devices, and applications.</small></p>{% endif %}
-					{% if post.Embed_WattPad != '' %}
-					<h2>Read Now On At Wattpad</h2>
-					{{ post.Embed_WattPad | raw }}
+					{% if post.FeaturedImage != '' %}
+						<br>
+						<img src="{{ post.FeaturedImage }}" class="img-full" alt="{{ post.Name }}">
 					{% endif %}
-				{% endif %}
+					{% if post.Video != '' %}
+						<br>
+						<div class="embed-responsive embed-responsive-16by9">
+							{{ post.Video | raw }}
+						</div>			
+					{% endif %}	
+					<h1>{{ post.Name }}</h1>
+					{{ post.HTML | raw }}
+					{% if post.Link != '' %}
+						<div class='link'>
+						Source: <a href='{{ post.Link }}'>{{ post.Link }}</a>
+						</div>
+					{% endif %}
+					{% if post.Type == 'book' %}
+						<h2>Where to Buy</h2>
+						{% if post.Link_Amazon_US != '' %}<p><a href='{{ post.Link_Amazon_US }}'><button type="button" class="btn btn-danger">Download from Amazon (US/World)</button></a>&nbsp;&nbsp;<a href='{{ post.Link_Amazon_UK }}'><button type="button" class="btn btn-warning">Download from Amazon (UK)</button></a><br><small>Download now for your Amazon Kindle eReader or if you have the Kindle app installed on your tablet or smartphone.</small></p>{% endif %}
+						{% if post.Link_Smashwords != '' %}<p><a href='{{ post.Link_Smashwords }}'><button type="button" class="btn btn-primary">Download from Smashwords</button></a><br><small>Smashwords offer eBooks in .mobi format for your Kindle and .epub for all other eBook readers, devices, and applications.</small></p>{% endif %}
+						{% if post.Embed_WattPad != '' %}
+						<h2>Read Now On At Wattpad</h2>
+						{{ post.Embed_WattPad | raw }}
+						{% endif %}
+					{% endif %}
 				
-				<hr>
-				<div id="disqus_thread"></div>
-				<script type="text/javascript">
-				/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-				var disqus_shortname = 'planetofthepenguins'; // required: replace example with your forum shortname
+					<hr>
+					<div id="disqus_thread"></div>
+					<script type="text/javascript">
+					/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+					var disqus_shortname = 'planetofthepenguins'; // required: replace example with your forum shortname
 
-				/* * * DON'T EDIT BELOW THIS LINE * * */
-				(function() {
-				    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-				    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-				    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-				})();
-				</script>
-				<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-				<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-				<hr>
-				<p class='postinfo'>
-					This is a  <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
-					saved at {{ post.Timestamp }}
-					{% if post.Category != '' %}
-					in {{ post.Category | raw }} 
-					{% endif %}
-					{% if post.Tags != '' %}
-					and tagged with {{ post.Tags | raw }}
-					{% endif %}
-				</p>
+					/* * * DON'T EDIT BELOW THIS LINE * * */
+					(function() {
+					    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+					    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+					    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+					})();
+					</script>
+					<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+					<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					<hr>
+					<p class='postinfo'>
+						This is a  <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
+						saved at {{ post.Timestamp }}
+						{% if post.Category != '' %}
+						in {{ post.Category | raw }} 
+						{% endif %}
+						{% if post.Tags != '' %}
+						and tagged with {{ post.Tags | raw }}
+						{% endif %}
+					</p>
+				</div>
+				</div>
 				{% if post.Related|length > 0 %}
 					<hr>
 					<!-- <h4 class='related'>Read More</h4> -->
-					<div class='row'>
 					{% for rpost in post.Related %}
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 item item-{{ post.Type }}">
-					<div class='iteminner'>
-					<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
-						{% if rpost.FeaturedImage != '' %}
-							<div class='imgcontainer'>	
-							<a href='{{ rpost.URI }}'><img src="{{ rpost.FeaturedImage }}" class="img-responsive" alt="{{ rpost.Name }}"></a>
+						<div class="item item-{{ post.Type }}">
+							<div class='iteminner'>
+						
+							{% if rpost.FeaturedImage != '' %}
+								<div class='imgcontainer'>	
+								<a href='{{ rpost.URI }}'><img src="{{ rpost.FeaturedImage }}" class="img-responsive" alt="{{ rpost.Name }}"></a>
+								</div>
+							{% endif %}	
+							{% if rpost.Video != '' %}
+								<div class="embed-responsive embed-responsive-16by9">
+									{{ rpost.Video | raw }}
+								</div>			
+							{% endif %}			
 							</div>
-						{% endif %}	
-						{% if rpost.Video != '' %}
-							<div class="embed-responsive embed-responsive-16by9">
-								{{ rpost.Video | raw }}
-							</div>			
-						{% endif %}			
-					</div>
-
-					<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
-						<h5 class='related'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a></h5>				
-					</div>
-					
-					</div>
-					</div>
+							<h5 class='related'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a></h5>
+							<div class='excerpt'>{{ rpost.Excerpt | raw }}</div>		
+						
+						</div>
 					{% endfor %} 
-					</div>
 				{% endif %}
-				</div>
 			{% endfor %}
 		{% endif %}
 	</div> 
-		
 
 	<div class='container'>
 		<div class='row'>
@@ -236,7 +236,17 @@
 		$container.layout();
 		$(window).trigger('resize');
 	});
-	
+
+	$container.imagesLoaded( function() {
+		$container.packery({
+			  itemSelector: '.item',
+			  columnWidth: '.column',
+			  rowHeight: 1,
+			  gutter: 0
+		});
+		$container.layout();
+		$(window).trigger('resize');
+	});	
 	</script>
 {% endif %}
 </html>
