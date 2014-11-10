@@ -62,56 +62,59 @@
 	<div class='row'>
 	<div id='content' class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
 	-->
-	<div id="wall">
-		<div class='column'></div>
-		{% if this.app.posts|length > 1 %}
-			{% for post in this.app.posts %}
-				{% if post.Type == 'status' %}
-					<div class="item item-{{ post.Type }}">
-						<div class='iteminner'>
-							<h3>{{ post.Tags | raw }}</h3>
-							<p>"{{ post.Name }}"</p>
+		
+	{% if this.app.posts|length > 1 %}
+	<div class='wall'>
+	<div class='column'></div>
+		{% for post in this.app.posts %}
+			{% if post.Type == 'status' %}
+				<div class="item item-{{ post.Type }}">
+					<div class='iteminner'>
+						<h3>{{ post.Tags | raw }}</h3>
+						<p>"{{ post.Name }}"</p>
+					</div>
+				</div>
+			{% else %}
+				<div class="item item-{{ post.Type }}">
+					<div class='iteminner'>
+						<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>								
+						<div class='imgcontainer'>	
+						{% if post.FeaturedImage != '' %}
+							<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
+						{% else %} 
+							{% if post.Video == '' %}	
+							<a href='{{ post.URI }}'><img src="http://lorempixel.com/400/200/?x={post.ID}" class="img-responsive" alt="{{ post.Name }}"></a>
+							{% endif %}
+						{% endif %}	
+						</div>
+						{% if post.Video != '' %}
+							<div class="embed-responsive embed-responsive-16by9">
+								{{ post.Video | raw }}
+							</div>			
+						{% endif %}			
+						<div class='excerpt'>{{ post.Excerpt | raw }}</div>
+													
+						<div class='postinfo'>
+							<p>
+							A <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
+							saved at {{ post.Timestamp }}
+							{% if post.Category != '' %}
+							in {{ post.Category | raw }} 
+							{% endif %}
+							{% if post.Tags != '' %}
+							and tagged with {{ post.Tags | raw }}
+							{% endif %}
+							</p>
 						</div>
 					</div>
-				{% else %}
-					<div class="item item-{{ post.Type }}">
-						<div class='iteminner'>
-							<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>								
-							<div class='imgcontainer'>	
-							{% if post.FeaturedImage != '' %}
-								<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
-							{% else %} 
-								{% if post.Video == '' %}	
-								<a href='{{ post.URI }}'><img src="http://lorempixel.com/400/200/?x={post.ID}" class="img-responsive" alt="{{ post.Name }}"></a>
-								{% endif %}
-							{% endif %}	
-							</div>
-							{% if post.Video != '' %}
-								<div class="embed-responsive embed-responsive-16by9">
-									{{ post.Video | raw }}
-								</div>			
-							{% endif %}			
-							<div class='excerpt'>{{ post.Excerpt | raw }}</div>
-														
-							<div class='postinfo'>
-								<p>
-								A <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
-								saved at {{ post.Timestamp }}
-								{% if post.Category != '' %}
-								in {{ post.Category | raw }} 
-								{% endif %}
-								{% if post.Tags != '' %}
-								and tagged with {{ post.Tags | raw }}
-								{% endif %}
-								</p>
-							</div>
-						</div>
-					</div>
-				{% endif %}
-			{% endfor %}
-		{% else %}
-			{% for post in this.app.posts %}
-				<div class='page'>
+				</div>
+			{% endif %}
+		{% endfor %}
+	</div>
+	{% else %}
+		{% for post in this.app.posts %}
+			<div class='wall'><div class='column'></div>
+			<div class='item item-{{ post.Type }} page'>
 				<div class='pageinner'>	
 					{% if post.FeaturedImage != '' %}
 						<br>
@@ -167,34 +170,34 @@
 						{% endif %}
 					</p>
 				</div>
-				</div>
-				{% if post.Related|length > 0 %}
-					<hr>
-					<!-- <h4 class='related'>Read More</h4> -->
-					{% for rpost in post.Related %}
-						<div class="item item-{{ post.Type }}">
-							<div class='iteminner'>
-						
-							{% if rpost.FeaturedImage != '' %}
-								<div class='imgcontainer'>	
-								<a href='{{ rpost.URI }}'><img src="{{ rpost.FeaturedImage }}" class="img-responsive" alt="{{ rpost.Name }}"></a>
-								</div>
-							{% endif %}	
-							{% if rpost.Video != '' %}
-								<div class="embed-responsive embed-responsive-16by9">
-									{{ rpost.Video | raw }}
-								</div>			
-							{% endif %}			
+			</div>
+			</div>
+			{% if post.Related|length > 0 %}
+			<div class='wall'><div class='column'></div>
+				<hr>
+				<!-- <h4 class='related'>Read More</h4> -->
+				{% for rpost in post.Related %}
+					<div class="item item-{{ post.Type }}">
+						<div class='iteminner'>
+						{% if rpost.FeaturedImage != '' %}
+							<div class='imgcontainer'>	
+							<a href='{{ rpost.URI }}'><img src="{{ rpost.FeaturedImage }}" class="img-responsive" alt="{{ rpost.Name }}"></a>
 							</div>
-							<h5 class='related'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a></h5>
-							<div class='excerpt'>{{ rpost.Excerpt | raw }}</div>		
-						
+						{% endif %}	
+						{% if rpost.Video != '' %}
+							<div class="embed-responsive embed-responsive-16by9">
+								{{ rpost.Video | raw }}
+							</div>			
+						{% endif %}			
 						</div>
-					{% endfor %} 
-				{% endif %}
-			{% endfor %}
-		{% endif %}
-	</div> 
+						<h5 class='related'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a></h5>
+						<div class='excerpt'>{{ rpost.Excerpt | raw }}</div>		
+					</div>
+				{% endfor %} 
+			</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %} 
 
 	<div class='container'>
 		<div class='row'>
@@ -220,33 +223,33 @@
 
 
 </body>
-{% if this.app.posts|length > 1 %}
-	<script>
-	
-	// jQuery
-	var $container = jQuery('#wall');
-	// initialize
-	$(document).ready(function() {
-		$container.packery({
+
+<script>
+
+// jQuery
+var $container = jQuery('.wall');
+// initialize
+$(document).ready(function() {
+	$container.packery({
+	  itemSelector: '.item',
+	  columnWidth: '.column',
+	  rowHeight: 1,
+	  gutter: 0
+	});
+	$container.layout();
+	$(window).trigger('resize');
+});
+
+$container.imagesLoaded( function() {
+	$container.packery({
 		  itemSelector: '.item',
 		  columnWidth: '.column',
 		  rowHeight: 1,
 		  gutter: 0
-		});
-		$container.layout();
-		$(window).trigger('resize');
 	});
+	$container.layout();
+	$(window).trigger('resize');
+});	
+</script>
 
-	$container.imagesLoaded( function() {
-		$container.packery({
-			  itemSelector: '.item',
-			  columnWidth: '.column',
-			  rowHeight: 1,
-			  gutter: 0
-		});
-		$container.layout();
-		$(window).trigger('resize');
-	});	
-	</script>
-{% endif %}
 </html>

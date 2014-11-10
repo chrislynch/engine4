@@ -2,7 +2,7 @@
 
 // Set up pager
 $this->app->pages = 1;
-$pagesize = 10;
+$pagesize = 20;
 $relatedthings = FALSE; // Assume that we are not picking up related things under we are certain we have one item
 if(isset($_GET['page'])) { $this->app->page = $_GET['page']; } else { $this->app->page = 1; }
 
