@@ -1,14 +1,16 @@
 <?php
 
 print "Opening connection\n";
-$conn = imap_open('{mail.planetofthepenguins.com/notls}', 'blog123@planetofthepenguins.com', 'blog123');
+$conn = imap_open('{mail.planetofthepenguins.com/notls}', 'blog456@planetofthepenguins.com', 'blog456');
 print "Connection open\n";
 
 print "Enumerating messages\n";
 $msgcount = imap_num_msg($conn);
 print "Found $msgcount messages\n";
 
-for ($i=1; $i <= $msgcount; $i++) { 
+// for ($i=1; $i <= $msgcount; $i++) { 
+// Only process one message at a time, so that we can spread out content easily.
+for ($i=1; $i <= 1; $i++) { 
 	$header = imap_headerinfo($conn, $i);
 	$subject = $header->subject;
 	$body = imap_body($conn, $i);
@@ -60,42 +62,40 @@ function email2thing($header,$body,$files=array()){
 	}
 
 	// Parse the remaining text and work out what we are doing based on message content
-	$body = explode("\n",$body);
-	$line1 = $body[1];
+	$body = explode("\n",$thing->html);
+	print "<pre>" . print_r($body,TRUE) . "</pre>";
+	$line1 = $body[0];
 	if (stripos($line1, 'http') === 0){
 		// If the line starts with http:// we could be looking at either a video or a link.
 		if (stripos($line1, 'youtube')){
 			// This is a video
 			$post['Type'] = 'video';
 			$post['Video'] = $line1;
-			unset($body[1]);
+			unset($body[0]);
 		} else {
 			// This is a link (for now, this is treated as a post)
 			$post['Type'] = 'link';
 			$post['Link'] = $line1;
-			if(!isset($post['Excerpt'])){$post['Excerpt'] = $body[3];}
-			unset($body[1]);
+			unset($body[0]);
 		}
 	} else {
 		// This is a post or a status
-		if (count($body) == 0){
+		if (strlen(trim($thing->html)) == 0){
 			// Single line posts are treated as a status
 			$post['Type'] = 'status';
 		} else {
 			// Multi-line posts that do not start with a http:// resource are a post
 			$post['Type'] = 'post';
-			if(!isset($post['Excerpt'])){$post['Excerpt'] = $body[3];}
 		}
 	}
-
+	print "<pre>" . print_r($body,TRUE) . "</pre>"; 
 	// Rebuild the body
 	$body = implode("\n",$body);
-
 	// Set the body using the remaining data
-	unset($post['html']);
+	$thing->html = $body;
 	$post['HTML'] = $thing->html;
 
-	print_r($post);
+	print "<pre>" . print_r($post,TRUE) . "</pre>"; 
 
 	// Save the thing
 	return (_cms::saveThing($post,$files));
