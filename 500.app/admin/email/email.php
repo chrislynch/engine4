@@ -10,9 +10,11 @@ print "Found $msgcount messages\n";
 
 // for ($i=1; $i <= $msgcount; $i++) { 
 // Only process one message at a time, so that we can spread out content easily.
-for ($i=1; $i <= 1; $i++) { 
+for ($i=1; $i <= min($msgcount,1); $i++) { 
+	// Load header
 	$header = imap_headerinfo($conn, $i);
 	$subject = $header->subject;
+	// Load body
 	$body = imap_body($conn, $i);
 	$txtend = stripos($body, 'Content-Type: text/html;');
 	$body = substr($body, 0,$txtend);
@@ -22,10 +24,30 @@ for ($i=1; $i <= 1; $i++) {
 	array_shift($body);
 	array_shift($body);
 	$body = implode("\n",$body);
+	// Save attachments
+	$attachments = array();
+	$structure = imap_fetchstructure($conn, $i);
+	for($a = 0; $a < count(@$structure->parts); $a++){
+		if($structure->parts[$a]->disposition == 'attachment'){
+			print "<pre>" . print_r($structure->parts[$a],TRUE) . "</pre>";	
+			$attachment = array();
+			$attachment['filename'] = '_custom/_default/content/uploads/' . $structure->parts[$a]->parameters[0]->value;
+			$attachment['data'] = imap_fetchbody($conn, $i, $a+1);
+            if($structure->parts[$a]->encoding == 3) { // 3 = BASE64
+               $attachment['data'] = base64_decode($attachment['data']);
+             }
+            elseif($structure->parts[$a]->encoding == 4) { // 4 = QUOTED-PRINTABLE
+               $attachment['data'] = quoted_printable_decode($attachment['data']);
+            }
+            $attachments[] = $attachment;
+            print "Saving {$attachment['filename']}";
+            file_put_contents($attachment['filename'],$attachment['data']);
+		}
+	}
 	print "Saving message $i\n";
-	email2thing($header,$body);
+	email2thing($header,$body,$attachments);
 	print "Deleting message $i\n";
-	imap_delete($conn,$i);
+	// imap_delete($conn,$i);
 }
 imap_expunge($conn);
 
@@ -39,7 +61,6 @@ function email2thing($header,$body,$files=array()){
 	global $e;
 
 	$post = _cms::newThing();	
-	$files = array();
 
 	// Default to creating a new item
 	$post['ID'] = 0;
@@ -94,6 +115,11 @@ function email2thing($header,$body,$files=array()){
 	// Set the body using the remaining data
 	$thing->html = $body;
 	$post['HTML'] = $thing->html;
+
+	// Attach any images
+	if(isset($files[0])){
+		$post['FeaturedImage'] = $files[0]['filename'];
+	}
 
 	print "<pre>" . print_r($post,TRUE) . "</pre>"; 
 
