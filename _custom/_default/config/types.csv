@@ -75,3 +75,4 @@
 "link","_content","HTML","Content","markdown","Enter the content for the post here. Markdown formatting is supported.",15
 "link","_content","Category","Category","tags","Enter a category/section for the post.",1
 "link","_content","Tags","Tags","tags","Enter tags for the post.",1,"",TRUE
+"link","_content","FeaturedImage","Featured Image","file","The featured image will appear on your post in preview and in full display.",

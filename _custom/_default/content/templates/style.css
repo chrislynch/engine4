@@ -4,6 +4,15 @@
 @import url(http://fonts.googleapis.com/css?family=Quattrocento:400,700);
 
 body {
+	background: url('background.jpg');
+	background-repeat: no-repeat;
+	background-color: gainsboro;
+	-webkit-background-size: cover;  
+  	-moz-background-size: cover;  
+  	-o-background-size: cover;  
+  	background-size: cover;  
+  	background-position: center;
+
 	font-family: 'Quattrocento', serif;
 	font-weight: 300;
 	font-size: 14pt;
@@ -77,18 +86,17 @@ small {
 #logo { padding-left: 0px; }
 
 #logo p {
-	color: gray;
+	color: white;
 }
 
 #logo #name, #logo #name a {
 	font-family: 'Oswald', sans-serif;
 	font-weight: 700;
 	font-size: 22pt; 
-	color: #8A0808;
 	text-align: left;
 	text-transform: uppercase;
-	color: gray;
-	line-height: 12pt;
+	color: white;
+	line-height: 26pt;
   	margin-top: 10px;
 }
 
@@ -106,38 +114,50 @@ small {
 
 /* Supersize me */
 @media only screen and (min-width : 1200px) {
-	.column { width: 33%;}
+	.column { width: 1%;}
 	.item { width: 33%;}
+	.page { width: 70% !important;}
+	.item-comments { width: 30%;}
 }
 
 /* Large Devices, Wide Screens */
 @media only screen and (max-width : 1199px) {
-	.column { width: 33%;}
-	.item { width: 33%;}
+	.column { width: 1%;}
+	.item { width: 32%;}
+	.page { width: 50% !important;}
+	.item-comments { width: 50%;}
 }
 
 /* Medium Devices, Desktops */
 @media only screen and (max-width : 992px) {
-	.column { width: 50%;}
-	.item { width: 50%;}
+	.column { width: 1%;}
+	.item { width: 49%;}
+	.page { width: 100% !important;}
+	.item-comments { width: 100%; height: 300px; overflow: scroll;}
 }
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
-	.column { width: 100%;}
+	.column { width: 1%;}
 	.item { width: 100%;}
+	.page { width: 100% !important;}
+	.item-comments { width: 100%; height: 300px; overflow: scroll;}
 }
 
 /* Extra Small Devices, Phones */ 
 @media only screen and (max-width : 480px) {
-	.column { width: 100%;}
+	.column { width: 1%;}
 	.item { width: 100%;}
+	.page { width: 100% !important;}
+	.item-comments { display: none;}
 }
 
 /* Custom, iPhone Retina */ 
 @media only screen and (max-width : 320px) {
-	.column { width: 50%;}
-	.item { width: 50%;}
+	.column { width: 1%;}
+	.item { width: 100%;}
+	.page { width: 100% !important;}
+	.item-comments { display: none;}
 }
 
 .item {		
@@ -149,8 +169,10 @@ small {
 	   margin-top: 0px; margin-bottom: 2px }
 
 .iteminner {
-	margin-left: 20px;
-	margin-right: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding: 10px;
+	background: white;
 }
 
 .iteminner img { width: 100%; }
@@ -159,10 +181,11 @@ small {
     width: 100%;
 }
 
-.page { width: 100% !important;}
 .pageinner {
-	margin-left: 20px;
-	margin-right: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding: 10px;
+	background: white;
 }
 
 /* SPECIFIC ITEM TYPES */
@@ -196,6 +219,12 @@ small {
 #sidebar .btn {color: #8A0808;}
 
 #sidebar #block-About p { font-size: 11pt; text-align: left; }
+
+#pager {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
 
 .book { margin-bottom: 12px; }
 .book img { max-width: 100%; }

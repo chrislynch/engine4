@@ -80,10 +80,10 @@
 						<h2><a href='{{ post.URI }}'>{{ post.Name }}</a></h2>								
 						<div class='imgcontainer'>	
 						{% if post.FeaturedImage != '' %}
-							<a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a>
+							 <a href='{{ post.URI }}'><img src="{{ post.FeaturedImage }}" class="img-responsive" alt="{{ post.Name }}"></a> 
 						{% else %} 
 							{% if post.Video == '' %}	
-							<a href='{{ post.URI }}'><img src="http://lorempixel.com/400/200/?x={post.ID}" class="img-responsive" alt="{{ post.Name }}"></a>
+							<!-- <a href='{{ post.URI }}'><img src="http://lorempixel.com/400/200/?x={post.ID}" class="img-responsive" alt="{{ post.Name }}"></a> -->
 							{% endif %}
 						{% endif %}	
 						</div>
@@ -114,63 +114,66 @@
 	{% else %}
 		{% for post in this.app.posts %}
 			<div class='wall'><div class='column'></div>
-			<div class='item item-{{ post.Type }} page'>
-				<div class='pageinner'>	
-					{% if post.FeaturedImage != '' %}
-						<br>
-						<img src="{{ post.FeaturedImage }}" class="img-full" alt="{{ post.Name }}">
-					{% endif %}
-					{% if post.Video != '' %}
-						<br>
-						<div class="embed-responsive embed-responsive-16by9">
-							{{ post.Video | raw }}
-						</div>			
-					{% endif %}	
-					<h1>{{ post.Name }}</h1>
-					{{ post.HTML | raw }}
-					{% if post.Link != '' %}
-						<div class='link'>
-						Source: <a href='{{ post.Link }}'>{{ post.Link }}</a>
-						</div>
-					{% endif %}
-					{% if post.Type == 'book' %}
-						<h2>Where to Buy</h2>
-						{% if post.Link_Amazon_US != '' %}<p><a href='{{ post.Link_Amazon_US }}'><button type="button" class="btn btn-danger">Download from Amazon (US/World)</button></a>&nbsp;&nbsp;<a href='{{ post.Link_Amazon_UK }}'><button type="button" class="btn btn-warning">Download from Amazon (UK)</button></a><br><small>Download now for your Amazon Kindle eReader or if you have the Kindle app installed on your tablet or smartphone.</small></p>{% endif %}
-						{% if post.Link_Smashwords != '' %}<p><a href='{{ post.Link_Smashwords }}'><button type="button" class="btn btn-primary">Download from Smashwords</button></a><br><small>Smashwords offer eBooks in .mobi format for your Kindle and .epub for all other eBook readers, devices, and applications.</small></p>{% endif %}
-						{% if post.Embed_WattPad != '' %}
-						<h2>Read Now On At Wattpad</h2>
-						{{ post.Embed_WattPad | raw }}
+				<div class='item item-{{ post.Type }} page'>
+					<div class='pageinner'>	
+						{% if post.FeaturedImage != '' %}
+							<br>
+							<img src="{{ post.FeaturedImage }}" class="img-full" alt="{{ post.Name }}">
 						{% endif %}
-					{% endif %}
-				
-					<hr>
-					<div id="disqus_thread"></div>
-					<script type="text/javascript">
-					/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-					var disqus_shortname = 'planetofthepenguins'; // required: replace example with your forum shortname
-
-					/* * * DON'T EDIT BELOW THIS LINE * * */
-					(function() {
-					    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-					    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-					    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-					})();
-					</script>
-					<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-					<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-					<hr>
-					<p class='postinfo'>
-						This is a  <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
-						saved at {{ post.Timestamp }}
-						{% if post.Category != '' %}
-						in {{ post.Category | raw }} 
+						{% if post.Video != '' %}
+							<br>
+							<div class="embed-responsive embed-responsive-16by9">
+								{{ post.Video | raw }}
+							</div>			
+						{% endif %}	
+						<h1>{{ post.Name }}</h1>
+						{{ post.HTML | raw }}
+						{% if post.Link != '' %}
+							<div class='link'>
+							Source: <a href='{{ post.Link }}'>{{ post.Link }}</a>
+							</div>
 						{% endif %}
-						{% if post.Tags != '' %}
-						and tagged with {{ post.Tags | raw }}
+						{% if post.Type == 'book' %}
+							<h2>Where to Buy</h2>
+							{% if post.Link_Amazon_US != '' %}<p><a href='{{ post.Link_Amazon_US }}'><button type="button" class="btn btn-danger">Download from Amazon (US/World)</button></a>&nbsp;&nbsp;<a href='{{ post.Link_Amazon_UK }}'><button type="button" class="btn btn-warning">Download from Amazon (UK)</button></a><br><small>Download now for your Amazon Kindle eReader or if you have the Kindle app installed on your tablet or smartphone.</small></p>{% endif %}
+							{% if post.Link_Smashwords != '' %}<p><a href='{{ post.Link_Smashwords }}'><button type="button" class="btn btn-primary">Download from Smashwords</button></a><br><small>Smashwords offer eBooks in .mobi format for your Kindle and .epub for all other eBook readers, devices, and applications.</small></p>{% endif %}
+							{% if post.Embed_WattPad != '' %}
+							<h2>Read Now On At Wattpad</h2>
+							{{ post.Embed_WattPad | raw }}
+							{% endif %}
 						{% endif %}
-					</p>
+					</div>
 				</div>
-			</div>
+				<div class='item item-comments'>
+					<div class='iteminner'>	
+						<hr>
+						<div id="disqus_thread"></div>
+						<script type="text/javascript">
+						/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+						var disqus_shortname = 'planetofthepenguins'; // required: replace example with your forum shortname
+
+						/* * * DON'T EDIT BELOW THIS LINE * * */
+						(function() {
+						    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+						    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+						    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+						})();
+						</script>
+						<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+						<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+						<hr>
+						<p class='postinfo'>
+							This is a  <a href='Type/{{ post.Type }}'>{{ post.Type }}</a> 
+							saved at {{ post.Timestamp }}
+							{% if post.Category != '' %}
+							in {{ post.Category | raw }} 
+							{% endif %}
+							{% if post.Tags != '' %}
+							and tagged with {{ post.Tags | raw }}
+							{% endif %}
+						</p>
+					</div>
+				</div>
 			</div>
 			{% if post.Related|length > 0 %}
 			<div class='wall'><div class='column'></div>
@@ -189,9 +192,9 @@
 								{{ rpost.Video | raw }}
 							</div>			
 						{% endif %}			
-						</div>
 						<h5 class='related'><a href='{{ rpost.URI }}'>{{ rpost.Name }}</a></h5>
 						<div class='excerpt'>{{ rpost.Excerpt | raw }}</div>		
+						</div>
 					</div>
 				{% endfor %} 
 			</div>
@@ -233,6 +236,7 @@ $(document).ready(function() {
 	$container.packery({
 	  itemSelector: '.item',
 	  columnWidth: '.column',
+	  stamp: '.stamp',
 	  rowHeight: 1,
 	  gutter: 0
 	});
@@ -244,6 +248,7 @@ $container.imagesLoaded( function() {
 	$container.packery({
 		  itemSelector: '.item',
 		  columnWidth: '.column',
+		  stamp: '.stamp',
 		  rowHeight: 1,
 		  gutter: 0
 	});
