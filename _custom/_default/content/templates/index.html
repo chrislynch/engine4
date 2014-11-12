@@ -66,7 +66,21 @@
 	{% if this.app.posts|length > 1 %}
 	<div class='wall'>
 	<div class='column'></div>
-		{% for post in this.app.posts %}
+		{% set i = 0 %}
+		{% for post in this.app.posts %}		
+			{% set i = i+1 %}
+			{% if i == 3 %}
+				<div class='item item-sidebar'>
+					<div class='iteminner'>
+					{{app.request.query.get("page")}}
+					{% for block in this.app.blocks %}
+						<div id='block-{{ block.Name }}'>
+						{{ block.HTML | raw }}
+						</div>
+					{% endfor %}
+					</div>
+				</div>
+			{% endif %}
 			{% if post.Type == 'status' %}
 				<div class="item item-{{ post.Type }}">
 					<div class='iteminner'>
@@ -236,7 +250,7 @@ $(document).ready(function() {
 	$container.packery({
 	  itemSelector: '.item',
 	  columnWidth: '.column',
-	  stamp: '.stamp',
+	  stamp: '#sidebar',
 	  rowHeight: 1,
 	  gutter: 0
 	});
@@ -248,7 +262,7 @@ $container.imagesLoaded( function() {
 	$container.packery({
 		  itemSelector: '.item',
 		  columnWidth: '.column',
-		  stamp: '.stamp',
+		  stamp: '#sidebar',
 		  rowHeight: 1,
 		  gutter: 0
 	});
