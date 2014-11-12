@@ -15,7 +15,8 @@ for ($i=1; $i <= min($msgcount,1); $i++) {
 	$header = imap_headerinfo($conn, $i);
 	$subject = $header->subject;
 	// Load body
-	$body = imap_body($conn, $i);
+	$body = imap_body($conn, $i, 1.1);
+	/*
 	$txtend = stripos($body, 'Content-Type: text/html;');
 	$body = substr($body, 0,$txtend);
 	$body = explode("\n",$body);
@@ -24,6 +25,7 @@ for ($i=1; $i <= min($msgcount,1); $i++) {
 	array_shift($body);
 	array_shift($body);
 	$body = implode("\n",$body);
+	*/
 	// Save attachments
 	$attachments = array();
 	$structure = imap_fetchstructure($conn, $i);
