@@ -49,7 +49,7 @@ for ($i=1; $i <= min($msgcount,1); $i++) {
 	print "Saving message $i\n";
 	email2thing($header,$body,$attachments);
 	print "Deleting message $i\n";
-	// imap_delete($conn,$i);
+	imap_delete($conn,$i);
 }
 imap_expunge($conn);
 
@@ -104,8 +104,13 @@ function email2thing($header,$body,$files=array()){
 	} else {
 		// This is a post or a status
 		if (strlen(trim($thing->html)) == 0){
-			// Single line posts are treated as a status
-			$post['Type'] = 'status';
+			if (sizeof($files) == 0) {
+				// Subject only posts with no attachments are treated as a status
+				$post['Type'] = 'status';
+			} else {
+				// Subject only posts with an attachments are treated as a picture
+				$post['Type'] = 'picture';
+			}
 		} else {
 			// Multi-line posts that do not start with a http:// resource are a post
 			$post['Type'] = 'post';
