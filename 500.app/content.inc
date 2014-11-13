@@ -74,15 +74,16 @@ if(is_object($things)){
 					$thingsSQLWhere[] = "td$i.Value LIKE '%$tag%'";
 				}	
 			}
+			if (sizeof($thingsSQLWhere) == 0){ $thingsSQLWhere[] = 'TRUE';}
 			$thingsSQL .= "WHERE (";
 			$thingsSQL .= implode(" OR ",$thingsSQLWhere);
 			$thingsSQL .= ") AND (t.Status = 1 AND System >= 0 AND t.ID > 1 AND t.ID <> {$thing['ID']})
 					ORDER BY ABS(t.ID - {$thing['ID']}) DESC LIMIT $pagesize";
 
-			$things = $this->_db->query($thingsSQL);
+			$rthings = $this->_db->query($thingsSQL);
 			$thing['Related'] = array();
-			if(is_object($things)){
-				while ($relatedThing = $things->fetch()){
+			if(is_object($rthings)){
+				while ($relatedThing = $rthings->fetch()){
 					_cms::loadThing($relatedThing);
 					_cms::renderThing($relatedThing);
 					$thing['Related'][] = $relatedThing;
