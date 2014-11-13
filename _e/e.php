@@ -623,9 +623,9 @@ class eThing extends stdClass {
         
         while($loop == TRUE){
             $loop = FALSE;
-            $variableStart = stripos($this->html,'<<');
+            $variableStart = stripos($this->html,'{{');
             if (!($variableStart === FALSE)){
-                $variableEnd = stripos($this->html,'>>');
+                $variableEnd = stripos($this->html,'}}');
                 if (!($variableEnd === FALSE)){
                     // Grab the variable
                     $variable = substr($this->html, $variableStart, ($variableEnd - $variableStart) + 2);
