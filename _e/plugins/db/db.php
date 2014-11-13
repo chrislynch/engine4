@@ -12,6 +12,7 @@ class _db {
     }
     
     public function connect($connectString = ''){
+	
         if($connectString == ''){
             // No connectString given.
             // Connect to our default DB?
@@ -22,7 +23,8 @@ class _db {
             $this->db = new PDO($connectString);
             return TRUE; // How do we know if PDO connected?
         }
-        /*
+	
+    /*
         if (isset($this->e->_config)) {
 	    	if ($this->e->_config->get('mysql.server') !== ''){
 	    		
@@ -54,7 +56,7 @@ class _db {
 	} else {
 		
 	}
-         */
+    */
     }
     
     public function disconnect(){
