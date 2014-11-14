@@ -87,6 +87,34 @@ function email2thing($header,$body,$files=array()){
 	// Parse the remaining text and work out what we are doing based on message content
 	$body = explode("\n",$thing->html);
 	print "<pre>" . print_r($body,TRUE) . "</pre>";
+
+	// Reverse the array and check for categories, tags, and other variable overrides
+	// This uses a format unique to emails, designed to make it easier to enter data
+	$cmdlines = array();
+	for($i = sizeof($body) -1, $i >= 0, $i--){
+		$foundcmdline = FALSE;
+		if ($body[$i][0] == '#' OR $body[$i][0] == '@') {
+			$foundcmdline = TRUE;
+			$cmdlines[$i] == $body[$i];
+		}
+	}
+	foreach($cmdlines as $i => $cmd){ 
+		// Process the command
+		switch($cmd[0]){
+			case '#':
+				// Tags that start with uppercase become the category, unless category is already set
+				// tags that start with lowercase are tags and are added to the tags
+				break;
+			case '@':
+				// This is a shorthand for defining a variable. (Query: This these always be done first?)
+				break;
+		}
+		// Remove the cmd line from the text
+		unset($body[$i]);	
+	}
+	print "<pre>" . print_r($body,TRUE) . "</pre>";
+
+	// Look at the first line of the remainder of the content and use it to define type of item
 	$line1 = $body[0];
 	if (stripos($line1, 'http') === 0){
 		// If the line starts with http:// we could be looking at either a video or a link.
@@ -116,7 +144,7 @@ function email2thing($header,$body,$files=array()){
 			$post['Type'] = 'post';
 		}
 	}
-	print "<pre>" . print_r($body,TRUE) . "</pre>"; 
+	
 	// Rebuild the body
 	$body = implode("\n",$body);
 	// Set the body using the remaining data
