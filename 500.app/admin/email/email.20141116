@@ -1,7 +1,7 @@
 <?php
 
 print "Opening connection\n";
-$conn = imap_open('{mail.planetofthepenguins.com/notls}', 'blog123@planetofthepenguins.com', 'blog123');
+$conn = imap_open('{mail.planetofthepenguins.com/notls}', 'blog456@planetofthepenguins.com', 'blog456');
 print "Connection open\n";
 
 print "Enumerating messages\n";
@@ -15,10 +15,7 @@ for ($i=1; $i <= min($msgcount,1); $i++) {
 	$header = imap_headerinfo($conn, $i);
 	$subject = $header->subject;
 	// Load body
-	$body = imap_fetchbody($conn, $i, 1.1);
-	if($body == ''){
-		$body = imap_fetchbody($conn, $i, 1);
-	}
+	$body = imap_body($conn, $i, 1.1);
 	/*
 	$txtend = stripos($body, 'Content-Type: text/html;');
 	$body = substr($body, 0,$txtend);
@@ -90,16 +87,44 @@ function email2thing($header,$body,$files=array()){
 	// Parse the remaining text and work out what we are doing based on message content
 	$body = explode("\n",$thing->html);
 	print "<pre>" . print_r($body,TRUE) . "</pre>";
+
+	// Reverse the array and check for categories, tags, and other variable overrides
+	// This uses a format unique to emails, designed to make it easier to enter data
+	$cmdlines = array();
+	for($i = sizeof($body) -1, $i >= 0, $i--){
+		$foundcmdline = FALSE;
+		if ($body[$i][0] == '#' OR $body[$i][0] == '@') {
+			$foundcmdline = TRUE;
+			$cmdlines[$i] == $body[$i];
+		}
+	}
+	foreach($cmdlines as $i => $cmd){ 
+		// Process the command
+		switch($cmd[0]){
+			case '#':
+				// Tags that start with uppercase become the category, unless category is already set
+				// tags that start with lowercase are tags and are added to the tags
+				break;
+			case '@':
+				// This is a shorthand for defining a variable. (Query: This these always be done first?)
+				break;
+		}
+		// Remove the cmd line from the text
+		unset($body[$i]);	
+	}
+	print "<pre>" . print_r($body,TRUE) . "</pre>";
+
+	// Look at the first line of the remainder of the content and use it to define type of item
 	$line1 = $body[0];
 	if (stripos($line1, 'http') === 0){
 		// If the line starts with http:// we could be looking at either a video or a link.
-		if (strstr($line1, 'youtube')){
+		if (stripos($line1, 'youtube')){
 			// This is a video
 			$post['Type'] = 'video';
 			$post['Video'] = $line1;
 			unset($body[0]);
 		} else {
-			// This is a link 
+			// This is a link (for now, this is treated as a post)
 			$post['Type'] = 'link';
 			$post['Link'] = $line1;
 			unset($body[0]);
@@ -119,7 +144,7 @@ function email2thing($header,$body,$files=array()){
 			$post['Type'] = 'post';
 		}
 	}
-	print "<pre>" . print_r($body,TRUE) . "</pre>"; 
+	
 	// Rebuild the body
 	$body = implode("\n",$body);
 	// Set the body using the remaining data
